@@ -1,11 +1,18 @@
-const express = require("express");
+const express =
+require("express");
+
+const router =
+express.Router();
 
 const {
   analyzeSymptoms
-} = require("../controllers/analyzeController");
+} = require(
+  "../controllers/analyzeController"
+);
 
-const router = express.Router();
-
-router.post("/", analyzeSymptoms);
+router.post(
+  "/",
+  analyzeSymptoms
+);
 
 module.exports = router;
