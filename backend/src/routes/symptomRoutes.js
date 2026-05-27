@@ -2,6 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
+const validateChatInput =
+require(
+  "../middlewares/validateChatInput"
+);
+
 const {
   getSymptoms,
 } = require("../controllers/symptomController");
@@ -17,9 +22,13 @@ const {
 router.get("/", getSymptoms);
 
 router.post(
+
   "/analyze",
-  symptomValidation,
+
+  validateChatInput,
+
   analyzeSymptoms
+
 );
 
 module.exports = router;

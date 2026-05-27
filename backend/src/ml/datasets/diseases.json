@@ -1,0 +1,261 @@
+[
+  {
+  "name": "Common Cold",
+
+  "symptoms": [
+    "cough",
+    "sore throat",
+    "fatigue",
+    "runny nose"
+  ],
+
+  "criticalSymptoms": [
+    "sore throat"
+  ],
+
+  "riskLevel": "low",
+
+  "department": "General Medicine",
+
+  "recommendations": [
+    "Drink warm fluids",
+    "Take rest",
+    "Use steam inhalation"
+  ]
+},
+ {
+  "name": "Flu",
+
+  "symptoms": [
+    "fever",
+    "cough",
+    "headache",
+    "fatigue"
+  ],
+
+  "criticalSymptoms": [
+    "fever"
+  ],
+
+  "riskLevel": "medium",
+
+  "department": "General Medicine",
+
+  "recommendations": [
+    "Stay hydrated",
+    "Take rest",
+    "Consult doctor if symptoms worsen"
+  ]
+},
+  {
+  "name": "Food Poisoning",
+
+  "symptoms": [
+    "vomiting",
+    "nausea",
+    "diarrhea",
+    "abdominal pain"
+  ],
+
+  "criticalSymptoms": [
+    "vomiting",
+    "diarrhea"
+  ],
+
+  "riskLevel": "medium",
+
+  "department": "Gastroenterology",
+
+  "recommendations": [
+    "Drink fluids",
+    "Avoid outside food",
+    "Consult doctor if severe"
+  ]
+},
+
+{
+  "name": "Dengue",
+
+  "symptoms": [
+    "fever",
+    "headache",
+    "body pain",
+    "joint pain",
+    "fatigue"
+  ],
+
+  "criticalSymptoms": [
+    "fever",
+    "body pain"
+  ],
+
+  "riskLevel": "high",
+
+  "department": "Infectious Disease",
+
+  "recommendations": [
+    "Drink fluids",
+    "Monitor platelet count",
+    "Take rest",
+    "Consult doctor immediately"
+  ]
+},
+ {
+  "name": "COVID-19",
+
+  "symptoms": [
+    "fever",
+    "cough",
+    "fatigue",
+    "loss of smell",
+    "loss of taste",
+    "shortness of breath"
+  ],
+
+  "criticalSymptoms": [
+    "loss of smell",
+    "shortness of breath"
+  ],
+
+  "riskLevel": "high",
+
+  "department": "Pulmonology",
+
+  "recommendations": [
+    "Isolate yourself",
+    "Monitor oxygen levels",
+    "Stay hydrated",
+    "Consult doctor if severe"
+  ]
+},
+
+{
+  "name": "Asthma",
+
+  "symptoms": [
+    "cough",
+    "wheezing",
+    "shortness of breath",
+    "chest pain"
+  ],
+
+  "criticalSymptoms": [
+    "shortness of breath",
+    "wheezing"
+  ],
+
+  "riskLevel": "medium",
+
+  "department": "Pulmonology",
+
+  "recommendations": [
+    "Use inhaler",
+    "Avoid allergens",
+    "Consult pulmonologist"
+  ]
+},
+
+{
+  "name": "Pneumonia",
+
+  "symptoms": [
+    "fever",
+    "cough",
+    "chest pain",
+    "shortness of breath",
+    "fatigue"
+  ],
+
+  "criticalSymptoms": [
+    "chest pain",
+    "shortness of breath"
+  ],
+
+  "riskLevel": "high",
+
+  "department": "Pulmonology",
+
+  "recommendations": [
+    "Consult doctor immediately",
+    "Take prescribed medication",
+    "Rest properly"
+  ]
+},
+
+{
+  "name": "Migraine",
+
+  "symptoms": [
+    "headache",
+    "nausea",
+    "vomiting",
+    "dizziness"
+  ],
+
+  "criticalSymptoms": [
+    "headache"
+  ],
+
+  "riskLevel": "medium",
+
+  "department": "Neurology",
+
+  "recommendations": [
+    "Rest in dark room",
+    "Stay hydrated",
+    "Avoid loud sounds"
+  ]
+},
+
+{
+  "name": "Bronchitis",
+
+  "symptoms": [
+    "cough",
+    "fatigue",
+    "chest pain",
+    "shortness of breath"
+  ],
+
+  "criticalSymptoms": [
+    "cough"
+  ],
+
+  "riskLevel": "medium",
+
+  "department": "Pulmonology",
+
+  "recommendations": [
+    "Avoid smoking",
+    "Drink warm fluids",
+    "Consult doctor if symptoms persist"
+  ]
+},
+
+{
+  "name": "Malaria",
+
+  "symptoms": [
+    "fever",
+    "chills",
+    "sweating",
+    "headache",
+    "fatigue"
+  ],
+
+  "criticalSymptoms": [
+    "fever",
+    "chills"
+  ],
+
+  "riskLevel": "high",
+
+  "department": "Infectious Disease",
+
+  "recommendations": [
+    "Consult doctor immediately",
+    "Drink fluids",
+    "Take prescribed medication"
+  ]
+}
+]

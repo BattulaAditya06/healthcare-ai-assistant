@@ -1,6 +1,9 @@
 const express =
 require("express");
 
+const docsRoutes =
+require("./routes/docsRoutes");
+
 const cors =
 require("cors");
 
@@ -23,7 +26,11 @@ const healthRoutes =
 require("./routes/healthRoutes");
 
 const errorHandler =
-require("./middleware/errorHandler");
+require("./middlewares/errorHandler");
+
+const chatRoutes =
+require("./routes/chatRoutes");
+
 
 const app = express();
 
@@ -44,6 +51,11 @@ app.use(
 );
 
 app.use(
+  "/api/docs",
+  docsRoutes
+);
+
+app.use(
   "/api/v1/diseases",
   diseaseRoutes
 );
@@ -56,6 +68,11 @@ app.use(
 app.use(
   "/api/v1/health",
   healthRoutes
+);
+
+app.use(
+  "/api/chat",
+  chatRoutes
 );
 
 app.use(errorHandler);
