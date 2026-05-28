@@ -1,40 +1,95 @@
 import json
 import joblib
-import pandas as pd
+import os
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import (
+    RandomForestClassifier
+)
 
-# Load training data
-with open("../datasets/trainingData.json", "r") as file:
-    data = json.load(file)
+from sklearn.preprocessing import (
+    LabelEncoder
+)
 
-# Prepare dataset
-X = [item["input"] for item in data]
-y = [item["output"] for item in data]
+# BASE DIRECTORY
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 
-# Encode labels
+# DATASET PATH
+dataset_path = os.path.join(
+    BASE_DIR,
+    "..",
+    "datasets",
+    "trainingData.json"
+)
+
+# LOAD TRAINING DATA
+with open(dataset_path, "r") as file:
+
+    training_data = json.load(file)
+
+# PREPARE FEATURES & LABELS
+X = []
+y = []
+
+for item in training_data:
+
+    X.append(item["input"])
+
+    y.append(item["output"])
+
+# LABEL ENCODING
 label_encoder = LabelEncoder()
+
 y_encoded = label_encoder.fit_transform(y)
 
-# Train model
+# TRAIN MODEL
 model = RandomForestClassifier(
+
     n_estimators=100,
+
     random_state=42
+
 )
 
 model.fit(X, y_encoded)
 
-# Save model
+# MODELS DIRECTORY
+models_dir = os.path.join(
+    BASE_DIR,
+    "..",
+    "models"
+)
+
+os.makedirs(
+    models_dir,
+    exist_ok=True
+)
+
+# SAVE MODEL
 joblib.dump(
+
     model,
-    "../models/diseasePredictor.pkl"
+
+    os.path.join(
+        models_dir,
+        "diseasePredictor.pkl"
+    )
+
 )
 
-# Save encoder
+# SAVE LABEL ENCODER
 joblib.dump(
+
     label_encoder,
-    "../models/labelEncoder.pkl"
+
+    os.path.join(
+        models_dir,
+        "labelEncoder.pkl"
+    )
+
 )
 
-print("Model trained successfully")
+print(
+    "Model trained successfully."
+)

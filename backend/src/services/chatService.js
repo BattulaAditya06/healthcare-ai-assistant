@@ -1,25 +1,65 @@
-const extractSymptoms =
-require("../ml/preprocess/symptomExtractor");
+const extractSymptoms = require(
+  "../ml/preprocess/symptomExtractor"
+);
 
-const {
-  predictDiseases
-} = require("./diseasePredictionService");
+const hybridPredictor = require(
+  "../ml/prediction/hybridPredictor"
+);
 
+const detectEmergency =
+require(
+  "../ml/preprocess/emergencyDetector"
+);
 
-const processChatMessage =
-async (userMessage) => {
+const chatService =
+async (message) => {
 
   try {
 
-    // Step 1 — Extract Symptoms
-    const detectedSymptoms =
-      extractSymptoms(userMessage);
+    // EXTRACT SYMPTOMS
+    const symptoms =
+      extractSymptoms(message);
 
+    console.log(
+      "Detected Symptoms:",
+      symptoms
+    );
 
+    // EMERGENCY CHECK
+const emergencyCheck =
+  detectEmergency(
+    symptoms
+  );
 
-    // Step 2 — Validate Symptoms
+if (
+  emergencyCheck.isEmergency
+) {
+
+  return {
+
+    success: true,
+
+    emergency: true,
+
+    message:
+      "Emergency symptoms detected. Seek immediate medical attention.",
+
+    enteredSymptoms:
+      symptoms,
+
+    emergencySymptoms:
+      emergencyCheck.matchedSymptoms,
+
+    possibleDiseases: []
+
+  };
+
+}
+
+    // NO SYMPTOMS
     if (
-      detectedSymptoms.length === 0
+      !symptoms ||
+      symptoms.length === 0
     ) {
 
       return {
@@ -37,25 +77,44 @@ async (userMessage) => {
 
     }
 
-    // Step 3 — Predict Diseases
-
+    // PREDICT DISEASE
     const predictions =
-      await predictDiseases(
-        detectedSymptoms
+      await hybridPredictor(
+        symptoms
       );
 
-    // Step 4 — Return Response
+    // NO PREDICTION
+    if (
+      !predictions ||
+      predictions.length === 0
+    ) {
+
+      return {
+
+        success: true,
+
+        message:
+          "No matching disease found.",
+
+        enteredSymptoms:
+          symptoms,
+
+        possibleDiseases: []
+
+      };
+
+    }
+
+    // SUCCESS
     return {
 
       success: true,
 
       message:
-        predictions.length > 0
-          ? "Possible diseases detected."
-          : "No matching disease found.",
+        "Possible diseases detected.",
 
       enteredSymptoms:
-        detectedSymptoms,
+        symptoms,
 
       possibleDiseases:
         predictions
@@ -64,7 +123,7 @@ async (userMessage) => {
 
   } catch (error) {
 
-    console.error(
+    console.log(
       "Chat Service Error:",
       error.message
     );
@@ -86,6 +145,5 @@ async (userMessage) => {
 
 };
 
-module.exports = {
-  processChatMessage
-};
+module.exports =
+chatService;

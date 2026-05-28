@@ -231,7 +231,6 @@
     "Consult doctor if symptoms persist"
   ]
 },
-
 {
   "name": "Malaria",
 
@@ -256,6 +255,154 @@
     "Consult doctor immediately",
     "Drink fluids",
     "Take prescribed medication"
+  ]
+},
+{
+  "name": "Sinusitis",
+
+  "symptoms": [
+    "headache",
+    "fever",
+    "runny nose",
+    "facial pain",
+    "nasal congestion"
+  ],
+
+  "criticalSymptoms": [
+    "high fever"
+  ],
+
+  "riskLevel": "low",
+
+  "department":
+    "ENT",
+
+  "recommendations": [
+    "Steam inhalation",
+    "Drink warm fluids",
+    "Consult ENT specialist if persistent"
+  ]
+},
+{
+  "name": "Tonsillitis",
+
+  "symptoms": [
+    "fever",
+    "sore throat",
+    "difficulty swallowing",
+    "headache",
+    "fatigue"
+  ],
+
+  "criticalSymptoms": [
+    "difficulty swallowing"
+  ],
+
+  "riskLevel": "medium",
+
+  "department":
+    "ENT",
+
+  "recommendations": [
+    "Warm salt water gargle",
+    "Stay hydrated",
+    "Consult doctor if severe"
+  ]
+},
+{
+  "name": "Acidity",
+
+  "symptoms": [
+    "chest burning",
+    "stomach pain",
+    "nausea",
+    "bloating"
+  ],
+
+  "criticalSymptoms": [],
+
+  "riskLevel": "low",
+
+  "department":
+    "Gastroenterology",
+
+  "recommendations": [
+    "Avoid spicy food",
+    "Eat smaller meals",
+    "Drink water regularly"
+  ]
+},
+{
+  "name": "Appendicitis",
+
+  "symptoms": [
+    "abdominal pain",
+    "vomiting",
+    "fever",
+    "nausea",
+    "loss of appetite"
+  ],
+
+  "criticalSymptoms": [
+    "abdominal pain"
+  ],
+
+  "riskLevel": "high",
+
+  "department":
+    "General Surgery",
+
+  "recommendations": [
+    "Seek immediate medical attention",
+    "Avoid self-medication"
+  ]
+},
+{
+  "name": "Dehydration",
+
+  "symptoms": [
+    "fatigue",
+    "dizziness",
+    "dry mouth",
+    "headache"
+  ],
+
+  "criticalSymptoms": [
+    "dizziness"
+  ],
+
+  "riskLevel": "low",
+
+  "department":
+    "General Medicine",
+
+  "recommendations": [
+    "Drink oral fluids",
+    "Avoid excessive heat",
+    "Rest properly"
+  ]
+},
+{
+  "name": "Stress",
+
+  "symptoms": [
+    "headache",
+    "fatigue",
+    "sleep disturbance",
+    "anxiety"
+  ],
+
+  "criticalSymptoms": [],
+
+  "riskLevel": "low",
+
+  "department":
+    "Psychology",
+
+  "recommendations": [
+    "Practice relaxation techniques",
+    "Maintain proper sleep",
+    "Reduce workload"
   ]
 }
 ]

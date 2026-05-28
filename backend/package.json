@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "@google/genai": "^2.6.0",
+    "axios": "^1.16.1",
     "compromise": "^14.15.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",

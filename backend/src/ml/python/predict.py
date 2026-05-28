@@ -3,62 +3,84 @@ import sys
 import json
 import joblib
 
-# Base directory
+# BASE DIRECTORY
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
 
-# Model paths
-model_path = os.path.join(
+# MODELS DIRECTORY
+models_dir = os.path.join(
     BASE_DIR,
-    "../models/diseasePredictor.pkl"
+    "..",
+    "models"
+)
+
+# MODEL PATHS
+model_path = os.path.join(
+    models_dir,
+    "diseasePredictor.pkl"
 )
 
 encoder_path = os.path.join(
-    BASE_DIR,
-    "../models/labelEncoder.pkl"
+    models_dir,
+    "labelEncoder.pkl"
 )
 
-# Load model
-model = joblib.load(model_path)
+# LOAD MODEL
+model = joblib.load(
+    model_path
+)
 
-# Load label encoder
+# LOAD LABEL ENCODER
 label_encoder = joblib.load(
     encoder_path
 )
 
-# Read vector
+# READ INPUT VECTOR
 input_vector = json.loads(
     sys.argv[1]
 )
 
-# Predict probabilities
+# PREDICT PROBABILITIES
 probabilities = model.predict_proba(
     [input_vector]
 )
 
+raw_confidence = max(
+    probabilities[0]
+) * 100
+
 confidence = round(
-    max(probabilities[0]) * 100,
+
+    min(
+        raw_confidence,
+        85
+    ),
+
     2
 )
 
-# Predict disease
+# PREDICT CLASS
 prediction = model.predict(
     [input_vector]
 )
 
-# Decode prediction
+# DECODE LABEL
 disease = label_encoder.inverse_transform(
     prediction
 )
 
-# Final JSON response
+# FINAL RESPONSE
 result = {
 
-    "disease": disease[0],
+    "disease":
+        disease[0],
 
-    "confidence": confidence
+    "confidence":
+        confidence
 
 }
 
-print(json.dumps(result))
+print(
+    json.dumps(result)
+)

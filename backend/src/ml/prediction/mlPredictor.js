@@ -1,5 +1,6 @@
-const { exec } =
-require("child_process");
+const axios = require(
+  "axios"
+);
 
 const {
   encodeSymptoms
@@ -7,90 +8,47 @@ const {
   "../encoders/symptomEncoder"
 );
 
-const predictDisease =
-(symptoms) => {
+const mlPredictor =
+async (symptoms) => {
 
-  return new Promise(
-    (resolve, reject) => {
+  try {
 
-      try {
+    // ENCODE SYMPTOMS
+    const vector =
+      encodeSymptoms(
+        symptoms
+      );
 
-        // Convert symptoms to ML vector
-        const vector =
-          encodeSymptoms(
-            symptoms
-          );
+    // CALL FASTAPI
+    const response =
+      await axios.post(
 
-        // Python command
-        const command =
-`python src/ml/python/predict.py "${JSON.stringify(vector)}"`;
+        "http://127.0.0.1:8000/predict",
 
-        exec(
+        {
 
-          command,
+          symptoms:
+            vector
 
-          (error, stdout, stderr) => {
+        }
 
-            // Handle execution errors
-            if (error) {
+      );
 
-              console.error(
-                "ML Prediction Error:",
-                error.message
-              );
+    // RETURN TOP PREDICTIONS
+    return response.data;
 
-              reject(error);
+  } catch (error) {
 
-              return;
+    console.log(
+      "ML Prediction Error:",
+      error.message
+    );
 
-            }
+    return [];
 
-            // Handle Python stderr
-            if (stderr) {
-
-              console.error(
-                "Python STDERR:",
-                stderr
-              );
-
-            }
-
-            try {
-
-              // Parse Python JSON output
-              const result =
-                JSON.parse(
-                  stdout.trim()
-                );
-
-              resolve([result]);
-
-            } catch (parseError) {
-
-              console.error(
-                "JSON Parse Error:",
-                parseError.message
-              );
-
-              reject(parseError);
-
-            }
-
-          }
-
-        );
-
-      } catch (error) {
-
-        reject(error);
-
-      }
-
-    }
-
-  );
+  }
 
 };
 
 module.exports =
-predictDisease;
+mlPredictor;
