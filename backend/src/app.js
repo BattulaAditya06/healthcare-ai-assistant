@@ -1,170 +1,80 @@
-const express = require("express");
+const express =
+require("express");
 
-const helmet = require("helmet");
+const docsRoutes =
+require("./routes/docsRoutes");
 
-const rateLimit =
-  require("express-rate-limit");
+const cors =
+require("cors");
 
-
-const cors = require("cors");
-
-const sessionRoutes =
-  require("./routes/sessionRoutes");
+const morgan =
+require("morgan");
 
 const symptomRoutes =
-  require("./routes/symptomRoutes");
-
-const diseaseRoutes =
-  require("./routes/diseaseRoutes");
+require("./routes/symptomRoutes");
 
 const analyzeRoutes =
-  require("./routes/analyzeRoutes");
+require("./routes/analyzeRoutes");
+
+const diseaseRoutes =
+require("./routes/diseaseRoutes");
+
+const sessionRoutes =
+require("./routes/sessionRoutes");
+
+const healthRoutes =
+require("./routes/healthRoutes");
+
+const errorHandler =
+require("./middlewares/errorHandler");
+
+const chatRoutes =
+require("./routes/chatRoutes");
+
 
 const app = express();
 
-app.disable("x-powered-by");
+app.use(express.json());
 
-// Security middleware
-app.use(helmet());
+app.use(cors());
 
-app.use(cors({
-
-  origin:
-    "http://localhost:5173",
-
-  methods: [
-    "GET",
-    "POST",
-    "PUT",
-    "DELETE"
-  ],
-
-  credentials: true
-}));
-
-app.use(express.json({
-  limit: "10kb"
-}));
-
-app.use((req, res, next) => {
-
-  console.log(
-    `${req.method} ${req.url}`
-  );
-
-  next();
-});
-
-app.use((req, res, next) => {
-
-  if (
-    req.method === "POST" &&
-    !req.is("application/json")
-  ) {
-
-    return res.status(400).json({
-
-      success: false,
-
-      message:
-        "Only JSON requests are allowed"
-    });
-  }
-
-  next();
-});
-
-app.use((req, res, next) => {
-
-  const sanitize = (obj) => {
-
-    if (!obj) return;
-
-    for (const key in obj) {
-
-      if (
-        key.startsWith("$") ||
-        key.includes(".")
-      ) {
-
-        delete obj[key];
-      }
-
-      else if (
-        typeof obj[key] === "object"
-      ) {
-
-        sanitize(obj[key]);
-      }
-    }
-  };
-
-  sanitize(req.body);
-
-  next();
-});
-
-// Rate limiter
-const limiter = rateLimit({
-
-  windowMs:
-    15 * 60 * 1000,
-
-  max: 100,
-
-  message: {
-
-  success: false,
-
-  message:
-    "Too many requests. Please try again later."
-}
-});
-
-app.use(limiter);
-
-// Routes
-app.use(
-  "/api/session",
-  sessionRoutes
-);
+app.use(morgan("dev"));
 
 app.use(
-  "/api/symptoms",
+  "/api/v1/symptoms",
   symptomRoutes
 );
 
 app.use(
-  "/api/diseases",
+  "/api/v1/analyze",
+  analyzeRoutes
+);
+
+app.use(
+  "/api/docs",
+  docsRoutes
+);
+
+app.use(
+  "/api/v1/diseases",
   diseaseRoutes
 );
 
 app.use(
-  "/api/analyze",
-  analyzeRoutes
+  "/api/v1/sessions",
+  sessionRoutes
 );
 
-// Health route
-app.get("/", (req, res) => {
+app.use(
+  "/api/v1/health",
+  healthRoutes
+);
 
-  res.json({
-    success: true,
-    message:
-      "Backend Running Successfully"
-  });
-});
+app.use(
+  "/api/chat",
+  chatRoutes
+);
 
-app.use((err, req, res, next) => {
-
-  console.error(err.stack);
-
-  res.status(500).json({
-
-    success: false,
-
-    message:
-      "Internal Server Error"
-  });
-});
+app.use(errorHandler);
 
 module.exports = app;

@@ -1,0 +1,38 @@
+{
+  "high temperature": "fever",
+
+  "cold": "runny nose",
+
+  "cold and cough": "cough",
+
+  "body ache": "body pain",
+
+  "head pain": "headache",
+
+  "throwing up": "vomiting",
+
+  "loose motion": "diarrhea",
+
+  "breathing difficulty":
+    "shortness of breath",
+
+  "throat pain": "sore throat",
+
+  "blocked nose":
+    "nasal congestion",
+
+  "burning chest":
+    "chest burning",
+
+  "stomach ache":
+    "abdominal pain",
+
+  "feeling dizzy":
+    "dizziness",
+
+  "weakness":
+    "fatigue",
+
+  "stress":
+    "anxiety"
+}

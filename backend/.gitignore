@@ -1,2 +1,18 @@
-node_modules
+# Node.js
+node_modules/
+
+# Environment Variables
 .env
+.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Logs
+logs/
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
