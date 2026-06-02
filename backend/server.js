@@ -3,13 +3,24 @@ require("dotenv").config();
 const app =
 require("./src/app");
 
-const connectDB =
-require("./src/config/db");
+const authRoutes =
+require(
+  "./src/routes/authRoutes"
+);
+app.use(
+  "/api/auth",
+  authRoutes
+);
+
+const cors =
+require("cors");
+
+app.use(cors());
+
+
 
 const PORT =
 process.env.PORT || 5000;
-
-connectDB();
 
 app.listen(PORT, () => {
 

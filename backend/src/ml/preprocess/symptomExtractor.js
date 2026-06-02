@@ -1,8 +1,12 @@
 const masterSymptoms =
-require("../datasets/masterSymptoms.json");
+require(
+  "../datasets/masterSymptoms.json"
+);
 
 const symptomSynonyms =
-require("../datasets/symptomSynonyms.json");
+require(
+  "../datasets/symptomSynonyms.json"
+);
 
 const stopWords =
 require(
@@ -41,7 +45,12 @@ const extractSymptoms =
   // TOKENIZE WORDS
   const words =
     normalizedText
-      .replace(/[^\w\s]/g, "")
+
+      .replace(
+        /[^\w\s]/g,
+        ""
+      )
+
       .split(/\s+/);
 
   // CREATE BIGRAM PHRASES
@@ -63,16 +72,27 @@ const extractSymptoms =
 
   }
 
-  // STEP 1 — DIRECT SYMPTOM MATCH
+  // STEP 1 — DIRECT MATCH
   masterSymptoms.forEach(
     (symptom) => {
 
+      const regex =
+        new RegExp(
+
+          `\\b${symptom}\\b`,
+
+          "i"
+
+        );
+
       // NEGATION CHECK
       if (
+
         isNegated(
           normalizedText,
           symptom
         )
+
       ) {
 
         return;
@@ -81,8 +101,8 @@ const extractSymptoms =
 
       // DIRECT MATCH
       if (
-        normalizedText.includes(
-          symptom.toLowerCase()
+        regex.test(
+          normalizedText
         )
       ) {
 
@@ -101,14 +121,27 @@ const extractSymptoms =
   ).forEach((synonym) => {
 
     const mappedSymptom =
-      symptomSynonyms[synonym];
+      symptomSynonyms[
+        synonym
+      ];
+
+    const regex =
+      new RegExp(
+
+        `\\b${synonym}\\b`,
+
+        "i"
+
+      );
 
     // NEGATION CHECK
     if (
+
       isNegated(
         normalizedText,
         synonym
       )
+
     ) {
 
       return;
@@ -117,8 +150,8 @@ const extractSymptoms =
 
     // SYNONYM MATCH
     if (
-      normalizedText.includes(
-        synonym.toLowerCase()
+      regex.test(
+        normalizedText
       )
     ) {
 
@@ -130,38 +163,46 @@ const extractSymptoms =
 
   });
 
-// STEP 3 — EXACT PHRASE MATCH
-phrases.forEach((phrase) => {
+  // STEP 3 — EXACT PHRASE MATCH
+  phrases.forEach(
+    (phrase) => {
 
-  if (
-    masterSymptoms.includes(
-      phrase
-    )
-  ) {
+      if (
 
-    if (
-      !detectedSymptoms.includes(
-        phrase
-      )
-    ) {
+        masterSymptoms.includes(
+          phrase
+        )
 
-      detectedSymptoms.push(
-        phrase
-      );
+      ) {
+
+        if (
+
+          !detectedSymptoms.includes(
+            phrase
+          )
+
+        ) {
+
+          detectedSymptoms.push(
+            phrase
+          );
+
+        }
+
+      }
 
     }
+  );
 
-  }
-
-});
-
-  // STEP 4— FUZZY MATCHING
+  // STEP 4 — FUZZY MATCHING
   words.forEach((word) => {
 
     // SKIP STOPWORDS
     if (
 
-      stopWords.includes(word) ||
+      stopWords.includes(
+        word
+      ) ||
 
       fuzzyBlockedWords.includes(
         word
@@ -188,10 +229,13 @@ phrases.forEach((phrase) => {
       );
 
     if (
+
       matched &&
+
       !detectedSymptoms.includes(
         matched
       )
+
     ) {
 
       detectedSymptoms.push(
@@ -202,13 +246,13 @@ phrases.forEach((phrase) => {
 
   });
 
-  // STEP 4 — NORMALIZE
+  // STEP 5 — NORMALIZE
   detectedSymptoms =
     normalizeSymptoms(
       detectedSymptoms
     );
 
-  // STEP 5 — REMOVE DUPLICATES
+  // STEP 6 — REMOVE DUPLICATES
   return [
 
     ...new Set(
@@ -220,4 +264,4 @@ phrases.forEach((phrase) => {
 };
 
 module.exports =
-extractSymptoms;
+  extractSymptoms;

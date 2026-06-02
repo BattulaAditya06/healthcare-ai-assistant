@@ -1,23 +1,34 @@
-const processChatMessage =
+
+const chatService =
 require(
   "../services/chatService"
 );
 
+const {
+
+  getOrCreateUserChat
+
+} = require(
+  "../services/userChatService"
+);
+
+// ANALYZE CHAT
 const analyzeChat =
 async (req, res) => {
 
   try {
 
-    const { message } =
-      req.body;
+    const response =
+      await chatService(
 
-    const result =
-      await processChatMessage(
-        message
+        req.user.id,
+
+        req.body.message
+
       );
 
-    res.status(200).json(
-      result
+    return res.status(200).json(
+      response
     );
 
   } catch (error) {
@@ -27,12 +38,52 @@ async (req, res) => {
       error.message
     );
 
-    res.status(500).json({
+    return res.status(500).json({
 
       success: false,
 
       message:
-        "Internal server error."
+        "Internal server error"
+
+    });
+
+  }
+
+};
+
+// GET CHAT MESSAGES
+const getMessages =
+async (req, res) => {
+
+  try {
+
+    const chat =
+      await getOrCreateUserChat(
+        req.user.id
+      );
+
+    return res.status(200).json({
+
+      success: true,
+
+      messages:
+        chat.messages || []
+
+    });
+
+  } catch (error) {
+
+    console.log(
+      "Get Messages Error:",
+      error.message
+    );
+
+    return res.status(500).json({
+
+      success: false,
+
+      message:
+        "Internal server error"
 
     });
 
@@ -42,6 +93,8 @@ async (req, res) => {
 
 module.exports = {
 
-  analyzeChat
+  analyzeChat,
+
+  getMessages
 
 };

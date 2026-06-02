@@ -26,7 +26,7 @@ const healthRoutes =
 require("./routes/healthRoutes");
 
 const errorHandler =
-require("./middlewares/errorHandler");
+require("./middleware/errorHandler");
 
 const chatRoutes =
 require("./routes/chatRoutes");
@@ -34,9 +34,14 @@ require("./routes/chatRoutes");
 
 const app = express();
 
-app.use(express.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-app.use(cors());
+app.use(express.json());
 
 app.use(morgan("dev"));
 

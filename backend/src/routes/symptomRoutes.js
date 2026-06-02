@@ -4,7 +4,7 @@ const router = express.Router();
 
 const validateChatInput =
 require(
-  "../middlewares/validateChatInput"
+  "../middleware/validateChatInput"
 );
 
 const {

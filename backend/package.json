@@ -12,7 +12,9 @@
   "description": "",
   "dependencies": {
     "@google/genai": "^2.6.0",
+    "@prisma/client": "^6.19.0",
     "axios": "^1.16.1",
+    "bcryptjs": "^3.0.3",
     "compromise": "^14.15.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -21,9 +23,10 @@
     "express-rate-limit": "^8.5.2",
     "express-validator": "^7.3.2",
     "helmet": "^8.2.0",
-    "mongoose": "^9.6.2",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "natural": "^8.1.1",
+    "prisma": "^6.19.0",
     "string-similarity": "^4.0.4",
     "uuid": "^14.0.0"
   },

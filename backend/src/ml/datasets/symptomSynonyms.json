@@ -34,5 +34,29 @@
     "fatigue",
 
   "stress":
-    "anxiety"
+    "anxiety",
+  "hand pain": "wrist pain",
+  "wrist hurting": "wrist pain",
+  "gym pain": "muscle soreness",
+  "workout pain": "muscle soreness",
+  "joint ache": "joint pain",
+  "body soreness": "muscle soreness",
+  "sprain": "joint pain",
+  "strain": "muscle soreness"
+,
+  "cold": "runny nose",
+  "little cold": "runny nose",
+  "blocked nose": "nasal congestion",
+  "stuffy nose": "nasal congestion",
+  "itchy": "itching",
+  "itchiness": "itching",
+  "skin irritation": "itching",
+  "body pain": "body ache",
+  "body pains": "body ache",
+  "throwing up": "vomiting",
+  "feeling weak": "fatigue",
+  "breathing issue": "shortness of breath",
+  "shivering": "chills",
+  "high temperature": "fever"
+
 }

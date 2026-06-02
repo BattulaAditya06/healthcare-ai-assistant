@@ -1,18 +1,46 @@
+
 const express =
 require("express");
 
 const router =
 express.Router();
 
+const authMiddleware =
+require(
+  "../middleware/authMiddleware"
+);
+
 const {
-  analyzeChat
+
+  analyzeChat,
+
+  getMessages
+
 } = require(
   "../controllers/chatController"
 );
 
+// SEND CHAT MESSAGE
 router.post(
-  "/analyze",
+
+  "/",
+
+  authMiddleware,
+
   analyzeChat
+
 );
 
-module.exports = router;
+// GET CHAT HISTORY
+router.get(
+
+  "/messages",
+
+  authMiddleware,
+
+  getMessages
+
+);
+
+module.exports =
+router;
