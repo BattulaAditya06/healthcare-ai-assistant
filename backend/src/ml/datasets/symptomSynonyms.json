@@ -1,0 +1,62 @@
+{
+  "high temperature": "fever",
+
+  "cold": "runny nose",
+
+  "cold and cough": "cough",
+
+  "body ache": "body pain",
+
+  "head pain": "headache",
+
+  "throwing up": "vomiting",
+
+  "loose motion": "diarrhea",
+
+  "breathing difficulty":
+    "shortness of breath",
+
+  "throat pain": "sore throat",
+
+  "blocked nose":
+    "nasal congestion",
+
+  "burning chest":
+    "chest burning",
+
+  "stomach ache":
+    "abdominal pain",
+
+  "feeling dizzy":
+    "dizziness",
+
+  "weakness":
+    "fatigue",
+
+  "stress":
+    "anxiety",
+  "hand pain": "wrist pain",
+  "wrist hurting": "wrist pain",
+  "gym pain": "muscle soreness",
+  "workout pain": "muscle soreness",
+  "joint ache": "joint pain",
+  "body soreness": "muscle soreness",
+  "sprain": "joint pain",
+  "strain": "muscle soreness"
+,
+  "cold": "runny nose",
+  "little cold": "runny nose",
+  "blocked nose": "nasal congestion",
+  "stuffy nose": "nasal congestion",
+  "itchy": "itching",
+  "itchiness": "itching",
+  "skin irritation": "itching",
+  "body pain": "body ache",
+  "body pains": "body ache",
+  "throwing up": "vomiting",
+  "feeling weak": "fatigue",
+  "breathing issue": "shortness of breath",
+  "shivering": "chills",
+  "high temperature": "fever"
+
+}

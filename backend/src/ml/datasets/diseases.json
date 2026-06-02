@@ -1,0 +1,485 @@
+[
+  {
+    "name": "Common Cold",
+
+    "primarySymptoms": [
+      "cough",
+      "sore throat"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue",
+      "runny nose"
+    ],
+
+    "emergencySymptoms": [],
+
+    "riskLevel": "low",
+
+    "department": "General Medicine",
+
+    "recommendations": [
+      "Drink warm fluids",
+      "Take rest",
+      "Use steam inhalation"
+    ]
+  },
+
+  {
+    "name": "Flu",
+
+    "primarySymptoms": [
+      "fever",
+      "cough"
+    ],
+
+    "secondarySymptoms": [
+      "headache",
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [
+      "high fever"
+    ],
+
+    "riskLevel": "medium",
+
+    "department": "General Medicine",
+
+    "recommendations": [
+      "Stay hydrated",
+      "Take rest",
+      "Consult doctor if symptoms worsen"
+    ]
+  },
+
+  {
+    "name": "Food Poisoning",
+
+    "primarySymptoms": [
+      "vomiting",
+      "diarrhea"
+    ],
+
+    "secondarySymptoms": [
+      "nausea",
+      "abdominal pain"
+    ],
+
+    "emergencySymptoms": [
+      "severe dehydration"
+    ],
+
+    "riskLevel": "medium",
+
+    "department": "Gastroenterology",
+
+    "recommendations": [
+      "Drink fluids",
+      "Avoid outside food",
+      "Consult doctor if severe"
+    ]
+  },
+
+  {
+    "name": "Dengue",
+
+    "primarySymptoms": [
+      "fever",
+      "body pain"
+    ],
+
+    "secondarySymptoms": [
+      "headache",
+      "joint pain",
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [
+      "bleeding",
+      "severe weakness"
+    ],
+
+    "riskLevel": "high",
+
+    "department": "Infectious Disease",
+
+    "recommendations": [
+      "Drink fluids",
+      "Monitor platelet count",
+      "Take rest",
+      "Consult doctor immediately"
+    ]
+  },
+
+  {
+    "name": "COVID-19",
+
+    "primarySymptoms": [
+      "fever",
+      "cough"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue",
+      "loss of smell",
+      "loss of taste"
+    ],
+
+    "emergencySymptoms": [
+      "shortness of breath"
+    ],
+
+    "riskLevel": "high",
+
+    "department": "Pulmonology",
+
+    "recommendations": [
+      "Isolate yourself",
+      "Monitor oxygen levels",
+      "Stay hydrated",
+      "Consult doctor if severe"
+    ]
+  },
+
+  {
+    "name": "Asthma",
+
+    "primarySymptoms": [
+      "wheezing",
+      "shortness of breath"
+    ],
+
+    "secondarySymptoms": [
+      "cough",
+      "chest pain"
+    ],
+
+    "emergencySymptoms": [
+      "severe shortness of breath"
+    ],
+
+    "riskLevel": "medium",
+
+    "department": "Pulmonology",
+
+    "recommendations": [
+      "Use inhaler",
+      "Avoid allergens",
+      "Consult pulmonologist"
+    ]
+  },
+
+  {
+    "name": "Pneumonia",
+
+    "primarySymptoms": [
+      "fever",
+      "cough"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [
+      "shortness of breath",
+      "chest pain"
+    ],
+
+    "riskLevel": "high",
+
+    "department": "Pulmonology",
+
+    "recommendations": [
+      "Consult doctor immediately",
+      "Take prescribed medication",
+      "Rest properly"
+    ]
+  },
+
+  {
+    "name": "Migraine",
+
+    "primarySymptoms": [
+      "headache"
+    ],
+
+    "secondarySymptoms": [
+      "nausea",
+      "vomiting",
+      "dizziness"
+    ],
+
+    "emergencySymptoms": [],
+
+    "riskLevel": "medium",
+
+    "department": "Neurology",
+
+    "recommendations": [
+      "Rest in dark room",
+      "Stay hydrated",
+      "Avoid loud sounds"
+    ]
+  },
+
+  {
+    "name": "Bronchitis",
+
+    "primarySymptoms": [
+      "cough"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue",
+      "chest pain",
+      "shortness of breath"
+    ],
+
+    "emergencySymptoms": [
+      "severe breathing difficulty"
+    ],
+
+    "riskLevel": "medium",
+
+    "department": "Pulmonology",
+
+    "recommendations": [
+      "Avoid smoking",
+      "Drink warm fluids",
+      "Consult doctor if symptoms persist"
+    ]
+  },
+
+  {
+    "name": "Malaria",
+
+    "primarySymptoms": [
+      "fever",
+      "chills"
+    ],
+
+    "secondarySymptoms": [
+      "sweating",
+      "headache",
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [
+      "loss of consciousness"
+    ],
+
+    "riskLevel": "high",
+
+    "department": "Infectious Disease",
+
+    "recommendations": [
+      "Consult doctor immediately",
+      "Drink fluids",
+      "Take prescribed medication"
+    ]
+  },
+
+  {
+    "name": "Sinusitis",
+
+    "primarySymptoms": [
+      "facial pain",
+      "nasal congestion"
+    ],
+
+    "secondarySymptoms": [
+      "headache",
+      "runny nose",
+      "fever"
+    ],
+
+    "emergencySymptoms": [],
+
+    "riskLevel": "low",
+
+    "department": "ENT",
+
+    "recommendations": [
+      "Steam inhalation",
+      "Drink warm fluids",
+      "Consult ENT specialist if persistent"
+    ]
+  },
+
+  {
+    "name": "Tonsillitis",
+
+    "primarySymptoms": [
+      "sore throat",
+      "difficulty swallowing"
+    ],
+
+    "secondarySymptoms": [
+      "fever",
+      "headache",
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [
+      "breathing difficulty"
+    ],
+
+    "riskLevel": "medium",
+
+    "department": "ENT",
+
+    "recommendations": [
+      "Warm salt water gargle",
+      "Stay hydrated",
+      "Consult doctor if severe"
+    ]
+  },
+
+  {
+    "name": "Acidity",
+
+    "primarySymptoms": [
+      "chest burning",
+      "stomach pain"
+    ],
+
+    "secondarySymptoms": [
+      "nausea",
+      "bloating"
+    ],
+
+    "emergencySymptoms": [],
+
+    "riskLevel": "low",
+
+    "department": "Gastroenterology",
+
+    "recommendations": [
+      "Avoid spicy food",
+      "Eat smaller meals",
+      "Drink water regularly"
+    ]
+  },
+
+  {
+    "name": "Appendicitis",
+
+    "primarySymptoms": [
+      "abdominal pain"
+    ],
+
+    "secondarySymptoms": [
+      "vomiting",
+      "fever",
+      "nausea",
+      "loss of appetite"
+    ],
+
+    "emergencySymptoms": [
+      "severe abdominal pain"
+    ],
+
+    "riskLevel": "high",
+
+    "department": "General Surgery",
+
+    "recommendations": [
+      "Seek immediate medical attention",
+      "Avoid self-medication"
+    ]
+  },
+
+  {
+    "name": "Dehydration",
+
+    "primarySymptoms": [
+      "dizziness",
+      "dry mouth"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue",
+      "headache"
+    ],
+
+    "emergencySymptoms": [
+      "fainting"
+    ],
+
+    "riskLevel": "low",
+
+    "department": "General Medicine",
+
+    "recommendations": [
+      "Drink oral fluids",
+      "Avoid excessive heat",
+      "Rest properly"
+    ]
+  },
+
+{
+  "name": "Muscle Strain",
+
+  "department": "Orthopedics",
+
+  "riskLevel": "low",
+
+  "primarySymptoms": [
+
+    "muscle soreness",
+
+    "wrist pain",
+
+    "joint pain"
+
+  ],
+
+  "secondarySymptoms": [
+
+    "swelling",
+
+    "stiffness"
+
+  ],
+
+  "recommendations": [
+
+    "Rest the affected area",
+
+    "Avoid heavy lifting",
+
+    "Apply ice pack",
+
+    "Consult doctor if pain worsens"
+
+  ]
+},
+
+  {
+    "name": "Stress",
+
+    "primarySymptoms": [
+      "anxiety",
+      "sleep disturbance"
+    ],
+
+    "secondarySymptoms": [
+      "headache",
+      "fatigue"
+    ],
+
+    "emergencySymptoms": [],
+
+    "riskLevel": "low",
+
+    "department": "Psychology",
+
+    "recommendations": [
+      "Practice relaxation techniques",
+      "Maintain proper sleep",
+      "Reduce workload"
+    ]
+  }
+]
