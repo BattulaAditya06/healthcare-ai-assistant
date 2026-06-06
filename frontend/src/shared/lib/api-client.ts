@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 export const apiClient =
@@ -24,11 +25,6 @@ apiClient.interceptors.request.use(
         "token"
       );
 
-    console.log(
-      "INTERCEPTOR TOKEN:",
-      token
-    );
-
     if (token) {
 
       config.headers.Authorization =
@@ -37,14 +33,6 @@ apiClient.interceptors.request.use(
     }
 
     return config;
-
-  },
-
-  (error) => {
-
-    return Promise.reject(
-      error
-    );
 
   }
 

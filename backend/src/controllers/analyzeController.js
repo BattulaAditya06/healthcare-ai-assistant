@@ -1,11 +1,30 @@
+
+
+console.log(
+  "ANALYZE CONTROLLER RUNNING"
+);
+const crypto=require("crypto");
 const asyncHandler =
 require("../utils/asyncHandler");
+
+
+console.log(
+  "CONTROLLER FILE:",
+  __filename
+);
+
+const recommendDoctors =
+require(
+  "../appointments/services/doctorRecommendationService"
+);
 
 const {
   processSymptoms
 } = require(
   "../services/nlpProcessingService"
 );
+
+console.log("nlp file loaded");
 
 const {
   calculateEmergency
@@ -49,6 +68,10 @@ asyncHandler(async (
     removeSymptoms
   } = req.body;
 
+  // =========================
+  // NLP PROCESSING
+  // =========================
+
   const processedData =
     processSymptoms(
       message,
@@ -64,9 +87,14 @@ asyncHandler(async (
   const temporalStatus =
     processedData.temporalStatus;
 
+  // =========================
+  // RESOLVED / PAST
+  // =========================
+
   if (
     temporalStatus ===
       "resolved" ||
+
     temporalStatus ===
       "past"
   ) {
@@ -75,25 +103,39 @@ asyncHandler(async (
 
   }
 
+  // =========================
+  // NO SYMPTOMS
+  // =========================
+
   if (
+
     (!symptoms ||
       symptoms.length === 0) &&
 
     (!removeSymptoms ||
       removeSymptoms.length === 0)
+
   ) {
 
     return successResponse(
+
       res,
+
       {
         enteredSymptoms: [],
-        possibleDiseases: []
+        possibleDiseases: [],
+        recommendedDoctors: []
       },
 
       "Symptoms appear related to temporary lifestyle, stress, workout, travel, or non-medical conditions."
+
     );
 
   }
+
+  // =========================
+  // EMERGENCY CHECK
+  // =========================
 
   const emergency =
     calculateEmergency(
@@ -101,17 +143,92 @@ asyncHandler(async (
       severity
     );
 
+  // =========================
+  // DISEASE PREDICTION
+  // =========================
+
   const possibleDiseases =
     await predictDiseases(
       symptoms
     );
 
-  const session =
-    await handleSession(
-      sessionId,
-      symptoms,
-      removeSymptoms
-    );
+console.log(
+  "PREDICTIONS TYPE:",
+  typeof possibleDiseases
+);
+
+console.log(
+  "IS ARRAY:",
+  Array.isArray(
+    possibleDiseases
+  )
+);
+
+console.log(
+  "FIRST PREDICTION:",
+  possibleDiseases?.[0]
+);
+
+
+  // =========================
+  // DOCTOR RECOMMENDATIONS
+  // =========================
+
+let recommendedDoctors = [];
+
+if (
+
+  Array.isArray(
+    possibleDiseases
+  ) &&
+
+  possibleDiseases.length > 0
+
+) {
+
+  recommendedDoctors =
+    recommendDoctors(
+
+      possibleDiseases[0]
+        .department
+
+    ) || [];
+
+
+}
+
+console.log(
+  "RECOMMENDED DOCTORS:",
+  JSON.stringify(
+    recommendedDoctors,
+    null,
+    2
+  )
+);
+
+
+  // =========================
+  // SESSION HANDLING
+  // =========================
+
+ // =========================
+// TEMP SESSION
+// =========================
+
+const session = {
+
+  sessionId:
+    sessionId ||
+
+    crypto.randomUUID(),
+
+  symptoms
+
+};
+
+  // =========================
+  // FOLLOW-UP QUESTIONS
+  // =========================
 
   let questions = [];
 
@@ -125,9 +242,11 @@ asyncHandler(async (
       ) {
 
         questions.push(
+
           ...followUpQuestions[
             symptom
           ]
+
         );
 
       }
@@ -139,29 +258,52 @@ asyncHandler(async (
     ...new Set(questions)
   ];
 
-  return successResponse(
+console.log(
 
-    res,
+  "FINAL RESPONSE:",
 
+  JSON.stringify(
     {
-      sessionId:
-        session.sessionId,
-
-      emergency,
-
-      enteredSymptoms:
-        symptoms,
-
-      followUpQuestions:
-        questions,
-
-      possibleDiseases
-
+      recommendedDoctors
     },
+    null,
+    2
+  )
 
-    "Symptoms analyzed successfully"
+);
 
-  );
+
+  // =========================
+  // RESPONSE
+  // =========================
+
+  
+return successResponse(
+
+  res,
+
+  {
+
+    sessionId:
+      session.sessionId,
+
+    emergency,
+
+    enteredSymptoms:
+      symptoms,
+
+    followUpQuestions:
+      questions,
+
+    possibleDiseases,
+
+    recommendedDoctors
+
+  },
+
+  "Symptoms analyzed successfully"
+
+);
 
 });
 

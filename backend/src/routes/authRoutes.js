@@ -3,7 +3,7 @@ const express =
 require("express");
 
 const router =
-express.Router();
+  express.Router();
 
 const {
 
@@ -15,13 +15,19 @@ const {
   "../controllers/authController"
 );
 
+// =========================
 // REGISTER
+// =========================
+
 router.post(
   "/register",
   register
 );
 
+// =========================
 // LOGIN
+// =========================
+
 router.post(
   "/login",
   login

@@ -1,3 +1,9 @@
+
+const stringSimilarity =
+require(
+  "string-similarity"
+);
+
 const masterSymptoms =
 require(
   "../datasets/masterSymptoms.json"
@@ -8,183 +14,477 @@ require(
   "../datasets/symptomSynonyms.json"
 );
 
-const stopWords =
-require(
-  "../datasets/stopWords.json"
-);
+// =========================
+// NEGATIVE WORDS
+// =========================
 
-const fuzzyBlockedWords =
-require(
-  "../datasets/fuzzyBlockedWords.json"
-);
+const negativeWords = [
 
-const fuzzyMatchSymptom =
-require(
-  "../utils/fuzzyMatcher"
-);
+  "no",
 
-const normalizeSymptoms =
-require(
-  "../utils/symptomNormalizer"
-);
+  "not",
 
-const isNegated =
-require(
-  "./negationDetector"
-);
+  "without",
+
+  "dont",
+
+  "don't",
+
+  "denies"
+
+];
+
+// =========================
+// NORMALIZE
+// =========================
+
+const normalize =
+(text = "") => {
+
+  return text
+
+    .toLowerCase()
+
+    .replace(/[^\w\s]/g, " ")
+
+    .replace(/\s+/g, " ")
+
+    .trim();
+
+};
+
+// =========================
+// SAFE REGEX
+// =========================
+
+const safeMatch =
+(
+  text,
+  phrase
+) => {
+
+  const escaped =
+    phrase.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+
+  return new RegExp(
+
+    `\\b${escaped}\\b`
+
+  ).test(text);
+
+};
+
+const canonicalMap = {
+
+  "high temperature":
+    "fever",
+
+  "cold and cough":
+    "cough"
+
+};
+
+
+// =========================
+// EXTRACT SYMPTOMS
+// =========================
 
 const extractSymptoms =
 (text = "") => {
 
-  // NORMALIZE INPUT
   const normalizedText =
-    text.toLowerCase();
+    normalize(text);
 
-  let detectedSymptoms = [];
+  const foundSymptoms =
+    new Set();
 
-  // TOKENIZE WORDS
-  const words =
-    normalizedText
+  const negativeSymptoms =
+    new Set();
 
-      .replace(
-        /[^\w\s]/g,
-        ""
-      )
+  const tokens =
+    normalizedText.split(" ");
 
-      .split(/\s+/);
+  // =========================
+  // DIRECT MATCH
+  // =========================
 
-  // CREATE BIGRAM PHRASES
-  const phrases = [];
-
-  for (
-    let i = 0;
-    i < words.length - 1;
-    i++
-  ) {
-
-    phrases.push(
-
-      words[i] +
-      " " +
-      words[i + 1]
-
-    );
-
-  }
-
-  // STEP 1 — DIRECT MATCH
   masterSymptoms.forEach(
+
     (symptom) => {
 
-      const regex =
-        new RegExp(
+      const normalizedSymptom =
+        normalize(symptom);
 
-          `\\b${symptom}\\b`,
-
-          "i"
-
-        );
-
-      // NEGATION CHECK
       if (
 
-        isNegated(
+        safeMatch(
+
           normalizedText,
-          symptom
+
+          normalizedSymptom
+
         )
 
       ) {
 
-        return;
-
-      }
-
-      // DIRECT MATCH
-      if (
-        regex.test(
-          normalizedText
-        )
-      ) {
-
-        detectedSymptoms.push(
+        foundSymptoms.add(
           symptom
         );
 
       }
 
     }
+
   );
 
-  // STEP 2 — SYNONYM MATCH
-  Object.keys(
+
+// =========================
+// MULTI-WORD PHRASE MATCHING
+// =========================
+
+masterSymptoms.forEach(
+
+  (symptom) => {
+
+    if (
+      symptom.includes(" ")
+    ) {
+
+      const normalizedSymptom =
+        normalize(symptom);
+
+      // EXACT PHRASE
+      if (
+
+        normalizedText.includes(
+          normalizedSymptom
+        )
+
+      ) {
+
+        foundSymptoms.add(
+          symptom
+        );
+
+      }
+
+      // PARTIAL PHRASE LOGIC
+      else {
+
+        const symptomWords =
+          normalizedSymptom.split(
+            " "
+          );
+
+        const matchedWords =
+          symptomWords.filter(
+
+            (word) =>
+
+              normalizedText.includes(
+                word
+              )
+
+          );
+
+        // MOST WORDS MATCHED
+        if (
+
+          matchedWords.length >=
+
+          Math.ceil(
+            symptomWords.length * 0.7
+          )
+
+        ) {
+
+          foundSymptoms.add(
+            symptom
+          );
+
+        }
+
+      }
+
+    }
+
+  }
+
+);
+
+  // =========================
+  // SYNONYM MATCH
+  // =========================
+
+  Object.entries(
     symptomSynonyms
-  ).forEach((synonym) => {
+  ).forEach(
 
-    const mappedSymptom =
-      symptomSynonyms[
-        synonym
-      ];
+    ([
 
-    const regex =
-      new RegExp(
+      symptom,
 
-        `\\b${synonym}\\b`,
+      synonyms
 
-        "i"
+    ]) => {
+
+      const synonymList =
+
+        Array.isArray(
+          synonyms
+        )
+
+          ? synonyms
+
+          : [synonyms];
+
+      synonymList.forEach(
+
+        (synonym) => {
+
+          const normalizedSynonym =
+            normalize(
+              synonym
+            );
+
+          if (
+
+            safeMatch(
+
+              normalizedText,
+
+              normalizedSynonym
+
+            )
+
+          ) {
+
+            foundSymptoms.add(
+              symptom
+            );
+
+          }
+
+        }
 
       );
 
-    // NEGATION CHECK
+    }
+
+  );
+
+  // =========================
+  // CONTEXTUAL PAIN MATCHING
+  // =========================
+
+  const hasPainWord =
+
+    tokens.includes(
+      "pain"
+    ) ||
+
+    tokens.includes(
+      "paining"
+    ) ||
+
+    tokens.includes(
+      "hurt"
+    ) ||
+
+    tokens.includes(
+      "hurting"
+    ) ||
+
+    tokens.includes(
+      "ache"
+    ) ||
+
+    tokens.includes(
+      "aching"
+    );
+
+  // WRIST PAIN
+
+  if (
+
+    tokens.includes(
+      "wrist"
+    ) &&
+
+    hasPainWord
+
+  ) {
+
+    foundSymptoms.add(
+      "wrist pain"
+    );
+
+  }
+
+  // JOINT PAIN
+
+  if (
+
+    tokens.includes(
+      "joint"
+    ) &&
+
+    hasPainWord
+
+  ) {
+
+    foundSymptoms.add(
+      "joint pain"
+    );
+
+  }
+
+  // CHEST PAIN
+
+  if (
+
+    tokens.includes(
+      "chest"
+    ) &&
+
+    hasPainWord
+
+  ) {
+
+    foundSymptoms.add(
+      "chest pain"
+    );
+
+  }
+
+  // BACK PAIN
+
+  if (
+
+    tokens.includes(
+      "back"
+    ) &&
+
+    hasPainWord
+
+  ) {
+
+    foundSymptoms.add(
+      "back pain"
+    );
+
+  }
+
+  // MUSCLE PAIN
+
+  if (
+
+    tokens.includes(
+      "muscle"
+    ) &&
+
+    hasPainWord
+
+  ) {
+
+    foundSymptoms.add(
+      "muscle pain"
+    );
+
+  }
+
+  // =========================
+  // FUZZY TYPO MATCHING
+  // =========================
+
+  tokens.forEach((token) => {
+
     if (
-
-      isNegated(
-        normalizedText,
-        synonym
-      )
-
+      token.length < 4
     ) {
 
       return;
 
     }
 
-    // SYNONYM MATCH
+    const matches =
+      stringSimilarity.findBestMatch(
+
+        token,
+
+        masterSymptoms
+
+      );
+
+    const bestMatch =
+      matches.bestMatch;
+
     if (
-      regex.test(
-        normalizedText
-      )
+
+      bestMatch.rating >= 0.78
+
     ) {
 
-      detectedSymptoms.push(
-        mappedSymptom
+      foundSymptoms.add(
+        bestMatch.target
       );
 
     }
 
   });
 
-  // STEP 3 — EXACT PHRASE MATCH
-  phrases.forEach(
-    (phrase) => {
+  // =========================
+  // NEGATIVE DETECTION
+  // =========================
+
+  tokens.forEach(
+    (
+      token,
+      index
+    ) => {
 
       if (
-
-        masterSymptoms.includes(
-          phrase
+        negativeWords.includes(
+          token
         )
-
       ) {
+
+        const nextWord =
+          tokens[index + 1];
+
+        if (
+          !nextWord
+        ) {
+
+          return;
+
+        }
+
+        const matches =
+          stringSimilarity.findBestMatch(
+
+            nextWord,
+
+            masterSymptoms
+
+          );
+
+        const bestMatch =
+          matches.bestMatch;
 
         if (
 
-          !detectedSymptoms.includes(
-            phrase
-          )
+          bestMatch.rating >= 0.75
 
         ) {
 
-          detectedSymptoms.push(
-            phrase
+          negativeSymptoms.add(
+
+            bestMatch.target
+
           );
 
         }
@@ -194,72 +494,44 @@ const extractSymptoms =
     }
   );
 
-  // STEP 4 — FUZZY MATCHING
-  words.forEach((word) => {
+// =========================
+// CANONICALIZATION
+// =========================
 
-    // SKIP STOPWORDS
-    if (
+const canonicalSymptoms =
 
-      stopWords.includes(
-        word
-      ) ||
+  [...foundSymptoms].map(
 
-      fuzzyBlockedWords.includes(
-        word
-      )
+    (symptom) =>
 
-    ) {
+      canonicalMap[symptom] ||
 
-      return;
+      symptom
 
-    }
+  );
 
-    // SKIP SHORT WORDS
-    if (
-      word.length < 4
-    ) {
+// REMOVE DUPLICATES
 
-      return;
+const uniqueCanonicalSymptoms =
 
-    }
+  [...new Set(
+    canonicalSymptoms
+  )];
 
-    const matched =
-      fuzzyMatchSymptom(
-        word
-      );
+// =========================
+// RETURN
+// =========================
 
-    if (
+return {
 
-      matched &&
+  symptoms:
+    uniqueCanonicalSymptoms,
 
-      !detectedSymptoms.includes(
-        matched
-      )
+  negativeSymptoms:
+    [...negativeSymptoms]
 
-    ) {
+};
 
-      detectedSymptoms.push(
-        matched
-      );
-
-    }
-
-  });
-
-  // STEP 5 — NORMALIZE
-  detectedSymptoms =
-    normalizeSymptoms(
-      detectedSymptoms
-    );
-
-  // STEP 6 — REMOVE DUPLICATES
-  return [
-
-    ...new Set(
-      detectedSymptoms
-    )
-
-  ];
 
 };
 

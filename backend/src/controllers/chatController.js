@@ -1,20 +1,23 @@
 
+const prisma =
+require(
+  "../config/prisma"
+);
+
 const chatService =
 require(
   "../services/chatService"
 );
 
-const {
-
-  getOrCreateUserChat
-
-} = require(
-  "../services/userChatService"
-);
-
+// =========================
 // ANALYZE CHAT
+// =========================
+
 const analyzeChat =
-async (req, res) => {
+async (
+  req,
+  res
+) => {
 
   try {
 
@@ -51,25 +54,49 @@ async (req, res) => {
 
 };
 
+// =========================
 // GET CHAT MESSAGES
+// =========================
+
 const getMessages =
-async (req, res) => {
+async (
+  req,
+  res
+) => {
 
   try {
 
     const chat =
-      await getOrCreateUserChat(
-        req.user.id
-      );
+      await prisma.chat.findFirst({
 
-    return res.status(200).json({
+        where: {
+          userId:
+            req.user.id
+        },
 
-      success: true,
+        include: {
 
-      messages:
-        chat.messages || []
+          messages: {
 
-    });
+            orderBy: {
+              createdAt: "asc"
+            }
+
+          }
+
+        }
+
+      });
+
+    if (!chat) {
+
+      return res.status(200).json([]);
+
+    }
+
+    return res.status(200).json(
+      chat.messages
+    );
 
   } catch (error) {
 

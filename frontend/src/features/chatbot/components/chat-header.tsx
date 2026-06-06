@@ -31,7 +31,7 @@ export function ChatHeader() {
       >
         Describe your symptoms clearly
       </p>
-
+y
     </header>
 
   );

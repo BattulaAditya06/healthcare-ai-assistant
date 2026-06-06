@@ -1,95 +1,153 @@
+
 import json
 import joblib
 import os
 
-from sklearn.ensemble import (
-    RandomForestClassifier
+from sklearn.linear_model import (
+    LogisticRegression
 )
 
 from sklearn.preprocessing import (
     LabelEncoder
 )
 
+# =========================
 # BASE DIRECTORY
+# =========================
+
 BASE_DIR = os.path.dirname(
     os.path.abspath(__file__)
 )
 
+# =========================
 # DATASET PATH
+# =========================
+
 dataset_path = os.path.join(
+
     BASE_DIR,
+
     "..",
+
     "datasets",
+
     "trainingData.json"
+
 )
 
-# LOAD TRAINING DATA
-with open(dataset_path, "r") as file:
+# =========================
+# LOAD DATA
+# =========================
 
-    training_data = json.load(file)
+with open(
+    dataset_path,
+    "r"
+) as file:
 
-# PREPARE FEATURES & LABELS
+    training_data = json.load(
+        file
+    )
+
+# =========================
+# FEATURES & LABELS
+# =========================
+
 X = []
 y = []
 
 for item in training_data:
 
-    X.append(item["input"])
+    X.append(
+        item["input"]
+    )
 
-    y.append(item["output"])
+    y.append(
+        item["output"]
+    )
 
-# LABEL ENCODING
+# =========================
+# LABEL ENCODER
+# =========================
+
 label_encoder = LabelEncoder()
 
-y_encoded = label_encoder.fit_transform(y)
+y_encoded = label_encoder.fit_transform(
+    y
+)
 
-# TRAIN MODEL
-model = RandomForestClassifier(
+# =========================
+# MODEL
+# =========================
 
-    n_estimators=100,
+model = LogisticRegression(
 
-    random_state=42
+    max_iter=2000
 
 )
 
-model.fit(X, y_encoded)
+# =========================
+# TRAIN
+# =========================
 
-# MODELS DIRECTORY
+model.fit(
+    X,
+    y_encoded
+)
+
+# =========================
+# SAVE
+# =========================
+
 models_dir = os.path.join(
+
     BASE_DIR,
+
     "..",
+
     "models"
+
 )
 
 os.makedirs(
+
     models_dir,
+
     exist_ok=True
+
 )
 
-# SAVE MODEL
+# MODEL
+
 joblib.dump(
 
     model,
 
     os.path.join(
+
         models_dir,
+
         "diseasePredictor.pkl"
+
     )
 
 )
 
-# SAVE LABEL ENCODER
+# LABEL ENCODER
+
 joblib.dump(
 
     label_encoder,
 
     os.path.join(
+
         models_dir,
+
         "labelEncoder.pkl"
+
     )
 
 )
 
 print(
-    "Model trained successfully."
+    "MODEL TRAINED SUCCESSFULLY"
 )

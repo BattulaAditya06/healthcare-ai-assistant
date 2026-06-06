@@ -1,4 +1,36 @@
 
+const recommendDoctors =
+require(
+  "../appointments/services/doctorRecommendationService"
+);
+
+// =========================
+// CONTEXT OVERLAP CHECK
+// =========================
+
+const hasContextOverlap =
+(
+  existingSymptoms = [],
+  newSymptoms = []
+) => {
+
+  return newSymptoms.some(
+
+    (symptom) =>
+
+      existingSymptoms.includes(
+        symptom
+      )
+
+  );
+
+};
+
+const detectEmergency =
+require(
+  "../utils/emergencyDetector"
+);
+
 const prisma =
 require("../config/prisma");
 
@@ -23,6 +55,30 @@ const {
   "./userChatService"
 );
 
+// =========================
+// NORMALIZE
+// =========================
+
+const normalize =
+(value = "") =>
+
+  value
+    .toLowerCase()
+    .trim();
+
+// =========================
+// UNIQUE ARRAY
+// =========================
+
+const uniqueArray =
+(array = []) =>
+
+  [...new Set(array)];
+
+// =========================
+// CHAT SERVICE
+// =========================
+
 const chatService =
 async (
   userId,
@@ -36,23 +92,19 @@ async (
       message
     );
 
-    console.log(
-      "USER ID:",
-      userId
-    );
+    // =========================
+    // GET CHAT
+    // =========================
 
-    // GET OR CREATE CHAT
     const chat =
       await getOrCreateUserChat(
         userId
       );
 
-    console.log(
-      "CHAT:",
-      chat?.id
-    );
-
+    // =========================
     // SAVE USER MESSAGE
+    // =========================
+
     await prisma.message.create({
 
       data: {
@@ -69,13 +121,13 @@ async (
 
     });
 
-    // NORMALIZED MESSAGE
     const normalizedMessage =
-      message
-        .toLowerCase()
-        .trim();
+      normalize(message);
 
+    // =========================
     // GREETINGS
+    // =========================
+
     const greetings = [
 
       "hi",
@@ -90,7 +142,6 @@ async (
 
     ];
 
-    // GREETING RESPONSE
     if (
 
       greetings.includes(
@@ -99,7 +150,7 @@ async (
 
     ) {
 
-      const greetingResponse = {
+      const response = {
 
         success: true,
 
@@ -114,7 +165,6 @@ async (
 
       };
 
-      // SAVE BOT MESSAGE
       await prisma.message.create({
 
         data: {
@@ -127,18 +177,91 @@ async (
 
           content:
             JSON.stringify(
-              greetingResponse
+              response
             )
 
         }
 
       });
 
-      return greetingResponse;
+      return response;
 
     }
 
+    // =========================
+    // RESET CHAT
+    // =========================
+
+    if (
+
+      normalizedMessage === "reset" ||
+
+      normalizedMessage === "start over"
+
+    ) {
+
+      await prisma.chat.update({
+
+        where: {
+          id: chat.id
+        },
+
+        data: {
+
+          currentSymptoms: [],
+
+          negativeSymptoms: [],
+
+          askedSymptoms: [],
+
+          lastQuestion: null
+
+        }
+
+      });
+
+      const resetResponse = {
+
+        success: true,
+
+        message:
+          "Chat symptoms and analysis have been reset. Please describe your symptoms again.",
+
+        enteredSymptoms: [],
+
+        possibleDiseases: [],
+
+        followUpQuestions: []
+
+      };
+
+      await prisma.message.create({
+
+        data: {
+
+          chatId: chat.id,
+
+          role: "assistant",
+
+          type: "text",
+
+          content:
+            JSON.stringify(
+              resetResponse
+            )
+
+        }
+
+      });
+
+      return resetResponse;
+
+    }
+
+    // =========================
     // EXISTING STATE
+    // =========================
+
     let currentSymptoms =
       chat.currentSymptoms || [];
 
@@ -148,26 +271,13 @@ async (
     let askedSymptoms =
       chat.askedSymptoms || [];
 
-    console.log(
-      "CURRENT SYMPTOMS:",
-      currentSymptoms
-    );
+    // =========================
+    // YES RESPONSE
+    // =========================
 
-    console.log(
-      "NEGATIVE SYMPTOMS:",
-      negativeSymptoms
-    );
-
-    console.log(
-      "ASKED SYMPTOMS:",
-      askedSymptoms
-    );
-
-    // HANDLE YES
     if (
 
-      normalizedMessage ===
-        "yes" &&
+      normalizedMessage === "yes" &&
 
       chat.lastQuestion
 
@@ -181,32 +291,36 @@ async (
             ""
           )
 
-          .replace(
-            "?",
-            ""
-          )
-
+          .replace("?", "")
           .trim();
 
-      if (
-        !currentSymptoms.includes(
-          symptom
-        )
-      ) {
+      negativeSymptoms =
+        negativeSymptoms.filter(
 
-        currentSymptoms.push(
-          symptom
+          (item) =>
+
+            item !== symptom
+
         );
 
-      }
+      currentSymptoms =
+        uniqueArray([
+
+          ...currentSymptoms,
+
+          symptom
+
+        ]);
 
     }
 
-    // HANDLE NO
+    // =========================
+    // NO RESPONSE
+    // =========================
+
     else if (
 
-      normalizedMessage ===
-        "no" &&
+      normalizedMessage === "no" &&
 
       chat.lastQuestion
 
@@ -220,65 +334,138 @@ async (
             ""
           )
 
-          .replace(
-            "?",
-            ""
-          )
-
+          .replace("?", "")
           .trim();
 
-      if (
-        !negativeSymptoms.includes(
-          symptom
-        )
-      ) {
+      currentSymptoms =
+        currentSymptoms.filter(
 
-        negativeSymptoms.push(
-          symptom
+          (item) =>
+
+            item !== symptom
+
         );
 
-      }
+      negativeSymptoms =
+        uniqueArray([
+
+          ...negativeSymptoms,
+
+          symptom
+
+        ]);
 
     }
 
+    // =========================
     // NORMAL MESSAGE
+    // =========================
+
     else {
 
-      const extractedSymptoms =
-        extractSymptoms(
-          message
-        );
+      const {
+
+        symptoms:
+          extractedSymptoms,
+
+        negativeSymptoms:
+          extractedNegativeSymptoms
+
+      } = extractSymptoms(
+        message
+      );
 
       console.log(
         "EXTRACTED:",
         extractedSymptoms
       );
 
-      currentSymptoms = [
+      console.log(
+        "NEGATIVE:",
+        extractedNegativeSymptoms
+      );
 
-        ...new Set([
+      // =====================
+      // MERGE NEGATIVE
+      // =====================
 
-          ...currentSymptoms,
+      negativeSymptoms =
+        uniqueArray([
 
-          ...extractedSymptoms
+          ...negativeSymptoms,
 
-        ])
+          ...extractedNegativeSymptoms
 
-      ];
+        ]);
+
+      // =====================
+      // CONTEXT OVERLAP
+      // =====================
+
+      const overlap =
+        hasContextOverlap(
+
+          currentSymptoms,
+
+          extractedSymptoms
+
+        );
+
+      // =====================
+      // NEW CONTEXT
+      // =====================
+
+      if (
+
+        currentSymptoms.length >= 2 &&
+
+        extractedSymptoms.length > 0 &&
+
+        !overlap
+
+      ) {
+
+        console.log(
+          "NEW CONTEXT DETECTED"
+        );
+
+        currentSymptoms =
+          extractedSymptoms;
+
+        negativeSymptoms = [];
+
+        askedSymptoms = [];
+
+      }
+
+      // =====================
+      // SAME CONTEXT
+      // =====================
+
+      else {
+
+        currentSymptoms =
+          uniqueArray([
+
+            ...currentSymptoms,
+
+            ...extractedSymptoms
+
+          ]);
+
+      }
 
     }
 
-    console.log(
-      "UPDATED SYMPTOMS:",
-      currentSymptoms
-    );
+    // =========================
+    // NO SYMPTOMS
+    // =========================
 
-    // NO VALID SYMPTOMS
     if (
       currentSymptoms.length === 0
     ) {
 
-      const noSymptomsResponse = {
+      const response = {
 
         success: false,
 
@@ -293,7 +480,6 @@ async (
 
       };
 
-      // SAVE BOT MESSAGE
       await prisma.message.create({
 
         data: {
@@ -306,25 +492,80 @@ async (
 
           content:
             JSON.stringify(
-              noSymptomsResponse
+              response
             )
 
         }
 
       });
 
-      return noSymptomsResponse;
+      return response;
 
     }
 
-    console.log(
-      "RUNNING PREDICTION"
-    );
+    // =========================
+    // EMERGENCY CHECK
+    // =========================
 
-    // PREDICTION
+    const isEmergency =
+      detectEmergency(
+        currentSymptoms
+      );
+
+    if (isEmergency) {
+
+      const emergencyResponse = {
+
+        success: true,
+
+        emergency: true,
+
+        message:
+          "Your symptoms may indicate a medical emergency. Please seek immediate medical attention immediately.",
+
+        enteredSymptoms:
+          currentSymptoms,
+
+        possibleDiseases: [],
+
+        followUpQuestions: []
+
+      };
+
+      await prisma.message.create({
+
+        data: {
+
+          chatId: chat.id,
+
+          role: "assistant",
+
+          type: "emergency",
+
+          content:
+            JSON.stringify(
+              emergencyResponse
+            )
+
+        }
+
+      });
+
+      return emergencyResponse;
+
+    }
+
+    // =========================
+    // PREDICTIONS
+    // =========================
+
     const predictions =
       await hybridPredictor(
-        currentSymptoms
+
+        currentSymptoms,
+
+        negativeSymptoms
+
       );
 
     console.log(
@@ -332,7 +573,29 @@ async (
       predictions
     );
 
+// =========================
+// DOCTOR RECOMMENDATIONS
+// =========================
+
+const recommendedDoctors =
+
+  recommendDoctors(
+
+    predictions?.[0]
+      ?.department
+
+  ) || [];
+
+console.log(
+  "RECOMMENDED DOCTORS:",
+  recommendedDoctors
+);
+
+
+    // =========================
     // FOLLOWUPS
+    // =========================
+
     const followUpQuestions =
       rankFollowUpQuestions(
 
@@ -346,19 +609,12 @@ async (
 
       );
 
-    console.log(
-      "FOLLOWUPS:",
-      followUpQuestions
-    );
-
     let followUpQuestion =
       null;
 
     if (
 
-      followUpQuestions &&
-
-      followUpQuestions.length
+      followUpQuestions.length > 0
 
     ) {
 
@@ -367,12 +623,66 @@ async (
 
     }
 
+    // =========================
+    // LOW CONFIDENCE
+    // =========================
+
+    const topPrediction =
+      predictions[0];
+
+    if (
+
+      topPrediction &&
+
+      topPrediction.confidence < 25 &&
+
+      followUpQuestions.length === 0
+
+    ) {
+
+      const lowConfidenceResponse = {
+
+        success: true,
+
+        message:
+          "The available symptoms are insufficient for a reliable prediction. Please provide additional symptoms.",
+
+        enteredSymptoms:
+          currentSymptoms,
+
+        possibleDiseases:
+          predictions,
+
+        followUpQuestions
+
+      };
+
+      await prisma.message.create({
+
+        data: {
+
+          chatId: chat.id,
+
+          role: "assistant",
+
+          type: "text",
+
+          content:
+            JSON.stringify(
+              lowConfidenceResponse
+            )
+
+        }
+
+      });
+
+      return lowConfidenceResponse;
+
+    }
+
+    // =========================
     // UPDATE ASKED
-    const updatedAskedSymptoms = [
-
-      ...askedSymptoms
-
-    ];
+    // =========================
 
     if (
       followUpQuestion
@@ -386,35 +696,24 @@ async (
             ""
           )
 
-          .replace(
-            "?",
-            ""
-          )
-
+          .replace("?", "")
           .trim();
 
-      if (
+      askedSymptoms =
+        uniqueArray([
 
-        !updatedAskedSymptoms.includes(
+          ...askedSymptoms,
+
           symptom
-        )
 
-      ) {
-
-        updatedAskedSymptoms.push(
-          symptom
-        );
-
-      }
+        ]);
 
     }
 
-    console.log(
-      "UPDATED ASKED:",
-      updatedAskedSymptoms
-    );
+    // =========================
+    // SAVE CHAT STATE
+    // =========================
 
-    // UPDATE CHAT MEMORY
     await prisma.chat.update({
 
       where: {
@@ -427,8 +726,7 @@ async (
 
         negativeSymptoms,
 
-        askedSymptoms:
-          updatedAskedSymptoms,
+        askedSymptoms,
 
         lastQuestion:
           followUpQuestion
@@ -437,28 +735,32 @@ async (
 
     });
 
+    // =========================
     // FINAL RESPONSE
-    const response = {
+    // =========================
 
-      success: true,
+const response = {
 
-      enteredSymptoms:
-        currentSymptoms,
+  success: true,
 
-      possibleDiseases:
-        predictions,
+  enteredSymptoms:
+    currentSymptoms,
 
-      followUpQuestions:
-        followUpQuestions || []
+  possibleDiseases:
+    predictions,
 
-    };
+  followUpQuestions:
+    followUpQuestions || [],
 
-    console.log(
-      "FINAL RESPONSE:",
-      response
-    );
+  recommendedDoctors
 
+};
+
+
+    // =========================
     // SAVE BOT MESSAGE
+    // =========================
+
     await prisma.message.create({
 
       data: {

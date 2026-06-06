@@ -1,8 +1,13 @@
+
 const prisma =
-require("../config/prisma");
+require(
+  "../config/prisma"
+);
 
 const getOrCreateUserChat =
-async (userId) => {
+async (
+  userId
+) => {
 
   let chat =
     await prisma.chat.findFirst({
@@ -11,12 +16,13 @@ async (userId) => {
         userId
       },
 
-      include: {
-        messages: true
+      orderBy: {
+        createdAt: "desc"
       }
 
     });
 
+  // CREATE NEW CHAT
   if (!chat) {
 
     chat =
@@ -32,10 +38,6 @@ async (userId) => {
 
           askedSymptoms: []
 
-        },
-
-        include: {
-          messages: true
         }
 
       });

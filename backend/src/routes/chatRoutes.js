@@ -1,14 +1,8 @@
-
 const express =
 require("express");
 
 const router =
-express.Router();
-
-const authMiddleware =
-require(
-  "../middleware/authMiddleware"
-);
+  express.Router();
 
 const {
 
@@ -20,27 +14,30 @@ const {
   "../controllers/chatController"
 );
 
-// SEND CHAT MESSAGE
-router.post(
-
-  "/",
-
-  authMiddleware,
-
-  analyzeChat
-
+const protect =
+require(
+  "../middleware/authMiddleware"
 );
 
+// =========================
+// SEND MESSAGE
+// =========================
+
+router.post(
+  "/",
+  protect,
+  analyzeChat
+);
+
+// =========================
 // GET CHAT HISTORY
+// =========================
+
 router.get(
-
   "/messages",
-
-  authMiddleware,
-
+  protect,
   getMessages
-
 );
 
 module.exports =
-router;
+  router;

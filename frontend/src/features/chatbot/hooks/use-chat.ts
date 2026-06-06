@@ -1,26 +1,47 @@
+"use client";
+
 import {
+
   useEffect,
+
   useState
+
 } from "react";
 
 import {
-  sendChatMessage,
-  getChatMessages
-} from "@/shared/services/chatbot-service";
 
-import { useChatStore }
-from "../store/chat-store";
+  useDiagnosticStore
+
+} from "@/shared/store/diagnostic-store";
 
 import {
-  ChatResponse,
-  StoredMessage,
-  ChatMessageType
+
+  sendChatMessage,
+
+  getChatMessages
+
+} from "@/shared/services/chatbot-service";
+
+import {
+
+  useChatStore
+
+} from "../store/chat-store";
+
+import {
+
+  ChatResponse
+
 } from "../types/chat";
 
 export function useChat() {
 
   const [loading, setLoading] =
     useState(false);
+
+  // =====================
+  // CHAT STORE
+  // =====================
 
   const {
 
@@ -32,6 +53,34 @@ export function useChat() {
 
   } = useChatStore();
 
+  // =====================
+  // DIAGNOSTIC STORE
+  // =====================
+
+  const {
+
+    setSymptoms,
+
+    setPredictions,
+
+    setRiskLevel,
+
+    setDepartment,
+
+    addReasoning,
+
+    setEmergency,
+
+    setAnalysisSteps,
+
+    setIsAnalyzing
+
+  } = useDiagnosticStore();
+
+  // =====================
+  // LOAD CHAT HISTORY
+  // =====================
+
   useEffect(() => {
 
     const loadMessages =
@@ -42,29 +91,49 @@ export function useChat() {
           const response =
             await getChatMessages();
 
-          const formattedMessages:
-            ChatMessageType[] =
-
-            response.messages.map(
+          const formattedMessages =
+            response.map(
 
               (
-                message:
-                  StoredMessage
-              ) => ({
+                message: {
 
-                id:
-                  message.id,
+                  content: string;
 
-                role:
-                  message.role,
+                  [key: string]:
+                    unknown;
 
-                type:
-                  message.type,
+                }
 
-                content:
-                  message.content
+              ) => {
 
-              })
+                let parsedContent:
+                  unknown =
+                    message.content;
+
+                try {
+
+                  parsedContent =
+                    JSON.parse(
+                      message.content
+                    );
+
+                } catch {
+
+                  parsedContent =
+                    message.content;
+
+                }
+
+                return {
+
+                  ...message,
+
+                  content:
+                    parsedContent
+
+                };
+
+              }
 
             );
 
@@ -74,7 +143,9 @@ export function useChat() {
 
         } catch (error) {
 
-          console.log(error);
+          console.log(
+            error
+          );
 
         }
 
@@ -84,6 +155,10 @@ export function useChat() {
 
   }, [setMessages]);
 
+  // =====================
+  // SEND MESSAGE
+  // =====================
+
   const sendMessage =
     async (
       message: string
@@ -92,6 +167,14 @@ export function useChat() {
       try {
 
         setLoading(true);
+
+        setIsAnalyzing(true);
+
+        setAnalysisSteps([]);
+
+        // =====================
+        // USER MESSAGE
+        // =====================
 
         addMessage({
 
@@ -109,6 +192,55 @@ export function useChat() {
 
         });
 
+        // =====================
+        // STREAMING STEPS
+        // =====================
+
+        const steps = [
+
+          "Analyzing symptoms...",
+
+          "Checking disease patterns...",
+
+          "Evaluating emergency indicators...",
+
+          "Calculating diagnostic confidence...",
+
+          "Generating predictions..."
+
+        ];
+
+        for (
+          const step of steps
+        ) {
+
+          setAnalysisSteps([
+
+            ...useDiagnosticStore
+              .getState()
+              .analysisSteps,
+
+            step
+
+          ]);
+
+          await new Promise(
+
+            (resolve) =>
+
+              setTimeout(
+                resolve,
+                700
+              )
+
+          );
+
+        }
+
+        // =====================
+        // API RESPONSE
+        // =====================
+
         const response:
           ChatResponse =
 
@@ -117,6 +249,43 @@ export function useChat() {
             message
 
           });
+
+        console.log(
+          "API RESPONSE:",
+          response
+        );
+
+        const apiData =
+          response;
+
+        // =====================
+        // FULL RESET
+        // =====================
+
+        useDiagnosticStore.setState({
+
+          symptoms: [],
+
+          predictions: [],
+
+          riskLevel: "Low",
+
+          department:
+            "General Medicine",
+
+          reasoning: [],
+
+          emergency: false,
+
+          analysisSteps: [],
+
+          isAnalyzing: false
+
+        });
+
+        // =====================
+        // ASSISTANT MESSAGE
+        // =====================
 
         addMessage({
 
@@ -130,13 +299,165 @@ export function useChat() {
             "diagnosis",
 
           content:
-            response
+            apiData
 
         });
 
+        // =====================
+        // SYMPTOMS
+        // =====================
+
+        setSymptoms(
+
+          apiData.enteredSymptoms || []
+
+        );
+
+        // =====================
+        // PREDICTIONS
+        // =====================
+
+        setPredictions(
+
+          (
+            apiData
+              .possibleDiseases || []
+
+          ).map(
+
+            (
+              disease: {
+
+                disease: string;
+
+                confidence: number;
+
+                riskLevel: string;
+
+                department: string;
+
+              }
+
+            ) => ({
+
+              disease:
+                disease.disease,
+
+              confidence:
+                disease.confidence,
+
+              riskLevel:
+                disease.riskLevel,
+
+              department:
+                disease.department
+
+            })
+
+          )
+
+        );
+
+        // =====================
+        // TOP PREDICTION
+        // =====================
+
+        const topPrediction =
+
+          apiData
+            ?.possibleDiseases?.[0];
+
+        if (topPrediction) {
+
+          // ===================
+          // SMART RISK
+          // ===================
+
+          const calculatedRisk =
+
+            topPrediction.confidence >= 35
+
+              ? topPrediction.riskLevel
+
+              : "Low";
+
+          setRiskLevel(
+            calculatedRisk
+          );
+
+          setDepartment(
+
+            topPrediction.department ||
+
+            "General Medicine"
+
+          );
+
+        }
+
+        // =====================
+        // AI REASONING
+        // =====================
+
+        addReasoning(
+          "Symptoms analyzed"
+        );
+
+        addReasoning(
+          "Disease confidence recalculated"
+        );
+
+        addReasoning(
+          "Risk evaluation completed"
+        );
+
+        // =====================
+        // SMART EMERGENCY
+        // =====================
+
+        const emergencyDetected =
+
+          apiData
+            ?.possibleDiseases
+            ?.some(
+
+              (
+                disease: {
+
+                  riskLevel: string;
+
+                  confidence: number;
+
+                  emergencyMatch?: boolean;
+
+                }
+
+              ) =>
+
+                (
+
+                  disease
+                    .riskLevel
+                    ?.toLowerCase() ===
+                  "high"
+
+                ) &&
+
+                disease.confidence >= 35 &&
+
+                disease.emergencyMatch
+
+            );
+
+        setEmergency(
+          emergencyDetected || false
+        );
+
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          error
+        );
 
         addMessage({
 
@@ -157,6 +478,8 @@ export function useChat() {
       } finally {
 
         setLoading(false);
+
+        setIsAnalyzing(false);
 
       }
 

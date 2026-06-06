@@ -1,29 +1,49 @@
+import type { Metadata } from "next";
+
 import "./globals.css";
 
-import { ThemeProvider } from "@/providers/theme-provider";
-import { QueryProvider } from "@/providers/query-provider";
+import {
+  TooltipProvider
+} from "@/components/ui/tooltip";
 
-import { Toaster } from "sonner";
+export const metadata:
+Metadata = {
+
+  title:
+    "Healthcare AI Assistant",
+
+  description:
+    "AI-powered medical diagnostic platform"
+
+};
 
 export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <ThemeProvider>
-          <QueryProvider>
-            {children}
 
-            <Toaster
-              richColors
-              position="top-right"
-            />
-          </QueryProvider>
-        </ThemeProvider>
+  children
+
+}: Readonly<{
+
+  children:
+    React.ReactNode;
+
+}>) {
+
+  return (
+
+    <html lang="en">
+
+      <body>
+
+        <TooltipProvider>
+
+          {children}
+
+        </TooltipProvider>
+
       </body>
+
     </html>
+
   );
+
 }

@@ -4,28 +4,45 @@ require(
   "./datasets/diseases.json"
 );
 
+// =========================
+// SAFE FALLBACKS
+// =========================
+
 const SAFE_FALLBACKS = [
 
   "fatigue",
 
-  "headache",
-
-  "body pain",
-
   "nausea",
 
-  "sore throat",
+  "dizziness",
 
   "vomiting",
 
-  "dizziness"
+  "body pain",
+
+  "sore throat"
 
 ];
+
+// =========================
+// NORMALIZE
+// =========================
+
+const normalize =
+(text = "") =>
+
+  text
+    .toLowerCase()
+    .trim();
+
+// =========================
+// QUESTION RANKER
+// =========================
 
 const rankFollowUpQuestions =
 (
 
-  predictions,
+  predictions = [],
 
   currentSymptoms = [],
 
@@ -35,49 +52,45 @@ const rankFollowUpQuestions =
 
 ) => {
 
-  // NORMALIZE
   const normalizedCurrent =
     currentSymptoms.map(
-      (symptom) =>
-
-        symptom
-          .toLowerCase()
-          .trim()
+      normalize
     );
 
   const normalizedNegative =
     negativeSymptoms.map(
-      (symptom) =>
-
-        symptom
-          .toLowerCase()
-          .trim()
+      normalize
     );
 
   const normalizedAsked =
     askedSymptoms.map(
-      (symptom) =>
-
-        symptom
-          .toLowerCase()
-          .trim()
+      normalize
     );
 
   const symptomScores = {};
 
-  // TOP PREDICTIONS
-  const topDiseases =
+  // =========================
+  // TOP DISEASES ONLY
+  // =========================
+
+  const topPredictions =
     predictions.slice(0, 3);
 
-  topDiseases.forEach(
-    (prediction, index) => {
+  topPredictions.forEach(
+
+    (
+      prediction,
+      index
+    ) => {
 
       const disease =
         diseases.find(
+
           (d) =>
 
             d.name ===
             prediction.disease
+
         );
 
       if (!disease) {
@@ -86,7 +99,11 @@ const rankFollowUpQuestions =
 
       }
 
-      const allSymptoms = [
+      // =========================
+      // DISEASE SYMPTOMS
+      // =========================
+
+      const diseaseSymptoms = [
 
         ...(disease.primarySymptoms || []),
 
@@ -94,13 +111,14 @@ const rankFollowUpQuestions =
 
       ];
 
-      allSymptoms.forEach(
+      diseaseSymptoms.forEach(
+
         (symptom) => {
 
           const normalized =
-            symptom
-              .toLowerCase()
-              .trim();
+            normalize(
+              symptom
+            );
 
           // SKIP EXISTING
           if (
@@ -141,6 +159,7 @@ const rankFollowUpQuestions =
 
           }
 
+          // INIT
           if (
             !symptomScores[
               symptom
@@ -153,32 +172,54 @@ const rankFollowUpQuestions =
 
           }
 
-          // WEIGHT
+          // =========================
+          // WEIGHTING
+          // =========================
+
+          const confidenceWeight =
+            prediction.confidence / 10;
+
+          const rankingWeight =
+            3 - index;
+
           symptomScores[
             symptom
-          ] += (3 - index);
+          ] +=
+
+            confidenceWeight *
+
+            rankingWeight;
 
         }
+
       );
 
     }
+
   );
 
+  // =========================
   // SORT
+  // =========================
+
   const rankedSymptoms =
+
     Object.entries(
       symptomScores
     )
 
       .sort(
         (a, b) =>
+
           b[1] - a[1]
       )
 
       .map(
+
         ([symptom]) =>
 
           symptom
+
       );
 
   console.log(
@@ -186,7 +227,10 @@ const rankFollowUpQuestions =
     rankedSymptoms
   );
 
-  // PRIMARY FOLLOWUP
+  // =========================
+  // BEST FOLLOWUP
+  // =========================
+
   if (
     rankedSymptoms.length > 0
   ) {
@@ -199,15 +243,17 @@ const rankFollowUpQuestions =
 
   }
 
+  // =========================
   // SAFE FALLBACKS
-  const availableFallback =
+  // =========================
+
+  const fallback =
     SAFE_FALLBACKS.find(
+
       (symptom) => {
 
         const normalized =
-          symptom
-            .toLowerCase()
-            .trim();
+          normalize(symptom);
 
         return (
 
@@ -226,21 +272,23 @@ const rankFollowUpQuestions =
         );
 
       }
+
     );
 
-  if (
-    availableFallback
-  ) {
+  if (fallback) {
 
     return [
 
-      `Do you also have ${availableFallback}?`
+      `Do you also have ${fallback}?`
 
     ];
 
   }
 
+  // =========================
   // NOTHING LEFT
+  // =========================
+
   return [];
 
 };

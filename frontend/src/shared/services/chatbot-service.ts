@@ -1,12 +1,12 @@
-import { apiClient }
-from "@/shared/lib/api-client";
+
+import { apiClient } from "@/shared/lib/api-client";
 
 export const sendChatMessage =
-async (data: {
-
-  message: string;
-
-}) => {
+async (
+  data: {
+    message: string;
+  }
+) => {
 
   const response =
     await apiClient.post(

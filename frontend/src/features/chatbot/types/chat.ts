@@ -14,17 +14,40 @@ export interface DiseasePrediction {
 
 export interface ChatResponse {
 
-  message: string;
+  success: boolean;
 
   enteredSymptoms: string[];
 
-  possibleDiseases:
-    DiseasePrediction[];
+  followUpQuestions: string[];
 
-  followUpQuestions:
-    string[];
+  possibleDiseases: {
+
+    disease: string;
+
+    confidence: number;
+
+    riskLevel: string;
+
+    department: string;
+
+    recommendations?: string[];
+
+  }[];
+
+  recommendedDoctors: {
+
+    id: number;
+
+    name: string;
+
+    department: string;
+
+    experience: string;
+
+  }[];
 
 }
+
 
 export interface StoredMessage {
 

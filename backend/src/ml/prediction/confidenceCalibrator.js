@@ -1,19 +1,26 @@
+
 const calibrateConfidence =
 (
-  predictions,
-  symptomCount
+  predictions = [],
+
+  symptomCount = 0
 ) => {
 
   return predictions.map(
     (prediction) => {
 
-      let multiplier = 1;
+      let confidence =
+        prediction.confidence;
+
+      // =====================
+      // LOW SYMPTOM PENALTY
+      // =====================
 
       if (
         symptomCount <= 1
       ) {
 
-        multiplier = 0.35;
+        confidence *= 0.55;
 
       }
 
@@ -21,27 +28,72 @@ const calibrateConfidence =
         symptomCount === 2
       ) {
 
-        multiplier = 0.55;
+        confidence *= 0.75;
 
       }
 
-      else if (
-        symptomCount === 3
+      // =====================
+      // HIGH CONFIDENCE BOOST
+      // =====================
+
+      if (
+        confidence >= 60
       ) {
 
-        multiplier = 0.75;
+        confidence *= 1.08;
 
       }
 
-      else {
+      // =====================
+      // EMERGENCY BOOST
+      // =====================
 
-        multiplier = 1;
+      if (
+        prediction.emergencyMatch
+      ) {
+
+        confidence += 8;
 
       }
 
-      const calibrated =
-        prediction.confidence *
-        multiplier;
+      // =====================
+      // SIGNATURE BOOST
+      // =====================
+
+      const matchedSymptoms =
+        prediction.matchedSymptoms || [];
+
+      const hasSignature =
+
+        matchedSymptoms.includes(
+          "loss of taste"
+        ) ||
+
+        matchedSymptoms.includes(
+          "loss of smell"
+        );
+
+      if (hasSignature) {
+
+        confidence += 18;
+
+      }
+
+      // =====================
+      // NORMALIZATION
+      // =====================
+
+      confidence =
+        Math.min(
+          confidence,
+          95
+        );
+
+      confidence =
+        Math.max(
+          confidence,
+          5
+        );
 
       return {
 
@@ -49,16 +101,20 @@ const calibrateConfidence =
 
         confidence:
           Number(
-
-            calibrated.toFixed(
-              1
-            )
-
+            confidence.toFixed(1)
           )
 
       };
 
     }
+
+  )
+
+  .sort(
+    (a, b) =>
+
+      b.confidence -
+      a.confidence
   );
 
 };

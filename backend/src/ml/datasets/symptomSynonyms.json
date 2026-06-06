@@ -57,6 +57,38 @@
   "feeling weak": "fatigue",
   "breathing issue": "shortness of breath",
   "shivering": "chills",
-  "high temperature": "fever"
+  "high temperature": "fever",
 
+"headache": [
+  "head pain",
+  "migraine",
+  "head hurts",
+  "head hurting"
+],
+
+
+  "fatigue": [
+    "tired",
+    "weakness",
+    "exhausted"
+  ],
+
+  "nausea": [
+    "feeling sick",
+    "queasy"
+  ],
+
+  "vomiting": [
+    "throwing up",
+    "vomit"
+  ],
+
+ 
+"wrist pain": [
+  "wristpain",
+  "pain in wrist",
+  "wrist hurting",
+  "wrist ache"
+]
 }
+

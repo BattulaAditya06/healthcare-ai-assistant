@@ -1,0 +1,148 @@
+[
+  {
+    "disease": "Common Cold",
+    "symptoms": [
+      "cough",
+      "runny nose",
+      "sneezing"
+    ]
+  },
+
+  {
+    "disease": "Flu",
+    "symptoms": [
+      "fever",
+      "cough",
+      "headache",
+      "fatigue"
+    ]
+  },
+
+  {
+    "disease": "COVID-19",
+    "symptoms": [
+      "fever",
+      "cough",
+      "loss of taste",
+      "shortness of breath",
+      "fatigue"
+    ]
+  },
+
+  {
+    "disease": "Dengue",
+    "symptoms": [
+      "fever",
+      "headache",
+      "body pain",
+      "fatigue"
+    ]
+  },
+
+  {
+    "disease": "Malaria",
+    "symptoms": [
+      "fever",
+      "headache",
+      "fatigue"
+    ]
+  },
+
+  {
+    "disease": "Food Poisoning",
+    "symptoms": [
+      "vomiting",
+      "nausea",
+      "diarrhea",
+      "stomach pain"
+    ]
+  },
+
+  {
+    "disease": "Pneumonia",
+    "symptoms": [
+      "fever",
+      "cough",
+      "shortness of breath",
+      "fatigue"
+    ]
+  },
+
+  {
+    "disease": "Asthma",
+    "symptoms": [
+      "shortness of breath",
+      "cough"
+    ]
+  },
+
+  {
+    "disease": "Migraine",
+    "symptoms": [
+      "headache",
+      "vomiting",
+      "nausea",
+      "dizziness"
+    ]
+  },
+
+  {
+    "disease": "Sinusitis",
+    "symptoms": [
+      "headache",
+      "runny nose",
+      "facial pain",
+      "nasal congestion"
+    ]
+  },
+
+  {
+    "disease": "Tonsillitis",
+    "symptoms": [
+      "fever",
+      "headache",
+      "sore throat",
+      "cough"
+    ]
+  },
+
+  {
+    "disease": "Acidity",
+    "symptoms": [
+      "acidity",
+      "indigestion",
+      "nausea"
+    ]
+  },
+
+  {
+    "disease": "Appendicitis",
+    "symptoms": [
+      "fever",
+      "vomiting",
+      "nausea",
+      "stomach pain",
+      "right abdomen pain"
+    ]
+  },
+
+  {
+    "disease": "Dehydration",
+    "symptoms": [
+      "headache",
+      "fatigue",
+      "dizziness",
+      "dehydration"
+    ]
+  },
+
+  {
+    "disease": "Stress",
+    "symptoms": [
+      "headache",
+      "fatigue",
+      "stress",
+      "anxiety"
+    ]
+  }
+]

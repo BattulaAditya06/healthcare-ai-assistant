@@ -1,9 +1,7 @@
-import { DiseaseCard }
-from "./disease-card";
 
-import {
-  FollowUpActions
-} from "./follow-up-actions";
+import { DiseaseCard } from "./disease-card";
+
+import { FollowUpActions } from "./follow-up-actions";
 
 import {
 
@@ -17,13 +15,11 @@ import {
 
 interface ChatMessageProps {
 
-  message:
-    ChatMessageType;
+  message: ChatMessageType;
 
-  sendMessage:
-    (
-      message: string
-    ) => Promise<void>;
+  sendMessage: (
+    message: string
+  ) => Promise<void>;
 
 }
 
@@ -38,7 +34,10 @@ export function ChatMessage({
   const isUser =
     message.role === "user";
 
+  // =========================
   // USER MESSAGE
+  // =========================
+
   if (isUser) {
 
     return (
@@ -64,7 +63,9 @@ export function ChatMessage({
 
               ? message.content
 
-              : message.content.message
+              : (
+                  message.content as ChatResponse
+                ).message
 
           }
 
@@ -76,7 +77,10 @@ export function ChatMessage({
 
   }
 
+  // =========================
   // ASSISTANT TEXT MESSAGE
+  // =========================
+
   if (
     message.type === "text"
   ) {
@@ -96,7 +100,18 @@ export function ChatMessage({
           "
         >
 
-          {message.content}
+          {
+
+            typeof message.content ===
+            "string"
+
+              ? message.content
+
+              : JSON.stringify(
+                  message.content
+                )
+
+          }
 
         </div>
 
@@ -106,7 +121,10 @@ export function ChatMessage({
 
   }
 
-  // ASSISTANT DIAGNOSIS MESSAGE
+  // =========================
+  // DIAGNOSIS MESSAGE
+  // =========================
+
   const data =
     message.content as ChatResponse;
 
@@ -125,6 +143,7 @@ export function ChatMessage({
       >
 
         {/* MAIN MESSAGE */}
+
         <div
           className="
             rounded-2xl
@@ -161,6 +180,7 @@ export function ChatMessage({
               <div className="flex flex-wrap gap-2">
 
                 {data.enteredSymptoms.map(
+
                   (
                     symptom: string,
                     index: number
@@ -184,6 +204,7 @@ export function ChatMessage({
                     </span>
 
                   )
+
                 )}
 
               </div>
@@ -195,6 +216,7 @@ export function ChatMessage({
         </div>
 
         {/* DISEASE CARDS */}
+
         {data.possibleDiseases
           ?.length > 0 && (
 
@@ -206,6 +228,7 @@ export function ChatMessage({
           >
 
             {data.possibleDiseases.map(
+
               (
                 disease:
                   DiseasePrediction,
@@ -240,6 +263,7 @@ export function ChatMessage({
                 />
 
               )
+
             )}
 
           </div>
@@ -247,6 +271,7 @@ export function ChatMessage({
         )}
 
         {/* FOLLOW-UP QUESTIONS */}
+
         {data.followUpQuestions
           ?.length > 0 && (
 
@@ -273,6 +298,7 @@ export function ChatMessage({
             <div className="flex flex-col gap-2">
 
               {data.followUpQuestions.map(
+
                 (
                   question: string,
                   index: number
@@ -291,6 +317,7 @@ export function ChatMessage({
                   />
 
                 )
+
               )}
 
             </div>

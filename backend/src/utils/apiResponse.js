@@ -1,3 +1,4 @@
+
 const successResponse = (
   res,
   data = {},
@@ -11,7 +12,7 @@ const successResponse = (
 
     message,
 
-    data
+    ...data
 
   });
 

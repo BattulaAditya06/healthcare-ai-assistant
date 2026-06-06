@@ -1,382 +1,284 @@
-const diseases = require(
-  "../datasets/diseases.json"
-);
-const calibrateConfidence =
-require(
-  "./confidenceCalibrator"
-);
-const mlPredictor = require(
-  "./mlPredictor"
-);
+
+const axios = require("axios");
+
+const predictDisease =
+require("./predictDisease");
+
+const masterSymptoms =
+require("../datasets/masterSymptoms.json");
+
+// =========================
+// CREATE VECTOR
+// =========================
+
+const createVector =
+(symptoms = []) => {
+
+  return masterSymptoms.map(
+
+    (symptom) =>
+
+      symptoms.includes(
+        symptom
+      )
+
+        ? 1
+
+        : 0
+
+  );
+
+};
+
+// =========================
+// MERGE PREDICTIONS
+// =========================
+
+const mergePredictions =
+(
+  rulePredictions = [],
+
+  mlPrediction = null
+) => {
+
+  if (
+    !mlPrediction
+  ) {
+
+    return rulePredictions;
+
+  }
+
+  return rulePredictions.map(
+
+    (prediction) => {
+
+      // =====================
+      // MATCHED DISEASE
+      // =====================
+
+      if (
+
+        prediction.disease ===
+
+        mlPrediction.disease
+
+      ) {
+
+        const mergedConfidence =
+
+          (
+
+            prediction.confidence *
+
+            0.45
+
+          ) +
+
+          (
+
+            mlPrediction.confidence *
+
+            0.55
+
+          );
+
+        return {
+
+          ...prediction,
+
+          confidence:
+            Number(
+              mergedConfidence.toFixed(1)
+            ),
+
+          predictionType:
+            "Hybrid AI Prediction"
+
+        };
+
+      }
+
+      // =====================
+      // NON-ML MATCH
+      // =====================
+
+      return {
+
+        ...prediction,
+
+        predictionType:
+          "Weighted Prediction"
+
+      };
+
+    }
+
+  )
+
+  .sort(
+    (a, b) =>
+
+      b.confidence -
+      a.confidence
+  );
+
+};
+
+// =========================
+// HYBRID PREDICTOR
+// =========================
 
 const hybridPredictor =
 async (
 
-  symptoms,
+  symptoms = [],
 
   negativeSymptoms = []
 
 ) => {
 
+  // =====================
+  // RULE ENGINE
+  // =====================
+
+  const rulePredictions =
+    predictDisease(
+
+      symptoms,
+
+      negativeSymptoms
+
+    );
+
   try {
 
-    // ML RESULTS
-    const mlResults =
-      await mlPredictor(
+    // =====================
+    // VECTOR
+    // =====================
+
+    const vector =
+      createVector(
         symptoms
       );
 
-    // FALLBACK WEIGHTED MATCHING
-    const fallbackResults =
-      diseases
-        .map((disease) => {
+    console.log(
+      "VECTOR:",
+      vector
+    );
 
-          // PRIMARY SYMPTOMS
-          const matchedPrimary =
-            symptoms.filter(
-              (symptom) =>
-
-                disease.primarySymptoms?.includes(
-                  symptom
-                )
-            );
-
-          // SECONDARY SYMPTOMS
-          const matchedSecondary =
-            symptoms.filter(
-              (symptom) =>
-
-                disease.secondarySymptoms?.includes(
-                  symptom
-                )
-            );
-
-          // EMERGENCY SYMPTOMS
-          const matchedEmergency =
-            symptoms.filter(
-              (symptom) =>
-
-                disease.emergencySymptoms?.includes(
-                  symptom
-                )
-            );
-
-          // WEIGHTED SCORE
-          const primaryScore =
-            matchedPrimary.length * 70;
-
-          const secondaryScore =
-            matchedSecondary.length * 10;
-
-          const emergencyScore =
-            matchedEmergency.length * 100;
-
-          const totalScore =
-            primaryScore +
-            secondaryScore +
-            emergencyScore;
-
-          // MAX POSSIBLE SCORE
-          const maxPossibleScore =
-            (
-              (disease.primarySymptoms?.length || 0) * 70
-            ) +
-            (
-              (disease.secondarySymptoms?.length || 0) * 10
-            ) +
-            (
-              (disease.emergencySymptoms?.length || 0) * 100
-            );
-
-          // NORMALIZED CONFIDENCE
-          const normalizedConfidence =
-            maxPossibleScore > 0
-              ? (
-                  totalScore /
-                  maxPossibleScore
-                ) * 100
-              : 0;
-
-          return {
-
-            disease:
-              disease.name,
-
-            confidence:
-              Number(
-                normalizedConfidence.toFixed(1)
-              ),
-
-            predictionType:
-              mlResults &&
-              mlResults.length > 0
-                ? "Hybrid ML Prediction"
-                : "Weighted Fallback Prediction",
-
-            matchedSymptoms: [
-              ...matchedPrimary,
-              ...matchedSecondary,
-              ...matchedEmergency
-            ],
-
-            emergencyMatch:
-              matchedEmergency.length > 0,
-
-            riskLevel:
-              disease.riskLevel,
-
-            department:
-              disease.department,
-
-            recommendations:
-              disease.recommendations
-
-          };
-
-        })
-
-        .filter(
-          (disease) =>
-            disease.confidence >= 20
-        )
-
-        .sort(
-          (a, b) =>
-            b.confidence -
-            a.confidence
-        )
-
-        .slice(0, 5);
-
-    // IF ML RESULTS EXIST
-    if (
-      mlResults &&
-      mlResults.length > 0
-    ) {
-
-      const enrichedResults =
-        mlResults.map(
-          (prediction) => {
-
-            const diseaseData =
-              diseases.find(
-
-                (disease) =>
-
-                  disease.name ===
-                  prediction.disease
-
-              );
-
-            // IF NO DATA FOUND
-            if (!diseaseData) {
-
-              return {
-
-                disease:
-                  prediction.disease,
-
-                confidence:
-                  prediction.confidence,
-
-                predictionType:
-                  "ML Prediction",
-
-                matchedSymptoms:
-                  symptoms,
-
-                emergencyMatch:
-                  false,
-
-                riskLevel:
-                  "unknown",
-
-                department:
-                  "General",
-
-                recommendations:
-                  []
-
-              };
-
-            }
-
-            // COMBINED SYMPTOMS
-            const allSymptoms = [
-
-              ...(diseaseData.primarySymptoms || []),
-
-              ...(diseaseData.secondarySymptoms || []),
-
-              ...(diseaseData.emergencySymptoms || [])
-
-            ];
-
-            // MATCHED SYMPTOMS
-            const matchedSymptoms =
-              symptoms.filter(
-                (symptom) =>
-
-                  allSymptoms.includes(
-                    symptom
-                  )
-              );
-
-            // PRIMARY MATCH
-            const matchedPrimary =
-              symptoms.filter(
-                (symptom) =>
-
-                  diseaseData.primarySymptoms?.includes(
-                    symptom
-                  )
-              );
-
-            // SECONDARY MATCH
-            const matchedSecondary =
-              symptoms.filter(
-                (symptom) =>
-
-                  diseaseData.secondarySymptoms?.includes(
-                    symptom
-                  )
-              );
-
-            // EMERGENCY MATCH
-            const matchedEmergency =
-              symptoms.filter(
-                (symptom) =>
-
-                  diseaseData.emergencySymptoms?.includes(
-                    symptom
-                  )
-              );
-
-            // WEIGHTED SCORE
-            const weightedScore =
-              (
-                matchedPrimary.length * 70 +
-                matchedSecondary.length * 10 +
-                matchedEmergency.length * 100
-              );
-
-            // MAX POSSIBLE SCORE
-            const maxPossibleScore =
-              (
-                (diseaseData.primarySymptoms?.length || 0) * 70
-              ) +
-              (
-                (diseaseData.secondarySymptoms?.length || 0) * 10
-              ) +
-              (
-                (diseaseData.emergencySymptoms?.length || 0) * 100
-              );
-
-            // NORMALIZED WEIGHT SCORE
-            const normalizedWeightedScore =
-              maxPossibleScore > 0
-                ? (
-                    weightedScore /
-                    maxPossibleScore
-                  ) * 100
-                : 0;
-
-            // FINAL CONFIDENCE
-            let finalConfidence =
-(
-  prediction.confidence * 0.7 +
-  normalizedWeightedScore * 0.3
-);
-
-negativeSymptoms.forEach(
-  (negativeSymptom) => {
+    // =====================
+    // VALIDATION
+    // =====================
 
     if (
 
-      allSymptoms.includes(
-        negativeSymptom
+      !Array.isArray(
+        vector
       )
 
     ) {
 
-      finalConfidence *= 0.7;
+      throw new Error(
+        "Invalid vector format"
+      );
 
     }
 
-  }
-);
+    // =====================
+    // ML REQUEST
+    // =====================
 
-            return {
+    const response =
+      await axios.post(
 
-              disease:
-                prediction.disease,
+        "http://127.0.0.1:8000/predict",
 
-              confidence:
-  Number(
-    finalConfidence.toFixed(1)
-  ),
+        {
 
-              predictionType:
-                "Hybrid ML Prediction",
+          vector:
+            vector.map(
+              Number
+            )
 
-              matchedSymptoms,
+        },
 
-              emergencyMatch:
-                matchedEmergency.length > 0,
+        {
 
-              riskLevel:
-                diseaseData.riskLevel,
+          headers: {
 
-              department:
-                diseaseData.department,
-
-              recommendations:
-                diseaseData.recommendations
-
-            };
+            "Content-Type":
+              "application/json"
 
           }
-        );
 
-      enrichedResults.sort(
-        (a, b) =>
-          b.confidence -
-          a.confidence
+        }
+
       );
-const calibratedResults =
-  calibrateConfidence(
 
-    enrichedResults,
+    // =====================
+    // ML RESPONSE
+    // =====================
 
-    symptoms.length
+    const mlPrediction =
+      response.data;
 
-  );
+    console.log(
+      "ML PREDICTION:",
+      mlPrediction
+    );
 
-  
+    // =====================
+    // VALIDATE RESPONSE
+    // =====================
+
+    if (
+
+      !mlPrediction ||
+
+      !mlPrediction.disease
+
+    ) {
+
+      throw new Error(
+        "Invalid ML response"
+      );
 
     }
 
-    // FALLBACK ONLY
-    return calibrateConfidence(
+    // =====================
+    // MERGE
+    // =====================
 
-  fallbackResults,
+    return mergePredictions(
 
-  symptoms.length
+      rulePredictions,
 
-);
+      mlPrediction
+
+    );
 
   } catch (error) {
 
     console.log(
-      "Hybrid Predictor Error:",
+
+      "ML Prediction Error:",
+
+      error.response?.data ||
+
       error.message
+
     );
 
-    return [];
+    // =====================
+    // SAFE FALLBACK
+    // =====================
+
+    return rulePredictions;
 
   }
 
 };
 
 module.exports =
-hybridPredictor;
+  hybridPredictor;

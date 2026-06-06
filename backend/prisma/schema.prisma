@@ -14,6 +14,8 @@ model User {
   password  String
   chats     Chat[]
   createdAt DateTime @default(now())
+  
+appointments Appointment[]
 }
 
 model Chat {
@@ -50,3 +52,25 @@ model Message {
 
   createdAt DateTime @default(now())
 }
+model Appointment {
+
+  id String @id @default(uuid())
+
+  userId String
+
+  doctorName String
+
+  department String
+
+  appointmentDate DateTime
+
+  timeSlot String
+
+  status String @default("upcoming")
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+}
+

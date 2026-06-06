@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Sharma",
+    "department": "Pulmonology",
+    "experience": "12 years"
+  },
+
+  {
+    "id": 2,
+    "name": "Dr. Priya Reddy",
+    "department": "General Medicine",
+    "experience": "8 years"
+  },
+
+  {
+    "id": 3,
+    "name": "Dr. Arjun Mehta",
+    "department": "Cardiology",
+    "experience": "15 years"
+  },
+
+  {
+    "id": 4,
+    "name": "Dr. Kavya Singh",
+    "department": "Neurology",
+    "experience": "10 years"
+  },
+
+  {
+    "id": 5,
+    "name": "Dr. Ahmed Khan",
+    "department": "Orthopedics",
+    "experience": "9 years"
+  }
+]

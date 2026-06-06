@@ -1,22 +1,30 @@
+
 [
   {
     "name": "Common Cold",
 
+    "department": "General Medicine",
+
+    "riskLevel": "low",
+
     "primarySymptoms": [
       "cough",
-      "sore throat"
+      "sore throat",
+      "runny nose"
     ],
 
     "secondarySymptoms": [
       "fatigue",
-      "runny nose"
+      "headache"
     ],
+
+    "signatureSymptoms": [],
 
     "emergencySymptoms": [],
 
-    "riskLevel": "low",
-
-    "department": "General Medicine",
+    "symptomCombinations": [
+      ["runny nose", "cough"]
+    ],
 
     "recommendations": [
       "Drink warm fluids",
@@ -28,23 +36,32 @@
   {
     "name": "Flu",
 
+    "department": "General Medicine",
+
+    "riskLevel": "medium",
+
     "primarySymptoms": [
       "fever",
-      "cough"
+      "cough",
+      "body pain"
     ],
 
     "secondarySymptoms": [
+      "fatigue",
       "headache",
-      "fatigue"
+      "chills"
     ],
+
+    "signatureSymptoms": [],
 
     "emergencySymptoms": [
       "high fever"
     ],
 
-    "riskLevel": "medium",
-
-    "department": "General Medicine",
+    "symptomCombinations": [
+      ["fever", "body pain"],
+      ["fever", "chills"]
+    ],
 
     "recommendations": [
       "Stay hydrated",
@@ -53,56 +70,202 @@
     ]
   },
 
+ 
+{
+  "name": "COVID-19",
+
+  "department": "Pulmonology",
+
+  "riskLevel": "high",
+
+  "primarySymptoms": [
+
+    "fever",
+
+    "cough",
+
+    "fatigue",
+
+    "shortness of breath"
+
+  ],
+
+  "secondarySymptoms": [
+
+    "headache",
+
+    "sore throat",
+
+    "body pain",
+
+    "nasal congestion"
+
+  ],
+
+  "signatureSymptoms": [
+
+    "loss of taste",
+
+    "loss of smell"
+
+  ],
+
+  "emergencySymptoms": [
+
+    "chest pain",
+
+    "difficulty breathing"
+
+  ],
+
+  "symptomCombinations": [
+
+    [
+
+      "fever",
+
+      "cough",
+
+      "loss of taste"
+
+    ],
+
+    [
+
+      "fever",
+
+      "loss of smell"
+
+    ],
+
+    [
+
+      "cough",
+
+      "shortness of breath"
+
+    ]
+
+  ],
+
+  "recommendations": [
+
+    "Stay isolated",
+
+    "Hydrate properly",
+
+    "Monitor oxygen levels",
+
+    "Seek emergency care if breathing worsens"
+
+  ]
+},
+
   {
-    "name": "Food Poisoning",
+    "name": "Pneumonia",
+
+    "department": "Pulmonology",
+
+    "riskLevel": "high",
 
     "primarySymptoms": [
-      "vomiting",
-      "diarrhea"
+      "fever",
+      "cough",
+      "chest pain"
     ],
 
     "secondarySymptoms": [
-      "nausea",
-      "abdominal pain"
+      "fatigue",
+      "body pain"
+    ],
+
+    "signatureSymptoms": [
+      "shortness of breath"
     ],
 
     "emergencySymptoms": [
-      "severe dehydration"
+      "difficulty breathing"
     ],
+
+    "symptomCombinations": [
+      ["cough", "shortness of breath"],
+      ["fever", "chest pain"]
+    ],
+
+    "recommendations": [
+      "Consult doctor immediately",
+      "Take prescribed medication",
+      "Rest properly"
+    ]
+  },
+
+  {
+    "name": "Bronchitis",
+
+    "department": "Pulmonology",
 
     "riskLevel": "medium",
 
-    "department": "Gastroenterology",
+    "primarySymptoms": [
+      "cough",
+      "fatigue"
+    ],
+
+    "secondarySymptoms": [
+      "chest pain",
+      "body pain"
+    ],
+
+    "signatureSymptoms": [
+      "mucus cough"
+    ],
+
+    "emergencySymptoms": [
+      "shortness of breath"
+    ],
+
+    "symptomCombinations": [
+      ["cough", "mucus cough"]
+    ],
 
     "recommendations": [
-      "Drink fluids",
-      "Avoid outside food",
-      "Consult doctor if severe"
+      "Avoid smoking",
+      "Drink warm fluids",
+      "Consult doctor if symptoms persist"
     ]
   },
 
   {
     "name": "Dengue",
 
-    "primarySymptoms": [
-      "fever",
-      "body pain"
-    ],
-
-    "secondarySymptoms": [
-      "headache",
-      "joint pain",
-      "fatigue"
-    ],
-
-    "emergencySymptoms": [
-      "bleeding",
-      "severe weakness"
-    ],
+    "department": "Infectious Disease",
 
     "riskLevel": "high",
 
-    "department": "Infectious Disease",
+    "primarySymptoms": [
+      "fever",
+      "joint pain"
+    ],
+
+    "secondarySymptoms": [
+      "vomiting",
+      "fatigue",
+      "headache"
+    ],
+
+    "signatureSymptoms": [
+      "skin rash",
+      "eye pain"
+    ],
+
+    "emergencySymptoms": [
+      "bleeding"
+    ],
+
+    "symptomCombinations": [
+      ["fever", "joint pain"],
+      ["fever", "skin rash"]
+    ],
 
     "recommendations": [
       "Drink fluids",
@@ -113,93 +276,50 @@
   },
 
   {
-    "name": "COVID-19",
+    "name": "Malaria",
+
+    "department": "Infectious Disease",
+
+    "riskLevel": "high",
 
     "primarySymptoms": [
       "fever",
-      "cough"
+      "chills",
+      "sweating"
     ],
 
     "secondarySymptoms": [
       "fatigue",
-      "loss of smell",
-      "loss of taste"
+      "vomiting",
+      "headache"
+    ],
+
+    "signatureSymptoms": [
+      "cyclic fever"
     ],
 
     "emergencySymptoms": [
-      "shortness of breath"
+      "loss of consciousness"
     ],
 
-    "riskLevel": "high",
-
-    "department": "Pulmonology",
-
-    "recommendations": [
-      "Isolate yourself",
-      "Monitor oxygen levels",
-      "Stay hydrated",
-      "Consult doctor if severe"
-    ]
-  },
-
-  {
-    "name": "Asthma",
-
-    "primarySymptoms": [
-      "wheezing",
-      "shortness of breath"
+    "symptomCombinations": [
+      ["fever", "chills"],
+      ["fever", "sweating"]
     ],
-
-    "secondarySymptoms": [
-      "cough",
-      "chest pain"
-    ],
-
-    "emergencySymptoms": [
-      "severe shortness of breath"
-    ],
-
-    "riskLevel": "medium",
-
-    "department": "Pulmonology",
-
-    "recommendations": [
-      "Use inhaler",
-      "Avoid allergens",
-      "Consult pulmonologist"
-    ]
-  },
-
-  {
-    "name": "Pneumonia",
-
-    "primarySymptoms": [
-      "fever",
-      "cough"
-    ],
-
-    "secondarySymptoms": [
-      "fatigue"
-    ],
-
-    "emergencySymptoms": [
-      "shortness of breath",
-      "chest pain"
-    ],
-
-    "riskLevel": "high",
-
-    "department": "Pulmonology",
 
     "recommendations": [
       "Consult doctor immediately",
-      "Take prescribed medication",
-      "Rest properly"
+      "Drink fluids",
+      "Take prescribed medication"
     ]
   },
 
   {
     "name": "Migraine",
+
+    "department": "Neurology",
+
+    "riskLevel": "medium",
 
     "primarySymptoms": [
       "headache"
@@ -211,11 +331,15 @@
       "dizziness"
     ],
 
+    "signatureSymptoms": [
+      "light sensitivity"
+    ],
+
     "emergencySymptoms": [],
 
-    "riskLevel": "medium",
-
-    "department": "Neurology",
+    "symptomCombinations": [
+      ["headache", "light sensitivity"]
+    ],
 
     "recommendations": [
       "Rest in dark room",
@@ -225,64 +349,47 @@
   },
 
   {
-    "name": "Bronchitis",
+    "name": "Food Poisoning",
 
-    "primarySymptoms": [
-      "cough"
-    ],
-
-    "secondarySymptoms": [
-      "fatigue",
-      "chest pain",
-      "shortness of breath"
-    ],
-
-    "emergencySymptoms": [
-      "severe breathing difficulty"
-    ],
+    "department": "Gastroenterology",
 
     "riskLevel": "medium",
 
-    "department": "Pulmonology",
-
-    "recommendations": [
-      "Avoid smoking",
-      "Drink warm fluids",
-      "Consult doctor if symptoms persist"
-    ]
-  },
-
-  {
-    "name": "Malaria",
-
     "primarySymptoms": [
-      "fever",
-      "chills"
+      "vomiting",
+      "diarrhea"
     ],
 
     "secondarySymptoms": [
-      "sweating",
-      "headache",
-      "fatigue"
+      "nausea",
+      "abdominal pain"
+    ],
+
+    "signatureSymptoms": [
+      "stomach cramps"
     ],
 
     "emergencySymptoms": [
-      "loss of consciousness"
+      "severe dehydration"
     ],
 
-    "riskLevel": "high",
-
-    "department": "Infectious Disease",
+    "symptomCombinations": [
+      ["vomiting", "diarrhea"]
+    ],
 
     "recommendations": [
-      "Consult doctor immediately",
       "Drink fluids",
-      "Take prescribed medication"
+      "Avoid outside food",
+      "Consult doctor if severe"
     ]
   },
 
   {
     "name": "Sinusitis",
+
+    "department": "ENT",
+
+    "riskLevel": "low",
 
     "primarySymptoms": [
       "facial pain",
@@ -295,11 +402,15 @@
       "fever"
     ],
 
+    "signatureSymptoms": [
+      "facial pressure"
+    ],
+
     "emergencySymptoms": [],
 
-    "riskLevel": "low",
-
-    "department": "ENT",
+    "symptomCombinations": [
+      ["facial pain", "nasal congestion"]
+    ],
 
     "recommendations": [
       "Steam inhalation",
@@ -311,6 +422,10 @@
   {
     "name": "Tonsillitis",
 
+    "department": "ENT",
+
+    "riskLevel": "medium",
+
     "primarySymptoms": [
       "sore throat",
       "difficulty swallowing"
@@ -318,17 +433,21 @@
 
     "secondarySymptoms": [
       "fever",
-      "headache",
-      "fatigue"
+      "fatigue",
+      "headache"
+    ],
+
+    "signatureSymptoms": [
+      "swollen tonsils"
     ],
 
     "emergencySymptoms": [
       "breathing difficulty"
     ],
 
-    "riskLevel": "medium",
-
-    "department": "ENT",
+    "symptomCombinations": [
+      ["sore throat", "difficulty swallowing"]
+    ],
 
     "recommendations": [
       "Warm salt water gargle",
@@ -340,6 +459,10 @@
   {
     "name": "Acidity",
 
+    "department": "Gastroenterology",
+
+    "riskLevel": "low",
+
     "primarySymptoms": [
       "chest burning",
       "stomach pain"
@@ -350,11 +473,15 @@
       "bloating"
     ],
 
+    "signatureSymptoms": [
+      "acid reflux"
+    ],
+
     "emergencySymptoms": [],
 
-    "riskLevel": "low",
-
-    "department": "Gastroenterology",
+    "symptomCombinations": [
+      ["chest burning", "stomach pain"]
+    ],
 
     "recommendations": [
       "Avoid spicy food",
@@ -366,6 +493,10 @@
   {
     "name": "Appendicitis",
 
+    "department": "General Surgery",
+
+    "riskLevel": "high",
+
     "primarySymptoms": [
       "abdominal pain"
     ],
@@ -373,17 +504,20 @@
     "secondarySymptoms": [
       "vomiting",
       "fever",
-      "nausea",
-      "loss of appetite"
+      "nausea"
+    ],
+
+    "signatureSymptoms": [
+      "right lower abdominal pain"
     ],
 
     "emergencySymptoms": [
       "severe abdominal pain"
     ],
 
-    "riskLevel": "high",
-
-    "department": "General Surgery",
+    "symptomCombinations": [
+      ["abdominal pain", "vomiting"]
+    ],
 
     "recommendations": [
       "Seek immediate medical attention",
@@ -393,6 +527,10 @@
 
   {
     "name": "Dehydration",
+
+    "department": "General Medicine",
+
+    "riskLevel": "low",
 
     "primarySymptoms": [
       "dizziness",
@@ -404,13 +542,17 @@
       "headache"
     ],
 
+    "signatureSymptoms": [
+      "dark urine"
+    ],
+
     "emergencySymptoms": [
       "fainting"
     ],
 
-    "riskLevel": "low",
-
-    "department": "General Medicine",
+    "symptomCombinations": [
+      ["dizziness", "dry mouth"]
+    ],
 
     "recommendations": [
       "Drink oral fluids",
@@ -419,46 +561,47 @@
     ]
   },
 
-{
-  "name": "Muscle Strain",
+  {
+    "name": "Muscle Strain",
 
-  "department": "Orthopedics",
+    "department": "Orthopedics",
 
-  "riskLevel": "low",
+    "riskLevel": "low",
 
-  "primarySymptoms": [
+    "primarySymptoms": [
+      "muscle soreness",
+      "joint pain",
+      "wrist pain"
+    ],
 
-    "muscle soreness",
+    "secondarySymptoms": [
+      "swelling",
+      "stiffness"
+    ],
 
-    "wrist pain",
+    "signatureSymptoms": [
+      "pain after workout"
+    ],
 
-    "joint pain"
+    "emergencySymptoms": [],
 
-  ],
+    "symptomCombinations": [
+      ["muscle soreness", "stiffness"]
+    ],
 
-  "secondarySymptoms": [
-
-    "swelling",
-
-    "stiffness"
-
-  ],
-
-  "recommendations": [
-
-    "Rest the affected area",
-
-    "Avoid heavy lifting",
-
-    "Apply ice pack",
-
-    "Consult doctor if pain worsens"
-
-  ]
-},
+    "recommendations": [
+      "Rest the affected area",
+      "Apply ice pack",
+      "Avoid heavy lifting"
+    ]
+  },
 
   {
     "name": "Stress",
+
+    "department": "Psychology",
+
+    "riskLevel": "low",
 
     "primarySymptoms": [
       "anxiety",
@@ -470,11 +613,15 @@
       "fatigue"
     ],
 
+    "signatureSymptoms": [
+      "overthinking"
+    ],
+
     "emergencySymptoms": [],
 
-    "riskLevel": "low",
-
-    "department": "Psychology",
+    "symptomCombinations": [
+      ["anxiety", "sleep disturbance"]
+    ],
 
     "recommendations": [
       "Practice relaxation techniques",

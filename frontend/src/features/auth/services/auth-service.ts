@@ -1,12 +1,14 @@
 
-import { apiClient }
-from "@/shared/lib/api-client";
+import { apiClient } from "@/shared/lib/api-client";
 
 import {
   AuthResponse
 } from "../types/auth";
 
+// =========================
 // SIGNUP
+// =========================
+
 export const signup =
 async (
   data: {
@@ -29,7 +31,6 @@ async (
 
     );
 
-  // SAVE TOKEN
   if (
     response.data.token
   ) {
@@ -48,7 +49,10 @@ async (
 
 };
 
+// =========================
 // LOGIN
+// =========================
+
 export const login =
 async (
   data: {
@@ -59,6 +63,10 @@ async (
 
   }
 ) => {
+
+  console.log(
+    "LOGIN START"
+  );
 
   const response =
     await apiClient.post<AuthResponse>(
@@ -74,7 +82,6 @@ async (
     response.data
   );
 
-  // SAVE TOKEN
   if (
     response.data.token
   ) {
@@ -90,7 +97,7 @@ async (
   }
 
   console.log(
-    "TOKEN AFTER SAVE:",
+    "TOKEN SAVED:",
     localStorage.getItem(
       "token"
     )
@@ -100,7 +107,10 @@ async (
 
 };
 
+// =========================
 // LOGOUT
+// =========================
+
 export const logout =
 () => {
 
