@@ -91,9 +91,9 @@ app.use(cors({
 
     "http://localhost:3000",
 
-    "https://healthcare-ai-assistant.vercel.app",
+    "https://healthcare-ai-assistant-pink.vercel.app",
 
-    "https://healthcare-ai-assistant-pink.vercel.app"
+    "https://healthcare-ai-assistant.vercel.app"
 
   ],
 
