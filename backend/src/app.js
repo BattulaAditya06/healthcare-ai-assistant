@@ -85,18 +85,21 @@ console.log({
 
 });
 
-app.use(
+app.use(cors({
 
-  cors({
+  origin: [
 
-    origin:
-      "http://localhost:3000",
+    "http://localhost:3000",
 
-    credentials: true
+    "https://healthcare-ai-assistant.vercel.app",
 
-  })
+    "https://healthcare-ai-assistant-pink.vercel.app"
 
-);
+  ],
+
+  credentials: true
+
+}));
 
 
 
