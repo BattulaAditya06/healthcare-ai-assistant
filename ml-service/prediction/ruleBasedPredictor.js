@@ -1,8 +1,8 @@
 const Disease =
-require("../../models/Disease");
+require("../../backend/src/models/Disease");
 
 const symptomWeights =
-require("../../utils/symptomWeights");
+require("../../backend/src/utils/symptomWeights");
 
 const ruleBasedPredictor =
 async (symptoms) => {

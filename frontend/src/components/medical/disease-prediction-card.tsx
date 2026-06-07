@@ -1,8 +1,10 @@
-
 "use client";
 
-import { useState }
-from "react";
+import {
+
+  useState
+
+} from "react";
 
 import {
 
@@ -10,15 +12,13 @@ import {
 
 } from "./prediction-explanation";
 
-import {
-
-  AppointmentModal
-
-} from "@/components/appointments/appointment-modal";
+import AppointmentModal from
+"@/components/appointments/appointment-modal";
 
 import {
 
   Card,
+
   CardContent
 
 } from "@/components/ui/card";
@@ -28,6 +28,26 @@ import {
   Badge
 
 } from "@/components/ui/badge";
+
+// =========================
+// TYPES
+// =========================
+
+type Doctor = {
+
+  id: number;
+
+  name: string;
+
+  department: string;
+
+  rating: number;
+
+  experience: number;
+
+  hospital: string;
+
+};
 
 interface Props {
 
@@ -41,25 +61,29 @@ interface Props {
 
   recommendations?: string[];
 
+  recommendedDoctors?: Doctor[];
+
   scoreBreakdown?: {
 
-    primaryMatches: number;
+  primaryMatches: number;
 
-    secondaryMatches: number;
+  secondaryMatches: number;
 
-    signatureMatches: number;
+  signatureMatches: number;
 
-    emergencyMatches: number;
+  emergencyMatches: number;
 
-    missingPrimary: number;
+  coverageRatio?: number;
 
-    missingSignature: number;
+  reliability?: number;
 
-    reliability: number;
-
-  };
+};
 
 }
+
+// =========================
+// COMPONENT
+// =========================
 
 export function DiseasePredictionCard({
 
@@ -73,9 +97,15 @@ export function DiseasePredictionCard({
 
   recommendations = [],
 
+  recommendedDoctors = [],
+
   scoreBreakdown
 
 }: Props) {
+
+  // =====================
+  // STATE
+  // =====================
 
   const [
 
@@ -85,9 +115,19 @@ export function DiseasePredictionCard({
 
   ] = useState(false);
 
-  // =========================
+  const [
+
+    selectedDoctor,
+
+    setSelectedDoctor
+
+  ] = useState<Doctor | null>(
+    null
+  );
+
+  // =====================
   // RISK COLOR
-  // =========================
+  // =====================
 
   const riskColor =
 
@@ -100,6 +140,55 @@ export function DiseasePredictionCard({
       ? "bg-yellow-500"
 
       : "bg-green-500";
+
+  // =====================
+  // HANDLE BOOKING
+  // =====================
+
+  const handleBooking =
+    () => {
+
+      // =====================
+      // PICK FIRST MATCHED
+      // DOCTOR
+      // =====================
+
+      const matchedDoctor =
+
+        recommendedDoctors.find(
+
+          (doctor) =>
+
+            doctor.department ===
+            department
+
+        ) ||
+
+        recommendedDoctors[0] ||
+
+        null;
+
+      if (!matchedDoctor) {
+
+        alert(
+          "No doctors available"
+        );
+
+        return;
+
+      }
+
+      setSelectedDoctor(
+        matchedDoctor
+      );
+
+      setOpen(true);
+
+    };
+
+  // =====================
+  // RENDER
+  // =====================
 
   return (
 
@@ -318,8 +407,8 @@ export function DiseasePredictionCard({
 
           <button
 
-            onClick={() =>
-              setOpen(true)
+            onClick={
+              handleBooking
             }
 
             className="
@@ -344,7 +433,7 @@ export function DiseasePredictionCard({
 
       </Card>
 
-      {/* APPOINTMENT MODAL */}
+      {/* MODAL */}
 
       <AppointmentModal
 
@@ -354,7 +443,9 @@ export function DiseasePredictionCard({
           setOpen(false)
         }
 
-        department={department}
+        doctor={
+          selectedDoctor
+        }
 
       />
 

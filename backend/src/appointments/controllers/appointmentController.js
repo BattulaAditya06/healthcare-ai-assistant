@@ -1,140 +1,259 @@
+const crypto =
+require("crypto");
 
-const {
+// =========================
+// DOCTORS DATA
+// =========================
 
-  createAppointment,
+const doctors =
+require("../data/doctors.json");
 
-  getUserAppointments
+// =========================
+// TEMP STORAGE
+// =========================
 
-} = require(
+const appointments = [];
 
-  "../services/appointmentService"
+// =========================
+// ALL SLOTS
+// =========================
 
-);
+const allSlots = [
+
+  "09:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "02:00 PM",
+  "03:00 PM",
+  "04:00 PM"
+
+];
+
+// =========================
+// GET AVAILABLE SLOTS
+// =========================
+
+const getAvailableSlots =
+(req, res) => {
+
+  const {
+    doctorId
+  } = req.query;
+
+  // =====================
+  // FIND BOOKED SLOTS
+  // =====================
+
+  const bookedSlots =
+
+    appointments
+
+      .filter(
+
+        (appointment) =>
+
+          String(
+            appointment.doctorId
+          ) === String(
+            doctorId
+          )
+
+      )
+
+      .map(
+
+        (appointment) =>
+
+          appointment
+            .appointmentTime
+
+      );
+
+  // =====================
+  // REMOVE BOOKED
+  // =====================
+
+  const availableSlots =
+
+    allSlots.filter(
+
+      (slot) =>
+
+        !bookedSlots.includes(
+          slot
+        )
+
+    );
+
+  return res.json({
+
+    success: true,
+
+    slots:
+      availableSlots
+
+  });
+
+};
 
 // =========================
 // BOOK APPOINTMENT
 // =========================
 
 const bookAppointment =
-async (
-  req,
-  res
-) => {
+(req, res) => {
 
-  try {
+  const {
 
-    const {
+    doctorId,
 
-      doctorName,
+    patientName,
 
-      department,
+    appointmentDate,
 
-      appointmentDate,
+    appointmentTime,
 
-      timeSlot
+    symptoms = [],
 
-    } = req.body;
+    severity = "medium"
 
-    const appointment =
-      await createAppointment({
+  } = req.body;
 
-        userId:
-          req.user.id,
+  // =====================
+  // FIND DOCTOR
+  // =====================
 
-        doctorName,
+  const doctor =
 
-        department,
+    doctors.find(
 
-        appointmentDate:
-          new Date(
-            appointmentDate
-          ),
+      (doc) =>
 
-        timeSlot
+        String(doc.id) ===
+        String(doctorId)
+
+    );
+
+  if (!doctor) {
+
+    return res.status(404)
+      .json({
+
+        success: false,
+
+        message:
+          "Doctor not found"
 
       });
 
-    return res.status(201).json({
+  }
 
-      success: true,
+  // =====================
+  // SLOT ALREADY TAKEN
+  // =====================
 
-      appointment
+  const alreadyBooked =
 
-    });
+    appointments.find(
 
-  } catch (error) {
+      (appointment) =>
 
-    console.log(
-      "BOOK APPOINTMENT ERROR:",
-      error
+        String(
+          appointment.doctorId
+        ) === String(
+          doctorId
+        ) &&
+
+        appointment
+          .appointmentTime ===
+        appointmentTime
+
     );
 
-    return res.status(500).json({
+  if (alreadyBooked) {
 
-      success: false,
+    return res.status(400)
+      .json({
 
-      message:
-        "Failed to create appointment"
+        success: false,
 
-    });
+        message:
+          "Slot already booked"
+
+      });
 
   }
+
+  // =====================
+  // CREATE APPOINTMENT
+  // =====================
+
+  const appointment = {
+
+    appointmentId:
+      crypto.randomUUID(),
+
+    doctorId:
+      doctor.id,
+
+    doctorName:
+      doctor.name,
+
+    department:
+      doctor.department,
+
+    patientName,
+
+    appointmentDate,
+
+    appointmentTime,
+
+    symptoms,
+
+    severity,
+
+    status:
+      "confirmed",
+
+    createdAt:
+      new Date()
+
+  };
+
+  // =====================
+  // SAVE
+  // =====================
+
+  appointments.push(
+    appointment
+  );
+
+  // =====================
+  // RESPONSE
+  // =====================
+
+  return res.json({
+
+    success: true,
+
+    message:
+      "Appointment booked successfully",
+
+    appointment
+
+  });
 
 };
 
 // =========================
-// GET APPOINTMENTS
+// EXPORTS
 // =========================
-
-const getAppointments =
-async (
-  req,
-  res
-) => {
-
-  try {
-
-    const appointments =
-      await getUserAppointments(
-
-        req.user.id
-
-      );
-
-    return res.json({
-
-      success: true,
-
-      appointments
-
-    });
-
-  } catch (error) {
-
-    console.log(
-      "GET APPOINTMENTS ERROR:",
-      error
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message:
-        "Failed to fetch appointments"
-
-    });
-
-  }
-
-};
-
 
 module.exports = {
 
-  bookAppointment,
+  getAvailableSlots,
 
-  getAppointments
+  bookAppointment
 
 };
-

@@ -53,30 +53,30 @@ export function BodySymptomMap() {
 
   } = useDiagnosticStore();
 
-  const toggleSymptom =
-    (
-      symptom: string
-    ) => {
+ const toggleSymptom =
+  (symptom: string) => {
 
-      if (
-        symptoms.includes(
-          symptom
-        )
-      ) {
+    if (
 
-        removeSymptom(
-          symptom
-        );
+      symptoms.includes(
+        symptom
+      )
 
-      } else {
+    ) {
 
-        addSymptom(
-          symptom
-        );
+      removeSymptom(
+        symptom
+      );
 
-      }
+    } else {
 
-    };
+      addSymptom(
+        symptom
+      );
+
+    }
+
+  };
 
   return (
 

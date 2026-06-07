@@ -3,9 +3,7 @@
 
 import { ReactNode } from "react";
 
-import {
-  Sidebar
-} from "./sidebar";
+import Sidebar from "./sidebar";
 
 import {
   Topbar

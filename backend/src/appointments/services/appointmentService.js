@@ -1,49 +1,48 @@
+const crypto =
+require("crypto");
 
-const prisma =
-require("../../config/prisma");
+const appointments = [];
 
-// =========================
-// CREATE APPOINTMENT
-// =========================
+const generateSlots = () => {
 
-const createAppointment =
-async (
-  data
-) => {
+  return [
 
-  return prisma.appointment.create({
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM"
 
-    data
-
-  });
+  ];
 
 };
 
-// =========================
-// GET USER APPOINTMENTS
-// =========================
-
-const getUserAppointments =
-async (
-  userId
+const createAppointment = (
+  data
 ) => {
 
-  return prisma.appointment.findMany({
+  const appointment = {
 
-    where: {
+    appointmentId:
+      crypto.randomUUID(),
 
-      userId
+    ...data,
 
-    },
+    status:
+      "confirmed",
 
-    orderBy: {
+    createdAt:
+      new Date()
 
-      appointmentDate:
-        "asc"
+  };
 
-    }
+  appointments.push(
+    appointment
+  );
 
-  });
+  return appointment;
 
 };
 
@@ -51,6 +50,6 @@ module.exports = {
 
   createAppointment,
 
-  getUserAppointments
+  generateSlots
 
 };

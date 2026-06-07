@@ -1,125 +1,110 @@
-
 "use client";
 
-import {
 
-  useEffect,
 
-  useState
-
-} from "react";
+import Link from "next/link";
 
 import {
 
-  getAppointments
+  CalendarDays,
 
-} from "@/services/appointment-service";
+  Clock3,
+
+  CheckCircle2,
+
+  Activity,
+
+  ArrowRight,
+
+  Stethoscope
+
+} from "lucide-react";
 
 import {
 
-  AppointmentCard
+  motion
 
-} from "@/components/appointments/appointment-card";
+} from "framer-motion";
 
-interface Appointment {
+import {
 
-  id: string;
+  useAppointmentStore
 
-  doctorName: string;
-
-  department: string;
-
-  appointmentDate: string;
-
-  timeSlot: string;
-
-  status: string;
-
-}
+} from "@/features/appointments/store/appointment-store";
 
 export default function AppointmentsPage() {
 
-  const [
+ const appointments =
+  useAppointmentStore(
+    (state) =>
+      state.appointments
+  );
+  const totalAppointments =
+    appointments.length;
 
-    appointments,
+  const upcomingAppointments =
+    appointments.filter(
 
-    setAppointments
+      (appointment) =>
 
-  ] = useState<
-    Appointment[]
-  >([]);
+        appointment.status ===
+        "upcoming"
 
-  const [
+    ).length;
 
-    loading,
+  const completedAppointments =
+    appointments.filter(
 
-    setLoading
+      (appointment) =>
 
-  ] = useState(true);
+        appointment.status ===
+        "completed"
 
-  useEffect(() => {
+    ).length;
 
-    const fetchAppointments =
-      async () => {
+  const pendingAppointments =
+    appointments.filter(
 
-        try {
+      (appointment) =>
 
-          const token =
-            localStorage.getItem(
-              "token"
-            );
+        appointment.status ===
+        "pending"
 
-          if (!token) {
-
-            return;
-
-          }
-
-          const data =
-            await getAppointments(
-              token
-            );
-
-          setAppointments(
-
-            data.appointments || []
-
-          );
-
-        } catch (error) {
-
-          console.log(error);
-
-        } finally {
-
-          setLoading(false);
-
-        }
-
-      };
-
-    fetchAppointments();
-
-  }, []);
+    ).length;
 
   return (
 
-    <div
+    <main
       className="
         min-h-screen
-        bg-muted/30
+        bg-gradient-to-br
+        from-slate-50
+        via-white
+        to-slate-100
         p-8
       "
     >
 
-      {/* HEADER */}
+      <motion.div
 
-      <div
+        initial={{
+          opacity: 0,
+          y: 20
+        }}
+
+        animate={{
+          opacity: 1,
+          y: 0
+        }}
+
         className="
           mb-10
           flex
-          items-center
+          flex-col
           justify-between
+          gap-6
+          lg:flex-row
+          lg:items-center
         "
       >
 
@@ -127,9 +112,8 @@ export default function AppointmentsPage() {
 
           <h1
             className="
-              text-4xl
-              font-bold
-              tracking-tight
+              text-5xl
+              font-black
             "
           >
 
@@ -137,166 +121,381 @@ export default function AppointmentsPage() {
 
           </h1>
 
-          <p
-            className="
-              mt-2
-              text-muted-foreground
-            "
-          >
-
-            Manage your healthcare consultations
-
-          </p>
-
         </div>
 
         <div
           className="
+            flex
+            items-center
+            gap-3
             rounded-2xl
             border
-            bg-background
-            px-6
+            bg-white
+            px-5
             py-4
             shadow-sm
           "
         >
 
-          <p
-            className="
-              text-sm
-              text-muted-foreground
-            "
-          >
-
-            Total Appointments
-
-          </p>
-
-          <h2
-            className="
-              mt-1
-              text-3xl
-              font-bold
-            "
-          >
-
-            {appointments.length}
-
-          </h2>
-
-        </div>
-
-      </div>
-
-      {/* CONTENT */}
-
-      {
-
-        loading ? (
-
           <div
             className="
-              flex
-              h-[300px]
-              items-center
-              justify-center
+              rounded-xl
+              bg-black
+              p-3
+              text-white
             "
           >
 
-            Loading appointments...
+            <Activity
+              className="
+                h-5
+                w-5
+              "
+            />
 
           </div>
 
-        ) : appointments.length === 0 ? (
-
-          <div
-            className="
-              rounded-3xl
-              border
-              border-dashed
-              bg-background
-              p-20
-              text-center
-              shadow-sm
-            "
-          >
-
-            <h2
-              className="
-                text-2xl
-                font-semibold
-              "
-            >
-
-              No Appointments Yet
-
-            </h2>
+          <div>
 
             <p
               className="
-                mt-3
-                text-muted-foreground
+                text-sm
+                text-slate-500
               "
             >
 
-              Book consultations directly
-              from AI diagnosis results.
+              Total Appointments
 
             </p>
 
+            <h3
+              className="
+                text-3xl
+                font-bold
+              "
+            >
+
+              {totalAppointments}
+
+            </h3>
+
           </div>
+
+        </div>
+
+      </motion.div>
+
+      <div
+        className="
+          grid
+          gap-5
+          md:grid-cols-2
+          xl:grid-cols-4
+        "
+      >
+
+        {[
+          {
+            label: "Upcoming",
+            value: upcomingAppointments,
+            icon: Clock3
+          },
+
+          {
+            label: "Completed",
+            value: completedAppointments,
+            icon: CheckCircle2
+          },
+
+          {
+            label: "Pending",
+            value: pendingAppointments,
+            icon: CalendarDays
+          },
+
+          {
+            label: "AI Assisted",
+            value: totalAppointments,
+            icon: Stethoscope
+          }
+
+        ].map(
+
+          (item) => (
+
+            <motion.div
+
+              key={item.label}
+
+              whileHover={{
+                y: -4
+              }}
+
+              className="
+                rounded-3xl
+                border
+                bg-white
+                p-6
+                shadow-sm
+              "
+            >
+
+              <div
+                className="
+                  flex
+                  items-center
+                  justify-between
+                "
+              >
+
+                <div>
+
+                  <p
+                    className="
+                      text-sm
+                      text-slate-500
+                    "
+                  >
+
+                    {item.label}
+
+                  </p>
+
+                  <h2
+                    className="
+                      mt-2
+                      text-4xl
+                      font-black
+                    "
+                  >
+
+                    {item.value}
+
+                  </h2>
+
+                </div>
+
+                <div
+                  className="
+                    rounded-2xl
+                    bg-slate-100
+                    p-4
+                  "
+                >
+
+                  <item.icon
+                    className="
+                      h-6
+                      w-6
+                      text-slate-700
+                    "
+                  />
+
+                </div>
+
+              </div>
+
+            </motion.div>
+
+          )
+
+        )}
+
+      </div>
+
+      {
+
+        appointments.length === 0 ? (
+
+          <motion.div
+
+            initial={{
+              opacity: 0,
+              y: 30
+            }}
+
+            animate={{
+              opacity: 1,
+              y: 0
+            }}
+
+            className="
+              mt-10
+            "
+          >
+
+            <div
+              className="
+                flex
+                flex-col
+                items-center
+                justify-center
+                rounded-[32px]
+                border
+                border-dashed
+                bg-white
+                px-8
+                py-28
+                text-center
+              "
+            >
+
+              <h2
+                className="
+                  text-4xl
+                  font-black
+                "
+              >
+
+                No Appointments Yet
+
+              </h2>
+
+              <Link href="/chat">
+
+                <button
+                  className="
+                    mt-8
+                    rounded-2xl
+                    bg-black
+                    px-8
+                    py-4
+                    text-white
+                  "
+                >
+
+                  Start AI Diagnosis
+
+                </button>
+
+              </Link>
+
+            </div>
+
+          </motion.div>
 
         ) : (
 
           <div
             className="
+              mt-10
               grid
               gap-6
-              lg:grid-cols-2
             "
           >
 
-            {
+            {appointments.map(
 
-              appointments.map(
+              (appointment) => (
 
-                (
-                  appointment
-                ) => (
+                <motion.div
 
-                  <AppointmentCard
+                  key={appointment.id}
 
-                    key={
-                      appointment.id
-                    }
+                  initial={{
+                    opacity: 0,
+                    y: 20
+                  }}
 
-                    doctorName={
-                      appointment.doctorName
-                    }
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }}
 
-                    department={
-                      appointment.department
-                    }
+                  className="
+                    rounded-3xl
+                    border
+                    bg-white
+                    p-6
+                    shadow-sm
+                  "
+                >
 
-                    appointmentDate={
-                      appointment.appointmentDate
-                    }
+                  <div
+                    className="
+                      flex
+                      items-center
+                      justify-between
+                    "
+                  >
 
-                    timeSlot={
-                      appointment.timeSlot
-                    }
+                    <div>
 
-                    status={
-                      appointment.status
-                    }
+                      <h2
+                        className="
+                          text-2xl
+                          font-bold
+                        "
+                      >
 
-                  />
+                        {appointment.doctorName}
 
-                )
+                      </h2>
+
+                      <p
+                        className="
+                          mt-1
+                          text-slate-500
+                        "
+                      >
+
+                        {appointment.department}
+
+                      </p>
+
+                    </div>
+
+                    <div
+                      className="
+                        rounded-xl
+                        bg-green-100
+                        px-4
+                        py-2
+                        text-sm
+                        font-semibold
+                        text-green-700
+                      "
+                    >
+
+                      {appointment.status}
+
+                    </div>
+
+                  </div>
+
+                  <div
+                    className="
+                      mt-6
+                      flex
+                      gap-8
+                      text-sm
+                      text-slate-600
+                    "
+                  >
+
+                    <div>
+
+                      Date:
+                      {" "}
+                      {appointment.date}
+
+                    </div>
+
+                    <div>
+
+                      Time:
+                      {" "}
+                      {appointment.time}
+
+                    </div>
+
+                  </div>
+
+                </motion.div>
 
               )
 
-            }
+            )}
 
           </div>
 
@@ -304,7 +503,7 @@ export default function AppointmentsPage() {
 
       }
 
-    </div>
+    </main>
 
   );
 

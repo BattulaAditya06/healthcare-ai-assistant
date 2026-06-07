@@ -1,17 +1,21 @@
-
 "use client";
 
-interface Doctor {
+import {
+  useState
+} from "react";
 
-  id: number;
+import type {
 
-  name: string;
+  Doctor
 
-  department: string;
+} from "@/features/chatbot/types/chat";
 
-  experience: string;
+import AppointmentModal
+from "@/components/appointments/appointment-modal";
 
-}
+// =========================
+// TYPES
+// =========================
 
 interface Props {
 
@@ -19,136 +23,281 @@ interface Props {
 
 }
 
+// =========================
+// COMPONENT
+// =========================
+
 export function RecommendedDoctors({
 
   doctors
 
 }: Props) {
 
+  // =========================
+  // LOCAL STATE
+  // =========================
+
+  const [
+
+    selectedDoctor,
+
+    setSelectedDoctor
+
+  ] = useState<Doctor | null>(
+    null
+  );
+
+  const [
+
+    open,
+
+    setOpen
+
+  ] = useState(false);
+
+  // =========================
+  // EMPTY STATE
+  // =========================
+
   if (
+
     !doctors ||
+
     doctors.length === 0
+
   ) {
 
     return null;
 
   }
 
+  // =========================
+  // UI
+  // =========================
+
   return (
 
-    <div
-      className="
-        space-y-4
-      "
-    >
+    <>
 
-      <h2
+      <div
         className="
-          text-2xl
-          font-bold
+          space-y-4
         "
       >
 
-        Recommended Doctors
+        {/* HEADER */}
 
-      </h2>
+        <div>
 
-      {
+          <h2
+            className="
+              text-2xl
+              font-bold
+            "
+          >
 
-        doctors.map(
-          (doctor) => (
+            Recommended Doctors
 
-            <div
+          </h2>
 
-              key={doctor.id}
+          <p
+            className="
+              text-sm
+              text-muted-foreground
+            "
+          >
 
-              className="
-                rounded-2xl
-                border
-                bg-white
-                p-5
-                shadow-sm
-              "
-            >
+            Specialists recommended based on AI analysis
+
+          </p>
+
+        </div>
+
+        {/* DOCTOR LIST */}
+
+        {
+
+          doctors.map(
+            (doctor) => (
 
               <div
+
+                key={doctor.id}
+
                 className="
-                  flex
-                  items-center
-                  justify-between
+                  rounded-2xl
+                  border
+                  bg-white
+                  p-5
+                  shadow-sm
+                  transition
+                  hover:shadow-md
                 "
               >
 
                 <div
                   className="
-                    space-y-1
+                    flex
+                    flex-col
+                    gap-4
+                    md:flex-row
+                    md:items-center
+                    md:justify-between
                   "
                 >
 
-                  <h3
+                  {/* LEFT */}
+
+                  <div
                     className="
-                      text-lg
+                      space-y-2
+                    "
+                  >
+
+                    <h3
+                      className="
+                        text-lg
+                        font-semibold
+                      "
+                    >
+
+                      {doctor.name}
+
+                    </h3>
+
+                    <p
+                      className="
+                        text-sm
+                        text-muted-foreground
+                      "
+                    >
+
+                      {doctor.department}
+
+                    </p>
+
+                    <p
+                      className="
+                        text-sm
+                        text-muted-foreground
+                      "
+                    >
+
+                      {doctor.hospital}
+
+                    </p>
+
+                    <div
+                      className="
+                        flex
+                        flex-wrap
+                        gap-4
+                        pt-1
+                        text-sm
+                      "
+                    >
+
+                      <span>
+
+                        ⭐ Rating:
+                        {" "}
+                        {doctor.rating}
+
+                      </span>
+
+                      <span>
+
+                        🩺 Experience:
+                        {" "}
+                        {doctor.experience}
+                        {" "}
+                        years
+
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                  {/* RIGHT */}
+
+                  <button
+
+                    onClick={() => {
+
+  setOpen(false);
+
+  requestAnimationFrame(() => {
+
+    setSelectedDoctor(
+      doctor
+    );
+
+    setOpen(true);
+
+  },);
+
+}}
+
+                    className="
+                      rounded-2xl
+                      bg-black
+                      px-6
+                      py-4
                       font-semibold
+                      text-white
+                      transition
+                      hover:scale-[1.02]
+                      hover:opacity-90
                     "
                   >
 
-                    {doctor.name}
+                    Book Appointment
 
-                  </h3>
-
-                  <p
-                    className="
-                      text-sm
-                      text-muted-foreground
-                    "
-                  >
-
-                    {doctor.department}
-
-                  </p>
-
-                  <p
-                    className="
-                      text-sm
-                      text-muted-foreground
-                    "
-                  >
-
-                    Experience:
-                    {" "}
-                    {doctor.experience}
-
-                  </p>
+                  </button>
 
                 </div>
 
-                <button
-                  className="
-                    rounded-xl
-                    bg-black
-                    px-5
-                    py-2
-                    text-sm
-                    text-white
-                    transition
-                    hover:opacity-90
-                  "
-                >
-
-                  Book Appointment
-
-                </button>
-
               </div>
 
-            </div>
-
+            )
           )
+
+        }
+
+      </div>
+
+      {/* MODAL */}
+
+      {
+
+        selectedDoctor && (
+
+          <AppointmentModal
+
+  key={
+    selectedDoctor?.id
+  }
+
+  open={open}
+
+  onClose={() => {
+
+    setOpen(false);
+
+    setSelectedDoctor(null);
+
+  }}
+
+  doctor={selectedDoctor}
+
+/>
+
         )
 
       }
 
-    </div>
+    </>
 
   );
 

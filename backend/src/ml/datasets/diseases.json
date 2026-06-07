@@ -1,29 +1,38 @@
-
 [
   {
-    "name": "Common Cold",
-
+    "disease": "Common Cold",
+    "category": "Respiratory",
     "department": "General Medicine",
-
     "riskLevel": "low",
+    "severityScore": 2,
 
     "primarySymptoms": [
+      "runny nose",
+      "nasal congestion",
       "cough",
       "sore throat",
-      "runny nose"
+      "sneezing"
     ],
 
     "secondarySymptoms": [
       "fatigue",
-      "headache"
+      "headache",
+      "mild fever"
     ],
 
-    "signatureSymptoms": [],
+    "signatureSymptoms": ["runny nose"],
 
     "emergencySymptoms": [],
 
+    "negativeSymptoms": [
+      "loss of taste",
+      "loss of smell",
+      "chest pain"
+    ],
+
     "symptomCombinations": [
-      ["runny nose", "cough"]
+      ["runny nose", "cough"],
+      ["sneezing", "nasal congestion"]
     ],
 
     "recommendations": [
@@ -34,28 +43,37 @@
   },
 
   {
-    "name": "Flu",
-
+    "disease": "Flu",
+    "category": "Respiratory",
     "department": "General Medicine",
-
     "riskLevel": "medium",
+    "severityScore": 5,
 
     "primarySymptoms": [
       "fever",
       "cough",
-      "body pain"
+      "body pain",
+      "fatigue"
     ],
 
     "secondarySymptoms": [
-      "fatigue",
       "headache",
-      "chills"
+      "chills",
+      "sore throat",
+      "runny nose"
     ],
 
-    "signatureSymptoms": [],
+    "signatureSymptoms": [
+      "body pain"
+    ],
 
     "emergencySymptoms": [
-      "high fever"
+      "difficulty breathing"
+    ],
+
+    "negativeSymptoms": [
+      "loss of taste",
+      "loss of smell"
     ],
 
     "symptomCombinations": [
@@ -70,162 +88,127 @@
     ]
   },
 
- 
-{
-  "name": "COVID-19",
-
-  "department": "Pulmonology",
-
-  "riskLevel": "high",
-
-  "primarySymptoms": [
-
-    "fever",
-
-    "cough",
-
-    "fatigue",
-
-    "shortness of breath"
-
-  ],
-
-  "secondarySymptoms": [
-
-    "headache",
-
-    "sore throat",
-
-    "body pain",
-
-    "nasal congestion"
-
-  ],
-
-  "signatureSymptoms": [
-
-    "loss of taste",
-
-    "loss of smell"
-
-  ],
-
-  "emergencySymptoms": [
-
-    "chest pain",
-
-    "difficulty breathing"
-
-  ],
-
-  "symptomCombinations": [
-
-    [
-
-      "fever",
-
-      "cough",
-
-      "loss of taste"
-
-    ],
-
-    [
-
-      "fever",
-
-      "loss of smell"
-
-    ],
-
-    [
-
-      "cough",
-
-      "shortness of breath"
-
-    ]
-
-  ],
-
-  "recommendations": [
-
-    "Stay isolated",
-
-    "Hydrate properly",
-
-    "Monitor oxygen levels",
-
-    "Seek emergency care if breathing worsens"
-
-  ]
-},
-
   {
-    "name": "Pneumonia",
-
+    "disease": "COVID-19",
+    "category": "Respiratory",
     "department": "Pulmonology",
-
     "riskLevel": "high",
+    "severityScore": 8,
 
     "primarySymptoms": [
       "fever",
       "cough",
+      "fatigue",
+      "shortness of breath"
+    ],
+
+    "secondarySymptoms": [
+      "headache",
+      "body pain",
+      "sore throat",
+      "nasal congestion"
+    ],
+
+    "signatureSymptoms": [
+      "loss of taste",
+      "loss of smell"
+    ],
+
+    "emergencySymptoms": [
+      "difficulty breathing",
+      "chest pain"
+    ],
+
+    "negativeSymptoms": [],
+
+    "symptomCombinations": [
+      ["fever", "loss of taste"],
+      ["fever", "loss of smell"],
+      ["cough", "shortness of breath"]
+    ],
+
+    "recommendations": [
+      "Stay isolated",
+      "Monitor oxygen levels",
+      "Seek emergency care if breathing worsens"
+    ]
+  },
+
+  {
+    "disease": "Pneumonia",
+    "category": "Respiratory",
+    "department": "Pulmonology",
+    "riskLevel": "high",
+    "severityScore": 9,
+
+    "primarySymptoms": [
+      "fever",
+      "cough",
+      "shortness of breath",
       "chest pain"
     ],
 
     "secondarySymptoms": [
       "fatigue",
-      "body pain"
+      "body pain",
+      "chills"
     ],
 
     "signatureSymptoms": [
-      "shortness of breath"
+      "green mucus",
+      "yellow mucus"
     ],
 
     "emergencySymptoms": [
       "difficulty breathing"
     ],
 
+    "negativeSymptoms": [],
+
     "symptomCombinations": [
-      ["cough", "shortness of breath"],
-      ["fever", "chest pain"]
+      ["fever", "chest pain"],
+      ["cough", "shortness of breath"]
     ],
 
     "recommendations": [
-      "Consult doctor immediately",
-      "Take prescribed medication",
-      "Rest properly"
+      "Seek immediate medical attention",
+      "Take prescribed medication"
     ]
   },
 
   {
-    "name": "Bronchitis",
-
+    "disease": "Bronchitis",
+    "category": "Respiratory",
     "department": "Pulmonology",
-
     "riskLevel": "medium",
+    "severityScore": 5,
 
     "primarySymptoms": [
+      "persistent cough",
       "cough",
       "fatigue"
     ],
 
     "secondarySymptoms": [
+      "body pain",
       "chest pain",
-      "body pain"
+      "wheezing"
     ],
 
     "signatureSymptoms": [
-      "mucus cough"
+      "persistent cough"
     ],
 
     "emergencySymptoms": [
-      "shortness of breath"
+      "difficulty breathing"
+    ],
+
+    "negativeSymptoms": [
+      "loss of taste"
     ],
 
     "symptomCombinations": [
-      ["cough", "mucus cough"]
+      ["persistent cough", "wheezing"]
     ],
 
     "recommendations": [
@@ -236,90 +219,52 @@
   },
 
   {
-    "name": "Dengue",
-
-    "department": "Infectious Disease",
-
-    "riskLevel": "high",
-
-    "primarySymptoms": [
-      "fever",
-      "joint pain"
-    ],
-
-    "secondarySymptoms": [
-      "vomiting",
-      "fatigue",
-      "headache"
-    ],
-
-    "signatureSymptoms": [
-      "skin rash",
-      "eye pain"
-    ],
-
-    "emergencySymptoms": [
-      "bleeding"
-    ],
-
-    "symptomCombinations": [
-      ["fever", "joint pain"],
-      ["fever", "skin rash"]
-    ],
-
-    "recommendations": [
-      "Drink fluids",
-      "Monitor platelet count",
-      "Take rest",
-      "Consult doctor immediately"
-    ]
-  },
-
-  {
-    "name": "Malaria",
-
-    "department": "Infectious Disease",
-
-    "riskLevel": "high",
-
-    "primarySymptoms": [
-      "fever",
-      "chills",
-      "sweating"
-    ],
-
-    "secondarySymptoms": [
-      "fatigue",
-      "vomiting",
-      "headache"
-    ],
-
-    "signatureSymptoms": [
-      "cyclic fever"
-    ],
-
-    "emergencySymptoms": [
-      "loss of consciousness"
-    ],
-
-    "symptomCombinations": [
-      ["fever", "chills"],
-      ["fever", "sweating"]
-    ],
-
-    "recommendations": [
-      "Consult doctor immediately",
-      "Drink fluids",
-      "Take prescribed medication"
-    ]
-  },
-
-  {
-    "name": "Migraine",
-
-    "department": "Neurology",
-
+    "disease": "Sinusitis",
+    "category": "ENT",
+    "department": "ENT",
     "riskLevel": "medium",
+    "severityScore": 4,
+
+    "primarySymptoms": [
+      "facial pain",
+      "nasal congestion",
+      "headache"
+    ],
+
+    "secondarySymptoms": [
+      "runny nose",
+      "fever",
+      "sinus pressure"
+    ],
+
+    "signatureSymptoms": [
+      "facial pain"
+    ],
+
+    "emergencySymptoms": [],
+
+    "negativeSymptoms": [
+      "loss of taste"
+    ],
+
+    "symptomCombinations": [
+      ["facial pain", "nasal congestion"],
+      ["headache", "sinus pressure"]
+    ],
+
+    "recommendations": [
+      "Steam inhalation",
+      "Drink warm fluids",
+      "Consult ENT specialist"
+    ]
+  },
+
+  {
+    "disease": "Migraine",
+    "category": "Neurological",
+    "department": "Neurology",
+    "riskLevel": "medium",
+    "severityScore": 5,
 
     "primarySymptoms": [
       "headache"
@@ -332,37 +277,133 @@
     ],
 
     "signatureSymptoms": [
-      "light sensitivity"
+      "sensitivity to light",
+      "blurred vision"
     ],
 
     "emergencySymptoms": [],
 
+    "negativeSymptoms": [
+      "fever",
+      "cough"
+    ],
+
     "symptomCombinations": [
-      ["headache", "light sensitivity"]
+      ["headache", "sensitivity to light"],
+      ["headache", "blurred vision"]
     ],
 
     "recommendations": [
       "Rest in dark room",
-      "Stay hydrated",
-      "Avoid loud sounds"
+      "Avoid loud sounds",
+      "Consult neurologist if severe"
     ]
   },
 
   {
-    "name": "Food Poisoning",
+    "disease": "Dengue",
+    "category": "Infectious Disease",
+    "department": "Infectious Disease",
+    "riskLevel": "high",
+    "severityScore": 8,
 
+    "primarySymptoms": [
+      "fever",
+      "joint pain",
+      "body pain"
+    ],
+
+    "secondarySymptoms": [
+      "fatigue",
+      "vomiting",
+      "headache"
+    ],
+
+    "signatureSymptoms": [
+      "skin rash",
+      "red spots"
+    ],
+
+    "emergencySymptoms": [
+      "bleeding"
+    ],
+
+    "negativeSymptoms": [
+      "loss of taste"
+    ],
+
+    "symptomCombinations": [
+      ["fever", "joint pain"],
+      ["fever", "skin rash"]
+    ],
+
+    "recommendations": [
+      "Drink fluids",
+      "Monitor platelet count",
+      "Consult doctor immediately"
+    ]
+  },
+
+  {
+    "disease": "Malaria",
+    "category": "Infectious Disease",
+    "department": "Infectious Disease",
+    "riskLevel": "high",
+    "severityScore": 8,
+
+    "primarySymptoms": [
+      "fever",
+      "chills",
+      "fatigue"
+    ],
+
+    "secondarySymptoms": [
+      "vomiting",
+      "headache",
+      "body pain"
+    ],
+
+    "signatureSymptoms": [
+      "night sweats",
+      "excessive sweating"
+    ],
+
+    "emergencySymptoms": [
+      "loss of consciousness"
+    ],
+
+    "negativeSymptoms": [
+      "loss of taste"
+    ],
+
+    "symptomCombinations": [
+      ["fever", "chills"],
+      ["fever", "night sweats"]
+    ],
+
+    "recommendations": [
+      "Consult doctor immediately",
+      "Take prescribed medication"
+    ]
+  },
+
+  {
+    "disease": "Food Poisoning",
+    "category": "Gastroenterology",
     "department": "Gastroenterology",
-
     "riskLevel": "medium",
+    "severityScore": 5,
 
     "primarySymptoms": [
       "vomiting",
-      "diarrhea"
+      "diarrhea",
+      "abdominal pain"
     ],
 
     "secondarySymptoms": [
       "nausea",
-      "abdominal pain"
+      "dehydration",
+      "stomach cramps"
     ],
 
     "signatureSymptoms": [
@@ -370,11 +411,17 @@
     ],
 
     "emergencySymptoms": [
-      "severe dehydration"
+      "blood vomiting"
+    ],
+
+    "negativeSymptoms": [
+      "cough",
+      "loss of taste"
     ],
 
     "symptomCombinations": [
-      ["vomiting", "diarrhea"]
+      ["vomiting", "diarrhea"],
+      ["abdominal pain", "stomach cramps"]
     ],
 
     "recommendations": [
@@ -385,102 +432,76 @@
   },
 
   {
-    "name": "Sinusitis",
-
-    "department": "ENT",
-
-    "riskLevel": "low",
-
-    "primarySymptoms": [
-      "facial pain",
-      "nasal congestion"
-    ],
-
-    "secondarySymptoms": [
-      "headache",
-      "runny nose",
-      "fever"
-    ],
-
-    "signatureSymptoms": [
-      "facial pressure"
-    ],
-
-    "emergencySymptoms": [],
-
-    "symptomCombinations": [
-      ["facial pain", "nasal congestion"]
-    ],
-
-    "recommendations": [
-      "Steam inhalation",
-      "Drink warm fluids",
-      "Consult ENT specialist if persistent"
-    ]
-  },
-
-  {
-    "name": "Tonsillitis",
-
-    "department": "ENT",
-
-    "riskLevel": "medium",
+    "disease": "Appendicitis",
+    "category": "Surgical",
+    "department": "General Surgery",
+    "riskLevel": "high",
+    "severityScore": 9,
 
     "primarySymptoms": [
-      "sore throat",
-      "difficulty swallowing"
-    ],
-
-    "secondarySymptoms": [
-      "fever",
-      "fatigue",
-      "headache"
-    ],
-
-    "signatureSymptoms": [
-      "swollen tonsils"
-    ],
-
-    "emergencySymptoms": [
-      "breathing difficulty"
-    ],
-
-    "symptomCombinations": [
-      ["sore throat", "difficulty swallowing"]
-    ],
-
-    "recommendations": [
-      "Warm salt water gargle",
-      "Stay hydrated",
-      "Consult doctor if severe"
-    ]
-  },
-
-  {
-    "name": "Acidity",
-
-    "department": "Gastroenterology",
-
-    "riskLevel": "low",
-
-    "primarySymptoms": [
-      "chest burning",
-      "stomach pain"
+      "abdominal pain",
+      "vomiting"
     ],
 
     "secondarySymptoms": [
       "nausea",
-      "bloating"
+      "fever"
     ],
 
     "signatureSymptoms": [
-      "acid reflux"
+      "abdominal pain"
+    ],
+
+    "emergencySymptoms": [
+      "abdominal pain"
+    ],
+
+    "negativeSymptoms": [
+      "cough",
+      "runny nose"
+    ],
+
+    "symptomCombinations": [
+      ["abdominal pain", "vomiting"],
+      ["abdominal pain", "fever"]
+    ],
+
+    "recommendations": [
+      "Seek immediate medical attention",
+      "Avoid self-medication"
+    ]
+  },
+
+  {
+    "disease": "Acidity",
+    "category": "Gastroenterology",
+    "department": "Gastroenterology",
+    "riskLevel": "low",
+    "severityScore": 3,
+
+    "primarySymptoms": [
+      "chest burning",
+      "abdominal pain"
+    ],
+
+    "secondarySymptoms": [
+      "bloating",
+      "nausea"
+    ],
+
+    "signatureSymptoms": [
+      "chest burning"
     ],
 
     "emergencySymptoms": [],
 
+    "negativeSymptoms": [
+      "fever",
+      "cough"
+    ],
+
     "symptomCombinations": [
-      ["chest burning", "stomach pain"]
+      ["chest burning", "bloating"]
     ],
 
     "recommendations": [
@@ -491,117 +512,11 @@
   },
 
   {
-    "name": "Appendicitis",
-
-    "department": "General Surgery",
-
-    "riskLevel": "high",
-
-    "primarySymptoms": [
-      "abdominal pain"
-    ],
-
-    "secondarySymptoms": [
-      "vomiting",
-      "fever",
-      "nausea"
-    ],
-
-    "signatureSymptoms": [
-      "right lower abdominal pain"
-    ],
-
-    "emergencySymptoms": [
-      "severe abdominal pain"
-    ],
-
-    "symptomCombinations": [
-      ["abdominal pain", "vomiting"]
-    ],
-
-    "recommendations": [
-      "Seek immediate medical attention",
-      "Avoid self-medication"
-    ]
-  },
-
-  {
-    "name": "Dehydration",
-
-    "department": "General Medicine",
-
-    "riskLevel": "low",
-
-    "primarySymptoms": [
-      "dizziness",
-      "dry mouth"
-    ],
-
-    "secondarySymptoms": [
-      "fatigue",
-      "headache"
-    ],
-
-    "signatureSymptoms": [
-      "dark urine"
-    ],
-
-    "emergencySymptoms": [
-      "fainting"
-    ],
-
-    "symptomCombinations": [
-      ["dizziness", "dry mouth"]
-    ],
-
-    "recommendations": [
-      "Drink oral fluids",
-      "Avoid excessive heat",
-      "Rest properly"
-    ]
-  },
-
-  {
-    "name": "Muscle Strain",
-
-    "department": "Orthopedics",
-
-    "riskLevel": "low",
-
-    "primarySymptoms": [
-      "muscle soreness",
-      "joint pain",
-      "wrist pain"
-    ],
-
-    "secondarySymptoms": [
-      "swelling",
-      "stiffness"
-    ],
-
-    "signatureSymptoms": [
-      "pain after workout"
-    ],
-
-    "emergencySymptoms": [],
-
-    "symptomCombinations": [
-      ["muscle soreness", "stiffness"]
-    ],
-
-    "recommendations": [
-      "Rest the affected area",
-      "Apply ice pack",
-      "Avoid heavy lifting"
-    ]
-  },
-
-  {
-    "name": "Stress",
-
+    "disease": "Stress",
+    "category": "Psychological",
     "department": "Psychology",
-
     "riskLevel": "low",
+    "severityScore": 3,
 
     "primarySymptoms": [
       "anxiety",
@@ -609,18 +524,25 @@
     ],
 
     "secondarySymptoms": [
+      "fatigue",
       "headache",
-      "fatigue"
+      "mood swings"
     ],
 
     "signatureSymptoms": [
-      "overthinking"
+      "panic attacks"
     ],
 
     "emergencySymptoms": [],
 
+    "negativeSymptoms": [
+      "fever",
+      "vomiting"
+    ],
+
     "symptomCombinations": [
-      ["anxiety", "sleep disturbance"]
+      ["anxiety", "sleep disturbance"],
+      ["panic attacks", "fatigue"]
     ],
 
     "recommendations": [

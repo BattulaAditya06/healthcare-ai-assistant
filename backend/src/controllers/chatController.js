@@ -1,52 +1,148 @@
 
-const prisma =
-require(
-  "../config/prisma"
+const crypto =
+require("crypto");
+
+const {
+  processSymptoms
+} = require(
+  "../services/nlpProcessingService"
 );
 
-const chatService =
+const predictionService =
 require(
-  "../services/chatService"
+  "../services/predictionService"
 );
+
+const recommendDoctors =
+require(
+  "../appointments/services/doctorRecommendationService"
+);
+
+// =========================
+// TEMP IN-MEMORY CHAT
+// =========================
+
+const messages = [];
 
 // =========================
 // ANALYZE CHAT
 // =========================
 
 const analyzeChat =
-async (
-  req,
-  res
-) => {
+async (req, res) => {
 
   try {
 
-    const response =
-      await chatService(
+    const {
+      message = ""
+    } = req.body;
 
-        req.user.id,
+    // =====================
+    // NLP
+    // =====================
 
-        req.body.message
+    const processedData =
 
+      processSymptoms(
+        message
       );
 
-    return res.status(200).json(
-      response
+    const symptoms =
+      processedData.symptoms;
+
+    console.log(
+      "FINAL NORMALIZED SYMPTOMS:",
+      symptoms
     );
+
+    // =====================
+    // PREDICTIONS
+    // =====================
+
+    const possibleDiseases =
+
+      predictionService(
+        symptoms
+      ) || [];
+
+    // =====================
+    // TOP PREDICTION
+    // =====================
+
+    const topPrediction =
+
+      possibleDiseases[0];
+
+    // =====================
+    // DOCTOR RECOMMENDATIONS
+    // =====================
+
+    let recommendedDoctors =
+      [];
+
+    if (
+
+      topPrediction?.department
+
+    ) {
+
+      recommendedDoctors =
+
+        recommendDoctors(
+
+          topPrediction.department
+
+        );
+
+    }
+
+    // =====================
+    // STORE MESSAGE
+    // =====================
+
+    messages.push({
+
+      id:
+        crypto.randomUUID(),
+
+      role:
+        "user",
+
+      content:
+        message,
+
+      createdAt:
+        new Date()
+
+    });
+
+    // =====================
+    // RESPONSE
+    // =====================
+
+    return res.json({
+
+      success: true,
+
+      enteredSymptoms:
+        symptoms,
+
+      possibleDiseases,
+
+      recommendedDoctors
+
+    });
 
   } catch (error) {
 
-    console.log(
-      "Chat Controller Error:",
-      error.message
-    );
+    console.log(error);
 
     return res.status(500).json({
 
       success: false,
 
       message:
-        "Internal server error"
+        "Chat analysis failed"
 
     });
 
@@ -55,66 +151,15 @@ async (
 };
 
 // =========================
-// GET CHAT MESSAGES
+// GET CHAT HISTORY
 // =========================
 
 const getMessages =
-async (
-  req,
-  res
-) => {
+async (req, res) => {
 
-  try {
-
-    const chat =
-      await prisma.chat.findFirst({
-
-        where: {
-          userId:
-            req.user.id
-        },
-
-        include: {
-
-          messages: {
-
-            orderBy: {
-              createdAt: "asc"
-            }
-
-          }
-
-        }
-
-      });
-
-    if (!chat) {
-
-      return res.status(200).json([]);
-
-    }
-
-    return res.status(200).json(
-      chat.messages
-    );
-
-  } catch (error) {
-
-    console.log(
-      "Get Messages Error:",
-      error.message
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message:
-        "Internal server error"
-
-    });
-
-  }
+  return res.json(
+    messages
+  );
 
 };
 

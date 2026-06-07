@@ -12,9 +12,27 @@ export interface DiseasePrediction {
 
 }
 
+export interface Doctor {
+
+  id: number;
+
+  name: string;
+
+  department: string;
+
+  rating: number;
+
+  experience: number;
+
+  hospital: string;
+
+}
+
 export interface ChatResponse {
 
   success: boolean;
+
+  message?: string;
 
   enteredSymptoms: string[];
 
@@ -30,6 +48,8 @@ export interface ChatResponse {
 
     department: string;
 
+    emergencyMatch?: boolean;
+
     recommendations?: string[];
 
   }[];
@@ -42,12 +62,25 @@ export interface ChatResponse {
 
     department: string;
 
-    experience: string;
+    rating: number;
+
+    experience: number;
+
+    hospital: string;
 
   }[];
 
-}
+  emergency?: {
 
+  isEmergency: boolean;
+
+  severity: string;
+
+  matchedSymptoms: string[];
+
+};
+
+}
 
 export interface StoredMessage {
 

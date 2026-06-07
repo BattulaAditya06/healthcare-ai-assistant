@@ -1,94 +1,161 @@
 {
   "high temperature": "fever",
-
-  "cold": "runny nose",
-
-  "cold and cough": "cough",
-
-  "body ache": "body pain",
+  "mild fever": "fever",
+  "low fever": "fever",
+  "temperature": "fever",
+  "burning body": "fever",
+  "body hot": "fever",
 
   "head pain": "headache",
+  "head hurts": "headache",
+  "head hurting": "headache",
+  "pain in head": "headache",
+  "migraine": "headache",
+
+  "body ache": "body pain",
+  "body aches": "body pain",
+  "body hurting": "body pain",
+  "whole body pain": "body pain",
+
+  "muscle soreness": "muscle pain",
+  "muscle ache": "muscle pain",
+  "muscle aches": "muscle pain",
 
   "throwing up": "vomiting",
+  "vomit": "vomiting",
+  "vomiting sensation": "vomiting",
 
   "loose motion": "diarrhea",
+  "loose motions": "diarrhea",
+  "watery stool": "diarrhea",
 
-  "breathing difficulty":
-    "shortness of breath",
+  "breathing difficulty": "shortness of breath",
+  "breathing issue": "shortness of breath",
+  "trouble breathing": "shortness of breath",
+  "difficulty breathing": "shortness of breath",
+  "breathlessness": "shortness of breath",
 
   "throat pain": "sore throat",
+  "pain in throat": "sore throat",
+  "throat irritation": "sore throat",
 
-  "blocked nose":
-    "nasal congestion",
-
-  "burning chest":
-    "chest burning",
-
-  "stomach ache":
-    "abdominal pain",
-
-  "feeling dizzy":
-    "dizziness",
-
-  "weakness":
-    "fatigue",
-
-  "stress":
-    "anxiety",
-  "hand pain": "wrist pain",
-  "wrist hurting": "wrist pain",
-  "gym pain": "muscle soreness",
-  "workout pain": "muscle soreness",
-  "joint ache": "joint pain",
-  "body soreness": "muscle soreness",
-  "sprain": "joint pain",
-  "strain": "muscle soreness"
-,
-  "cold": "runny nose",
-  "little cold": "runny nose",
   "blocked nose": "nasal congestion",
   "stuffy nose": "nasal congestion",
+  "nose blockage": "nasal congestion",
+  "nose congestion": "nasal congestion",
+
+  "cold": "runny nose",
+  "common cold": "runny nose",
+  "having cold": "runny nose",
+  "caught cold": "runny nose",
+  "sneezing": "runny nose",
+
+  "nose running": "runny nose",
+
+  "burning chest": "chest pain",
+  "chest irritation": "chest pain",
+
+  "stomach ache": "abdominal pain",
+  "stomach pain": "abdominal pain",
+  "pain in stomach": "abdominal pain",
+  "belly pain": "abdominal pain",
+
+  "feeling dizzy": "dizziness",
+  "lightheaded": "dizziness",
+  "dizzy": "dizziness",
+
+  "feeling weak": "fatigue",
+  "tired": "fatigue",
+  "very tired": "fatigue",
+  "exhausted": "fatigue",
+  "low energy": "fatigue",
+  "weak": "fatigue",
+  "body weakness": "fatigue",
+  "fatigued": "fatigue",
+
   "itchy": "itching",
   "itchiness": "itching",
   "skin irritation": "itching",
-  "body pain": "body ache",
-  "body pains": "body ache",
-  "throwing up": "vomiting",
-  "feeling weak": "fatigue",
-  "breathing issue": "shortness of breath",
+  "skin itching": "itching",
+  "itchy skin": "itching",
+
+  "skin rashes": "skin rash",
+  "red rashes": "skin rash",
+
   "shivering": "chills",
-  "high temperature": "fever",
+  "cold shivers": "chills",
 
-"headache": [
-  "head pain",
-  "migraine",
-  "head hurts",
-  "head hurting"
-],
+  "joint ache": "joint pain",
+  "pain in joints": "joint pain",
+  "joint hurting": "joint pain",
 
+  "pain in wrist": "wrist pain",
+  "wrist hurting": "wrist pain",
+  "wrist ache": "wrist pain",
 
-  "fatigue": [
-    "tired",
-    "weakness",
-    "exhausted"
-  ],
+  "back ache": "back pain",
+  "back hurting": "back pain",
+  "lower back pain": "back pain",
 
-  "nausea": [
-    "feeling sick",
-    "queasy"
-  ],
+  "knee ache": "knee pain",
+  "ankle ache": "ankle pain",
+  "shoulder ache": "shoulder pain",
 
-  "vomiting": [
-    "throwing up",
-    "vomit"
-  ],
+  "swollen": "swelling",
+  "body swelling": "swelling",
 
- 
-"wrist pain": [
-  "wristpain",
-  "pain in wrist",
-  "wrist hurting",
-  "wrist ache"
-]
+  "hard to swallow": "difficulty swallowing",
+
+  "cannot sleep": "sleep disturbance",
+  "sleep problem": "sleep disturbance",
+  "insomnia": "sleep disturbance",
+
+  "panic": "panic attacks",
+  "panic attack": "panic attacks",
+  "nervous": "anxiety",
+  "anxious": "anxiety",
+
+  "loss of taste sensation": "loss of taste",
+  "cannot taste": "loss of taste",
+  "food has no taste": "loss of taste",
+
+  "cannot smell": "loss of smell",
+  "loss of smell sensation": "loss of smell",
+
+  "fast heartbeat": "rapid heartbeat",
+  "heart racing": "rapid heartbeat",
+
+  "passing out": "fainting",
+  "fainted": "fainting",
+
+  "blackout": "loss of consciousness",
+
+  "pins and needles": "tingling sensation",
+
+  "bloody cough": "cough with blood",
+
+  "yellow phlegm": "yellow mucus",
+  "green phlegm": "green mucus",
+
+  "high bp": "high blood pressure",
+  "low bp": "low blood pressure",
+
+  "cant breathe": "difficulty breathing",
+  "unable to breathe": "difficulty breathing",
+
+  "heavy chest": "chest pain",
+
+  "cant walk properly": "difficulty walking",
+
+  "blurry vision": "blurred vision",
+
+  "red eyes": "eye redness",
+
+  "sweating too much": "excessive sweating",
+
+  "memory issues": "memory loss",
+
+  "confused": "confusion",
+
+  "skin peeling off": "skin peeling"
 }
-

@@ -1,56 +1,103 @@
-
 "use client";
-
-import { useState }
-from "react";
 
 import {
 
-  createAppointment
+  useEffect,
 
-} from "@/services/appointment-service";
+  useState
 
-interface Props {
+} from "react";
+import {
+
+  useAppointmentStore
+
+} from "@/features/appointments/store/appointment-store";
+
+// =========================
+// TYPES
+// =========================
+
+type Doctor = {
+
+  id: number;
+
+  name: string;
+
+  department: string;
+
+  rating: number;
+
+  experience: number;
+
+  hospital: string;
+
+};
+
+type Appointment = {
+
+  appointmentId: string;
+
+  doctorName: string;
+
+  appointmentTime: string;
+
+};
+
+type Props = {
 
   open: boolean;
 
   onClose: () => void;
 
-  department: string;
+  doctor: Doctor | null;
 
-}
+};
 
-export function AppointmentModal({
+// =========================
+// COMPONENT
+// =========================
 
+export default function AppointmentModal({
+
+
+  
   open,
 
   onClose,
 
-  department
+  doctor
 
 }: Props) {
 
+  const {
+
+    addAppointment
+
+  } = useAppointmentStore();
+
   const [
 
-    doctorName,
+    slots,
 
-    setDoctorName
+    setSlots
+
+  ] = useState<string[]>([]);
+
+
+  
+  const [
+
+    selectedSlot,
+
+    setSelectedSlot
 
   ] = useState("");
 
   const [
 
-    appointmentDate,
+    patientName,
 
-    setAppointmentDate
-
-  ] = useState("");
-
-  const [
-
-    timeSlot,
-
-    setTimeSlot
+    setPatientName
 
   ] = useState("");
 
@@ -62,167 +109,587 @@ export function AppointmentModal({
 
   ] = useState(false);
 
+  const [
+
+    success,
+
+    setSuccess
+
+  ] = useState(false);
+
+  const [
+
+    appointment,
+
+    setAppointment
+
+  ] = useState<Appointment | null>(
+    null
+  );
+
+  // =====================
+  // FETCH SLOTS
+  // =====================
+
+  useEffect(() => {
+
+  if (
+
+    !open ||
+
+    !doctor
+
+  ) {
+
+    return;
+
+  }
+
+  const fetchSlots =
+    async () => {
+
+      try {
+
+        const response =
+          await fetch(
+
+            `http://localhost:5000/api/appointments/slots?doctorId=${doctor.id}`
+
+          );
+
+        const data =
+          await response.json();
+
+        setSlots(
+          data.slots || []
+        );
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    };
+
+  fetchSlots();
+
+}, [open, doctor, success]);
+
+  // =====================
+  // BOOK APPOINTMENT
+  // =====================
+
+ const handleBooking = async () => {
+
+  if (
+    !patientName ||
+    !selectedSlot ||
+    !doctor
+  ) {
+
+    alert(
+      "Please fill all fields"
+    );
+
+    return;
+
+  }
+
+  try {
+
+    setLoading(true);
+
+    const response =
+      await fetch(
+
+        "http://localhost:5000/api/appointments/book",
+
+        {
+
+          method: "POST",
+
+          headers: {
+
+            "Content-Type":
+              "application/json"
+
+          },
+
+          body: JSON.stringify({
+
+            doctorId:
+              doctor.id,
+
+            patientName,
+
+            appointmentDate:
+              new Date()
+                .toISOString()
+                .split("T")[0],
+
+            appointmentTime:
+              selectedSlot,
+
+            symptoms: [],
+
+            severity:
+              "medium"
+
+          })
+
+        }
+
+      );
+
+    const data =
+      await response.json();
+
+    console.log(
+      "BOOKING SUCCESS:",
+      data
+    );
+
+    if (data.success) {
+
+  const appointmentData = {
+
+    id:
+      data.appointment.appointmentId,
+
+    doctorName:
+      data.appointment.doctorName,
+
+    department:
+      data.appointment.department,
+
+    date:
+      data.appointment.appointmentDate,
+
+    time:
+      data.appointment.appointmentTime,
+
+    status:
+      "upcoming" as const
+
+  };
+
+  console.log(
+    "ADDING:",
+    appointmentData
+  );
+
+  addAppointment(
+    appointmentData
+  );
+
+  console.log(
+    "STORE AFTER ADD:",
+    useAppointmentStore
+      .getState()
+      .appointments
+  );
+
+  setAppointment({
+
+    appointmentId:
+      data.appointment.appointmentId,
+
+    doctorName:
+      data.appointment.doctorName,
+
+    appointmentTime:
+      data.appointment.appointmentTime
+
+  });
+
+  setSuccess(true);
+
+  setSelectedSlot("");
+
+}
+  } catch (error) {
+
+    console.log(
+      "BOOKING ERROR:",
+      error
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+
+};
+
+const resetModal = () => {
+
+  setSelectedSlot("");
+
+  setPatientName("");
+
+  setLoading(false);
+
+  setSuccess(false);
+
+  setAppointment(null);
+
+};
+
+  // =====================
+  // CLOSE
+  // =====================
+
   if (!open) {
 
     return null;
 
   }
 
-  const handleBook =
-    async () => {
+  // =====================
+  // SUCCESS
+  // =====================
 
-      try {
+  if (
 
-        setLoading(true);
+    success &&
 
-        const token =
-          localStorage.getItem(
-            "token"
-          );
+    appointment
 
-        if (!token) {
+  ) {
 
-          return;
+    return (
 
-        }
+      <div
+  className="
+    fixed
+    inset-0
+    z-[9999]
+    flex
+    items-center
+    justify-center
+    bg-black/40
+  "
+>
 
-        await createAppointment(
+        <div
+          className="
+            w-[420px]
+            rounded-2xl
+            bg-white
+            p-8
+          "
+        >
 
-          token,
+          <h2
+            className="
+              text-2xl
+              font-bold
+              text-green-600
+            "
+          >
 
-          {
+            Appointment Confirmed
 
-            doctorName,
+          </h2>
 
-            department,
+          <div
+            className="
+              mt-5
+              space-y-2
+            "
+          >
 
-            appointmentDate,
+            <p>
 
-            timeSlot
+              Appointment ID:
+              {" "}
+              {appointment.appointmentId}
 
-          }
+            </p>
 
-        );
+            <p>
 
-        onClose();
+              Doctor:
+              {" "}
+              {appointment.doctorName}
 
-      } catch (error) {
+            </p>
 
-        console.log(error);
+            <p>
 
-      } finally {
+              Time:
+              {" "}
+              {appointment.appointmentTime}
 
-        setLoading(false);
+            </p>
 
-      }
+          </div>
 
-    };
+          <button
+
+            onClick={() => {
+
+setSuccess(false);
+
+setAppointment(null);
+
+setSelectedSlot("");
+
+setPatientName("");
+
+onClose();
+}}
+
+            className="
+              mt-6
+              w-full
+              rounded-xl
+              bg-black
+              py-3
+              text-white
+            "
+
+          >
+
+            Close
+
+          </button>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
+
+  // =====================
+  // MODAL
+  // =====================
 
   return (
 
     <div
       className="
-        fixed
-        inset-0
-        z-50
+        fixed inset-0 overflow-y-auto
+        z-[9999]
         flex
         items-center
         justify-center
-        bg-black/50
+        bg-black/40
       "
     >
 
       <div
         className="
-          w-full
-          max-w-md
+          w-[500px]
           rounded-2xl
-          bg-background
-          p-6
-          shadow-2xl
+          bg-white
+          p-8
         "
       >
 
-        <h2
+        <div
           className="
-            mb-6
-            text-2xl
-            font-bold
+            flex
+            items-center
+            justify-between
           "
         >
 
-          Book Appointment
+          <div>
 
-        </h2>
+            <h2
+              className="
+                text-2xl
+                font-bold
+              "
+            >
+
+              Book Appointment
+
+            </h2>
+
+            <p
+              className="
+                mt-1
+                text-gray-500
+              "
+            >
+
+              {doctor?.name}
+
+            </p>
+
+          </div>
+
+          <button
+            onClick={() => {
+
+  resetModal();
+
+  onClose();
+
+}}
+          >
+            ✕
+          </button>
+
+        </div>
+
+        <div className="mt-6">
+
+          <label
+            className="
+              text-sm
+              font-medium
+            "
+          >
+
+            Patient Name
+
+          </label>
+
+          <input
+
+            type="text"
+
+            value={patientName}
+
+            onChange={(e) =>
+              setPatientName(
+                e.target.value
+              )
+            }
+
+            placeholder="Enter patient name"
+
+            className="
+              mt-2
+              w-full
+              rounded-xl
+              border
+              p-3
+            "
+
+          />
+
+        </div>
+
+        <div className="mt-6">
+
+          <h3
+            className="
+              mb-3
+              font-semibold
+            "
+          >
+
+            Select Time Slot
+
+          </h3>
+
+          <div
+            className="
+              grid
+              grid-cols-2
+              gap-3
+            "
+          >
+
+            {slots.map(
+
+              (slot) => (
+
+                <button
+
+                  key={slot}
+
+                  onClick={() =>
+                    setSelectedSlot(
+                      slot
+                    )
+                  }
+
+                  className={`
+
+                    rounded-xl
+                    border
+                    py-3
+
+                    ${
+
+                      selectedSlot === slot
+
+                        ? "bg-black text-white"
+
+                        : "bg-white"
+
+                    }
+
+                  `}
+
+                >
+
+                  {slot}
+
+                </button>
+
+              )
+
+            )}
+
+          </div>
+
+        </div>
 
         <div
           className="
-            space-y-4
+            mt-8
+            flex
+            gap-3
           "
         >
 
-          <input
-            type="text"
-            placeholder="Doctor Name"
-            value={doctorName}
-            onChange={(e) =>
-              setDoctorName(
-                e.target.value
-              )
-            }
-            className="
-              w-full
-              rounded-lg
-              border
-              p-3
-            "
-          />
+          <button
 
-          <input
-            type="date"
-            value={appointmentDate}
-            onChange={(e) =>
-              setAppointmentDate(
-                e.target.value
-              )
-            }
-            className="
-              w-full
-              rounded-lg
-              border
-              p-3
-            "
-          />
+            onClick={() => {
 
-          <input
-            type="text"
-            placeholder="Time Slot"
-            value={timeSlot}
-            onChange={(e) =>
-              setTimeSlot(
-                e.target.value
-              )
-            }
+  resetModal();
+
+  onClose();
+
+}}
+
             className="
-              w-full
-              rounded-lg
+              flex-1
+              rounded-xl
               border
-              p-3
+              py-3
             "
-          />
+
+          >
+
+            Cancel
+
+          </button>
 
           <button
-            onClick={
-              handleBook
-            }
+
+            onClick={handleBooking}
+
             disabled={loading}
+
             className="
-              w-full
-              rounded-lg
+              flex-1
+              rounded-xl
               bg-black
-              p-3
+              py-3
               text-white
             "
+
           >
 
             {
@@ -231,7 +698,7 @@ export function AppointmentModal({
 
                 ? "Booking..."
 
-                : "Confirm Appointment"
+                : "Confirm Booking"
 
             }
 

@@ -1,66 +1,147 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
 
-import {
-  Badge
-} from "@/components/ui/badge";
-
-import {
-  Progress
-} from "@/components/ui/progress";
-
-import {
-  AlertTriangle,
-  Brain,
-  Activity
-} from "lucide-react";
-
-import {
   motion
+
 } from "framer-motion";
 
 import {
+
+  Card,
+
+  CardContent,
+
+  CardHeader,
+
+  CardTitle
+
+} from "@/components/ui/card";
+
+import {
+
+  Badge
+
+} from "@/components/ui/badge";
+
+import {
+
+  Progress
+
+} from "@/components/ui/progress";
+
+import {
+
+  AlertTriangle,
+
+  Brain,
+
+  Activity,
+
+  ShieldAlert,
+
+  Stethoscope,
+
+  Sparkles
+
+} from "lucide-react";
+
+import {
+
   useDiagnosticStore
+
 } from "@/shared/store/diagnostic-store";
+
+// =========================
+// COMPONENT
+// =========================
 
 export function AIHealthPanel() {
 
   const {
 
-    symptoms,
+    symptoms = [],
 
-    predictions,
+    predictions = [],
 
-    riskLevel,
+    riskLevel = "Low",
 
-    department,
+    department = "General Medicine",
 
-    reasoning,
+    reasoning = [],
 
-    emergency
+    emergency = false
 
   } = useDiagnosticStore();
 
+  // =========================
+  // TOP PREDICTION
+  // =========================
+
   const topPrediction =
-    predictions[0];
+    predictions?.[0];
+
+  // =========================
+  // RISK UI
+  // =========================
+
+  const getRiskBadgeVariant = () => {
+
+    const risk =
+      riskLevel
+        ?.toLowerCase();
+
+    if (
+      risk === "high"
+    ) {
+
+      return "destructive";
+
+    }
+
+    return "secondary";
+
+  };
+
+  // =========================
+  // CONFIDENCE COLOR
+  // =========================
+
+  const getConfidenceColor = (
+    confidence: number
+  ) => {
+
+    if (confidence >= 70) {
+
+      return "text-red-500";
+
+    }
+
+    if (confidence >= 40) {
+
+      return "text-yellow-500";
+
+    }
+
+    return "text-emerald-500";
+
+  };
+
+  // =========================
+  // RENDER
+  // =========================
 
   return (
 
     <aside
       className="
         hidden
+        xl:block
         w-80
         border-l
         bg-background/80
-        p-6
         backdrop-blur-xl
-        xl:block
+        p-6
       "
     >
 
@@ -70,13 +151,15 @@ export function AIHealthPanel() {
         "
       >
 
-        {/* HEADER */}
+        {/* =====================
+            HEADER
+        ====================== */}
 
         <motion.div
 
           initial={{
             opacity: 0,
-            y: 20
+            y: 15
           }}
 
           animate={{
@@ -86,32 +169,66 @@ export function AIHealthPanel() {
 
         >
 
-          <h2
+          <div
             className="
-              text-2xl
-              font-bold
+              flex
+              items-center
+              gap-3
             "
           >
 
-            AI Health State
+            <div
+              className="
+                rounded-2xl
+                bg-primary/10
+                p-3
+              "
+            >
 
-          </h2>
+              <Sparkles
+                className="
+                  h-6
+                  w-6
+                  text-primary
+                "
+              />
 
-          <p
-            className="
-              mt-1
-              text-sm
-              text-muted-foreground
-            "
-          >
+            </div>
 
-            Live diagnostic intelligence
+            <div>
 
-          </p>
+              <h2
+                className="
+                  text-2xl
+                  font-bold
+                "
+              >
+
+                AI Health State
+
+              </h2>
+
+              <p
+                className="
+                  text-sm
+                  text-muted-foreground
+                  mt-1
+                "
+              >
+
+                Real-time diagnostic intelligence
+
+              </p>
+
+            </div>
+
+          </div>
 
         </motion.div>
 
-        {/* EMERGENCY ALERT */}
+        {/* =====================
+            EMERGENCY ALERT
+        ====================== */}
 
         {emergency && (
 
@@ -119,7 +236,7 @@ export function AIHealthPanel() {
 
             initial={{
               opacity: 0,
-              scale: 0.9
+              scale: 0.95
             }}
 
             animate={{
@@ -133,23 +250,36 @@ export function AIHealthPanel() {
               className="
                 border-red-500
                 bg-red-500/10
+                shadow-lg
               "
             >
 
               <CardContent
                 className="
                   flex
-                  items-center
-                  gap-3
-                  p-4
+                  items-start
+                  gap-4
+                  p-5
                 "
               >
 
-                <AlertTriangle
+                <div
                   className="
-                    text-red-500
+                    rounded-xl
+                    bg-red-500/20
+                    p-2
                   "
-                />
+                >
+
+                  <ShieldAlert
+                    className="
+                      h-5
+                      w-5
+                      text-red-500
+                    "
+                  />
+
+                </div>
 
                 <div>
 
@@ -160,18 +290,19 @@ export function AIHealthPanel() {
                     "
                   >
 
-                    Emergency Risk
+                    Emergency Risk Detected
 
                   </h3>
 
                   <p
                     className="
+                      mt-1
                       text-sm
                       text-muted-foreground
                     "
                   >
 
-                    Immediate medical attention recommended
+                    Immediate medical consultation is strongly recommended.
 
                   </p>
 
@@ -185,7 +316,9 @@ export function AIHealthPanel() {
 
         )}
 
-        {/* CURRENT STATUS */}
+        {/* =====================
+            CURRENT STATUS
+        ====================== */}
 
         <motion.div
 
@@ -205,7 +338,11 @@ export function AIHealthPanel() {
 
         >
 
-          <Card>
+          <Card
+            className="
+              shadow-sm
+            "
+          >
 
             <CardHeader>
 
@@ -232,9 +369,11 @@ export function AIHealthPanel() {
 
             <CardContent
               className="
-                space-y-4
+                space-y-5
               "
             >
+
+              {/* RISK */}
 
               <div
                 className="
@@ -244,22 +383,20 @@ export function AIHealthPanel() {
                 "
               >
 
-                <span>
+                <span
+                  className="
+                    text-sm
+                  "
+                >
+
                   Risk Level
+
                 </span>
 
                 <Badge
-
                   variant={
-                  topPrediction?.confidence>=35&&
-                    riskLevel.toLowerCase() === "high"
-
-                      ? "destructive"
-
-                      : "secondary"
-
+                    getRiskBadgeVariant()
                   }
-
                 >
 
                   {riskLevel}
@@ -268,6 +405,8 @@ export function AIHealthPanel() {
 
               </div>
 
+              {/* DEPARTMENT */}
+
               <div
                 className="
                   flex
@@ -276,20 +415,36 @@ export function AIHealthPanel() {
                 "
               >
 
-                <span>
-                  Department
-                </span>
-
                 <span
                   className="
+                    text-sm
+                  "
+                >
+
+                  Department
+
+                </span>
+
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-2
                     text-sm
                     text-muted-foreground
                   "
                 >
 
+                  <Stethoscope
+                    className="
+                      h-4
+                      w-4
+                    "
+                  />
+
                   {department}
 
-                </span>
+                </div>
 
               </div>
 
@@ -299,7 +454,9 @@ export function AIHealthPanel() {
 
         </motion.div>
 
-        {/* TOP PREDICTION */}
+        {/* =====================
+            TOP PREDICTION
+        ====================== */}
 
         <motion.div
 
@@ -319,7 +476,11 @@ export function AIHealthPanel() {
 
         >
 
-          <Card>
+          <Card
+            className="
+              shadow-sm
+            "
+          >
 
             <CardHeader>
 
@@ -338,7 +499,15 @@ export function AIHealthPanel() {
                   "
                 />
 
-                {topPrediction?.confidence>=25?"Top Prediction":"Possible Conditions"}
+                {
+
+                  topPrediction?.confidence >= 25
+
+                    ? "Top Prediction"
+
+                    : "Possible Conditions"
+
+                }
 
               </CardTitle>
 
@@ -346,7 +515,7 @@ export function AIHealthPanel() {
 
             <CardContent
               className="
-                space-y-4
+                space-y-5
               "
             >
 
@@ -357,10 +526,15 @@ export function AIHealthPanel() {
                   <div>
 
                     <h3
-                      className="
-                        text-xl
-                        font-semibold
-                      "
+                      className={`
+                        text-2xl
+                        font-bold
+
+                        ${getConfidenceColor(
+                          topPrediction.confidence
+                        )}
+
+                      `}
                     >
 
                       {
@@ -371,34 +545,42 @@ export function AIHealthPanel() {
 
                     <p
                       className="
+                        mt-1
                         text-sm
                         text-muted-foreground
                       "
                     >
 
-                      Confidence score
+                      AI diagnostic confidence
 
                     </p>
 
                   </div>
 
-                  <Progress
-                    value={
-                      topPrediction.confidence
-                    }
-                  />
+                  {/* PROGRESS */}
 
-                  <div
-                    className="
-                      text-right
-                      text-sm
-                      font-medium
-                    "
-                  >
+                  <div>
 
-                    {
-                      topPrediction.confidence
-                    }%
+                    <Progress
+                      value={
+                        topPrediction.confidence
+                      }
+                    />
+
+                    <div
+                      className="
+                        mt-2
+                        text-right
+                        text-sm
+                        font-medium
+                      "
+                    >
+
+                      {
+                        topPrediction.confidence
+                      }%
+
+                    </div>
 
                   </div>
 
@@ -406,16 +588,28 @@ export function AIHealthPanel() {
 
               ) : (
 
-                <p
+                <div
                   className="
-                    text-sm
-                    text-muted-foreground
+                    rounded-xl
+                    border
+                    border-dashed
+                    p-5
+                    text-center
                   "
                 >
 
-                  Waiting for symptom analysis...
+                  <p
+                    className="
+                      text-sm
+                      text-muted-foreground
+                    "
+                  >
 
-                </p>
+                    Waiting for symptom analysis...
+
+                  </p>
+
+                </div>
 
               )}
 
@@ -425,7 +619,9 @@ export function AIHealthPanel() {
 
         </motion.div>
 
-        {/* ACTIVE SYMPTOMS */}
+        {/* =====================
+            ACTIVE SYMPTOMS
+        ====================== */}
 
         <motion.div
 
@@ -445,7 +641,11 @@ export function AIHealthPanel() {
 
         >
 
-          <Card>
+          <Card
+            className="
+              shadow-sm
+            "
+          >
 
             <CardHeader>
 
@@ -494,7 +694,7 @@ export function AIHealthPanel() {
                   "
                 >
 
-                  No symptoms added
+                  No active symptoms
 
                 </p>
 
@@ -506,7 +706,9 @@ export function AIHealthPanel() {
 
         </motion.div>
 
-        {/* AI REASONING */}
+        {/* =====================
+            AI REASONING
+        ====================== */}
 
         <motion.div
 
@@ -526,7 +728,11 @@ export function AIHealthPanel() {
 
         >
 
-          <Card>
+          <Card
+            className="
+              shadow-sm
+            "
+          >
 
             <CardHeader>
 
@@ -567,6 +773,13 @@ export function AIHealthPanel() {
                         x: 0
                       }}
 
+                      className="
+                        rounded-xl
+                        border
+                        bg-muted/30
+                        p-3
+                      "
+
                     >
 
                       ✓ {item}
@@ -578,15 +791,28 @@ export function AIHealthPanel() {
 
               ) : (
 
-                <p
+                <div
                   className="
-                    text-muted-foreground
+                    rounded-xl
+                    border
+                    border-dashed
+                    p-5
+                    text-center
                   "
                 >
 
-                  AI reasoning will appear here
+                  <p
+                    className="
+                      text-sm
+                      text-muted-foreground
+                    "
+                  >
 
-                </p>
+                    AI reasoning events will appear here
+
+                  </p>
+
+                </div>
 
               )}
 

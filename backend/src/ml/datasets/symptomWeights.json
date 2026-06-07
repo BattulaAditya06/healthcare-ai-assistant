@@ -1,0 +1,23 @@
+{
+  "fever": 1,
+  "cough": 1,
+  "fatigue": 1,
+  "headache": 1,
+
+  "loss of smell": 5,
+  "loss of taste": 5,
+
+  "shortness of breath": 4,
+  "difficulty breathing": 4,
+
+  "chest pain": 4,
+
+  "vomiting": 2,
+  "diarrhea": 2,
+
+  "skin rash": 3,
+
+  "seizures": 5,
+
+  "blood in urine": 5
+}

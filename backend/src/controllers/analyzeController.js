@@ -1,30 +1,33 @@
-
-
 console.log(
   "ANALYZE CONTROLLER RUNNING"
 );
-const crypto=require("crypto");
+
+const {
+  getAppointmentPriority
+} = require(
+  "../appointments/services/appointmentPriorityService"
+);
+
+const crypto =
+require("crypto");
+
 const asyncHandler =
 require("../utils/asyncHandler");
-
 
 console.log(
   "CONTROLLER FILE:",
   __filename
 );
 
-const recommendDoctors =
-require(
-  "../appointments/services/doctorRecommendationService"
-);
+// =========================
+// SERVICES
+// =========================
 
 const {
   processSymptoms
 } = require(
   "../services/nlpProcessingService"
 );
-
-console.log("nlp file loaded");
 
 const {
   calculateEmergency
@@ -33,16 +36,19 @@ const {
 );
 
 const {
-  predictDiseases
+  predictDisease
 } = require(
-  "../services/diseasePredictionService"
+  "../services/mlService"
 );
 
-const {
-  handleSession
-} = require(
-  "../services/sessionService"
+const recommendDoctors =
+require(
+  "../appointments/services/doctorRecommendationService"
 );
+
+// =========================
+// UTILITIES
+// =========================
 
 const {
   successResponse
@@ -55,257 +61,390 @@ require(
   "../utils/followUpQuestions"
 );
 
+// =========================
+// ANALYZE CONTROLLER
+// =========================
+
 const analyzeSymptoms =
-asyncHandler(async (
-  req,
-  res
-) => {
+asyncHandler(
 
-  let {
-    symptoms,
-    message,
-    sessionId,
-    removeSymptoms
-  } = req.body;
+  async (
+    req,
+    res
+  ) => {
 
-  // =========================
-  // NLP PROCESSING
-  // =========================
+    // =====================
+    // REQUEST BODY
+    // =====================
 
-  const processedData =
-    processSymptoms(
-      message,
+    let {
+
+      symptoms = [],
+
+      message = "",
+
+      sessionId = null,
+
+      removeSymptoms = []
+
+    } = req.body;
+
+    // =====================
+    // VALIDATION
+    // =====================
+
+    if (
+
+      typeof message !==
+      "string"
+
+    ) {
+
+      return res.status(400)
+        .json({
+
+          success: false,
+
+          message:
+            "Message must be a string"
+
+        });
+
+    }
+
+    // =====================
+    // NLP PROCESSING
+    // =====================
+
+    const processedData =
+
+      processSymptoms(
+
+        message,
+
+        symptoms
+
+      );
+
+    symptoms =
+      processedData.symptoms || [];
+
+    const severity =
+      processedData.severity ||
+      "low";
+
+    const temporalStatus =
+      processedData.temporalStatus ||
+      "active";
+
+    console.log(
+      "FINAL SYMPTOMS:",
       symptoms
     );
 
-  symptoms =
-    processedData.symptoms;
+    // =====================
+    // RESOLVED / PAST
+    // =====================
 
-  const severity =
-    processedData.severity;
+    if (
 
-  const temporalStatus =
-    processedData.temporalStatus;
+      temporalStatus ===
+        "resolved" ||
 
-  // =========================
-  // RESOLVED / PAST
-  // =========================
+      temporalStatus ===
+        "past"
 
-  if (
-    temporalStatus ===
-      "resolved" ||
+    ) {
 
-    temporalStatus ===
-      "past"
-  ) {
+      symptoms = [];
 
-    symptoms = [];
+    }
 
-  }
+    // =====================
+    // NO SYMPTOMS
+    // =====================
 
-  // =========================
-  // NO SYMPTOMS
-  // =========================
+    if (
 
-  if (
+      symptoms.length === 0 &&
 
-    (!symptoms ||
-      symptoms.length === 0) &&
+      removeSymptoms.length === 0
 
-    (!removeSymptoms ||
-      removeSymptoms.length === 0)
+    ) {
 
-  ) {
+      return successResponse(
+
+        res,
+
+        {
+
+          sessionId:
+
+            sessionId ||
+
+            crypto.randomUUID(),
+
+          emergency: false,
+
+          severity,
+
+          temporalStatus,
+
+          enteredSymptoms: [],
+
+          normalizedSymptoms: [],
+
+          possibleDiseases: [],
+
+          topPrediction: null,
+
+          recommendedDoctors: [],
+
+          followUpQuestions: [],
+
+          analysisMetadata: {
+
+            symptomCount: 0,
+
+            predictionCount: 0
+
+          }
+
+        },
+
+        "No medically significant symptoms detected"
+
+      );
+
+    }
+
+    // =====================
+    // EMERGENCY CHECK
+    // =====================
+
+    const emergency =
+
+      calculateEmergency(
+
+        symptoms,
+
+        severity
+
+      );
+
+    // =====================
+    // DISEASE PREDICTION
+    // =====================
+
+   const possibleDiseases =
+  await predictDisease(
+    symptoms
+  ) || [];
+
+    console.log(
+      "PREDICTIONS:",
+      possibleDiseases
+    );
+
+
+    // =====================
+    // TOP PREDICTION
+    // =====================
+
+    const topPrediction =
+
+      possibleDiseases[0] ||
+      null;
+
+      const appointmentPriority =
+
+  getAppointmentPriority(
+
+    severity,
+
+    emergency,
+
+    topPrediction?.riskLevel
+
+  );
+
+// =========================
+// DOCTOR RECOMMENDATIONS
+// =========================
+
+let recommendedDoctors = [];
+
+console.log(
+  "TOP PREDICTION:",
+  topPrediction
+);
+
+if (
+
+  topPrediction &&
+
+  topPrediction.department
+
+) {
+
+  recommendedDoctors =
+
+    recommendDoctors(
+
+      topPrediction.department
+
+    );
+
+}
+
+console.log(
+
+  "RECOMMENDED DOCTORS:",
+
+  JSON.stringify(
+    recommendedDoctors,
+    null,
+    2
+  )
+
+);
+
+    console.log(
+      "RECOMMENDED DOCTORS:",
+      recommendedDoctors
+    );
+
+    // =====================
+    // FOLLOW-UP QUESTIONS
+    // =====================
+
+    let questions = [];
+
+    symptoms.forEach(
+
+      (symptom) => {
+
+        if (
+
+          followUpQuestions[
+            symptom
+          ]
+
+        ) {
+
+          questions.push(
+
+            ...followUpQuestions[
+              symptom
+            ]
+
+          );
+
+        }
+
+      }
+
+    );
+
+    questions = [
+
+      ...new Set(questions)
+
+    ];
+
+    // =====================
+    // SESSION
+    // =====================
+
+    const finalSessionId =
+
+      sessionId ||
+
+      crypto.randomUUID();
+
+    // =====================
+    // RESPONSE
+    // =====================
 
     return successResponse(
 
       res,
 
       {
-        enteredSymptoms: [],
-        possibleDiseases: [],
-        recommendedDoctors: []
+
+        sessionId:
+          finalSessionId,
+
+        emergency: {
+
+  isEmergency:
+    emergency,
+
+  severity,
+
+  matchedSymptoms:
+
+    symptoms.filter(
+
+      (symptom) =>
+
+        [
+
+          "chest pain",
+          "difficulty breathing",
+          "shortness of breath",
+          "loss of consciousness",
+          "seizures",
+          "cough with blood"
+
+        ].includes(symptom)
+
+    )
+
+},
+
+        severity,
+
+        temporalStatus,
+
+        enteredSymptoms:
+          symptoms,
+
+        normalizedSymptoms:
+          symptoms,
+
+        possibleDiseases,
+
+        topPrediction,
+
+        recommendedDoctors,
+
+        appointmentPriority,
+
+        followUpQuestions:
+          questions,
+
+        analysisMetadata: {
+
+          symptomCount:
+            symptoms.length,
+
+          predictionCount:
+            possibleDiseases.length,
+
+            emergency
+
+        }
+
       },
 
-      "Symptoms appear related to temporary lifestyle, stress, workout, travel, or non-medical conditions."
+      "Symptoms analyzed successfully"
 
     );
 
   }
 
-  // =========================
-  // EMERGENCY CHECK
-  // =========================
-
-  const emergency =
-    calculateEmergency(
-      symptoms,
-      severity
-    );
-
-  // =========================
-  // DISEASE PREDICTION
-  // =========================
-
-  const possibleDiseases =
-    await predictDiseases(
-      symptoms
-    );
-
-console.log(
-  "PREDICTIONS TYPE:",
-  typeof possibleDiseases
 );
-
-console.log(
-  "IS ARRAY:",
-  Array.isArray(
-    possibleDiseases
-  )
-);
-
-console.log(
-  "FIRST PREDICTION:",
-  possibleDiseases?.[0]
-);
-
-
-  // =========================
-  // DOCTOR RECOMMENDATIONS
-  // =========================
-
-let recommendedDoctors = [];
-
-if (
-
-  Array.isArray(
-    possibleDiseases
-  ) &&
-
-  possibleDiseases.length > 0
-
-) {
-
-  recommendedDoctors =
-    recommendDoctors(
-
-      possibleDiseases[0]
-        .department
-
-    ) || [];
-
-
-}
-
-console.log(
-  "RECOMMENDED DOCTORS:",
-  JSON.stringify(
-    recommendedDoctors,
-    null,
-    2
-  )
-);
-
-
-  // =========================
-  // SESSION HANDLING
-  // =========================
-
- // =========================
-// TEMP SESSION
-// =========================
-
-const session = {
-
-  sessionId:
-    sessionId ||
-
-    crypto.randomUUID(),
-
-  symptoms
-
-};
-
-  // =========================
-  // FOLLOW-UP QUESTIONS
-  // =========================
-
-  let questions = [];
-
-  symptoms.forEach(
-    (symptom) => {
-
-      if (
-        followUpQuestions[
-          symptom
-        ]
-      ) {
-
-        questions.push(
-
-          ...followUpQuestions[
-            symptom
-          ]
-
-        );
-
-      }
-
-    }
-  );
-
-  questions = [
-    ...new Set(questions)
-  ];
-
-console.log(
-
-  "FINAL RESPONSE:",
-
-  JSON.stringify(
-    {
-      recommendedDoctors
-    },
-    null,
-    2
-  )
-
-);
-
-
-  // =========================
-  // RESPONSE
-  // =========================
-
-  
-return successResponse(
-
-  res,
-
-  {
-
-    sessionId:
-      session.sessionId,
-
-    emergency,
-
-    enteredSymptoms:
-      symptoms,
-
-    followUpQuestions:
-      questions,
-
-    possibleDiseases,
-
-    recommendedDoctors
-
-  },
-
-  "Symptoms analyzed successfully"
-
-);
-
-});
 
 module.exports = {
   analyzeSymptoms

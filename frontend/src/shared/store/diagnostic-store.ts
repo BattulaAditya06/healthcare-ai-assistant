@@ -1,11 +1,14 @@
+import {
 
-import { create } from "zustand";
+  create
+
+} from "zustand";
 
 // =========================
-// DISEASE PREDICTION
+// TYPES
 // =========================
 
-interface DiseasePrediction {
+type Prediction = {
 
   disease: string;
 
@@ -15,13 +18,29 @@ interface DiseasePrediction {
 
   department: string;
 
-}
+  emergencyMatch?: boolean;
 
-// =========================
-// RECOMMENDED DOCTOR
-// =========================
+  recommendations?: string[];
 
-interface RecommendedDoctor {
+  scoreBreakdown?: {
+
+    primaryMatches: number;
+
+    secondaryMatches: number;
+
+    signatureMatches: number;
+
+    emergencyMatches: number;
+
+    coverageRatio?: number;
+
+    reliability?: number;
+
+  };
+
+};
+
+type Doctor = {
 
   id: number;
 
@@ -29,38 +48,71 @@ interface RecommendedDoctor {
 
   department: string;
 
-  experience: string;
+  rating: number;
 
-}
+  experience: number;
 
-// =========================
-// STORE STATE
-// =========================
+  hospital: string;
 
-interface DiagnosticState {
+};
+
+type AnalysisResult = {
+
+  enteredSymptoms: string[];
+
+  possibleDiseases: Prediction[];
+
+  recommendedDoctors: Doctor[];
+
+  emergency?: {
+
+    isEmergency: boolean;
+
+  };
+
+};
+
+type DiagnosticStore = {
+
+  // =====================
+  // STATE
+  // =====================
 
   symptoms: string[];
 
-  predictions: DiseasePrediction[];
+  predictions: Prediction[];
 
-  recommendedDoctors:
-    RecommendedDoctor[];
+  recommendedDoctors: Doctor[];
+
+  reasoning: string[];
+
+  analysisSteps: string[];
 
   riskLevel: string;
 
   department: string;
 
-  reasoning: string[];
-
   emergency: boolean;
 
-  analysisSteps: string[];
+  loading: boolean;
 
   isAnalyzing: boolean;
 
   // =====================
   // ACTIONS
   // =====================
+
+  setLoading: (
+    loading: boolean
+  ) => void;
+
+  setIsAnalyzing: (
+    value: boolean
+  ) => void;
+
+  setAnalysisSteps: (
+    steps: string[]
+  ) => void;
 
   setSymptoms: (
     symptoms: string[]
@@ -74,166 +126,203 @@ interface DiagnosticState {
     symptom: string
   ) => void;
 
-  setPredictions: (
-    predictions:
-      DiseasePrediction[]
-  ) => void;
+  clearSymptoms: () => void;
 
-  setRecommendedDoctors: (
-    doctors:
-      RecommendedDoctor[]
+  setPredictions: (
+    predictions: Prediction[]
   ) => void;
 
   setRiskLevel: (
-    riskLevel: string
+    level: string
   ) => void;
 
   setDepartment: (
     department: string
   ) => void;
 
-  addReasoning: (
-    reasoning: string
-  ) => void;
-
   setEmergency: (
     emergency: boolean
   ) => void;
 
-  setAnalysisSteps: (
-    steps: string[]
+  addReasoning: (
+    text: string
   ) => void;
 
-  setIsAnalyzing: (
-    value: boolean
+  clearReasoning: () => void;
+
+  clearAnalysis: () => void;
+
+  setAnalysisResult: (
+    data: AnalysisResult
   ) => void;
 
-  reset: () => void;
-
-}
+};
 
 // =========================
 // STORE
 // =========================
 
 export const useDiagnosticStore =
-create<DiagnosticState>(
 
-  (set) => ({
+  create<DiagnosticStore>(
+    (set) => ({
 
-    symptoms: [],
+      // =====================
+      // INITIAL STATE
+      // =====================
 
-    predictions: [],
+      symptoms: [],
 
-    recommendedDoctors: [],
+      predictions: [],
 
-    riskLevel: "Low",
+      recommendedDoctors: [],
 
-    department:
-      "General Medicine",
+      reasoning: [],
 
-    reasoning: [],
+      analysisSteps: [],
 
-    emergency: false,
+      riskLevel: "Low",
 
-    analysisSteps: [],
+      department:
+        "General Medicine",
 
-    isAnalyzing: false,
+      emergency: false,
 
-    // =====================
-    // SYMPTOMS
-    // =====================
+      loading: false,
 
-    setSymptoms:
-      (symptoms) =>
+      isAnalyzing: false,
+
+      // =====================
+      // BASIC SETTERS
+      // =====================
+
+      setLoading: (
+        loading
+      ) =>
+
+        set({
+          loading
+        }),
+
+      setIsAnalyzing: (
+        value
+      ) =>
+
+        set({
+          isAnalyzing: value
+        }),
+
+      setAnalysisSteps: (
+        steps
+      ) =>
+
+        set({
+          analysisSteps: steps
+        }),
+
+      // =====================
+      // SYMPTOMS
+      // =====================
+
+      setSymptoms: (
+        symptoms
+      ) =>
 
         set({
           symptoms
         }),
 
-    addSymptom:
-      (symptom) =>
-
-        set((state) => ({
-
-          symptoms: [
-
-            ...new Set([
-
-              ...state.symptoms,
-
-              symptom
-
-            ])
-
-          ]
-
-        })),
-
-    removeSymptom:
-      (symptom) =>
+      addSymptom: (
+        symptom
+      ) =>
 
         set((state) => ({
 
           symptoms:
+            state.symptoms.includes(
+              symptom
+            )
 
+              ? state.symptoms
+
+              : [
+
+                  ...state.symptoms,
+
+                  symptom
+
+                ]
+
+        })),
+
+      removeSymptom: (
+        symptom
+      ) =>
+
+        set((state) => ({
+
+          symptoms:
             state.symptoms.filter(
-              (s) =>
-                s !== symptom
+
+              (item) =>
+
+                item !== symptom
+
             )
 
         })),
 
-    // =====================
-    // PREDICTIONS
-    // =====================
+      clearSymptoms: () =>
 
-    setPredictions:
-      (predictions) =>
+        set({
+
+          symptoms: []
+
+        }),
+
+      // =====================
+      // PREDICTIONS
+      // =====================
+
+      setPredictions: (
+        predictions
+      ) =>
 
         set({
           predictions
         }),
 
-    // =====================
-    // RECOMMENDED DOCTORS
-    // =====================
-
-    setRecommendedDoctors:
-      (recommendedDoctors) =>
-
-        set({
-          recommendedDoctors
-        }),
-
-    // =====================
-    // RISK LEVEL
-    // =====================
-
-    setRiskLevel:
-      (riskLevel) =>
+      setRiskLevel: (
+        riskLevel
+      ) =>
 
         set({
           riskLevel
         }),
 
-    // =====================
-    // DEPARTMENT
-    // =====================
-
-    setDepartment:
-      (department) =>
+      setDepartment: (
+        department
+      ) =>
 
         set({
           department
         }),
 
-    // =====================
-    // AI REASONING
-    // =====================
+      setEmergency: (
+        emergency
+      ) =>
 
-    addReasoning:
-      (reasoning) =>
+        set({
+          emergency
+        }),
+
+      // =====================
+      // REASONING
+      // =====================
+
+      addReasoning: (
+        text
+      ) =>
 
         set((state) => ({
 
@@ -241,74 +330,94 @@ create<DiagnosticState>(
 
             ...state.reasoning,
 
-            reasoning
+            text
 
-          ].slice(-8)
+          ]
 
         })),
 
-    // =====================
-    // EMERGENCY
-    // =====================
-
-    setEmergency:
-      (emergency) =>
+      clearReasoning: () =>
 
         set({
-          emergency
+
+          reasoning: []
+
         }),
 
-    // =====================
-    // ANALYSIS STEPS
-    // =====================
+      // =====================
+      // CLEAR ANALYSIS
+      // =====================
 
-    setAnalysisSteps:
-      (analysisSteps) =>
+      clearAnalysis: () =>
 
         set({
-          analysisSteps
+
+          symptoms: [],
+
+          predictions: [],
+
+          recommendedDoctors: [],
+
+          reasoning: [],
+
+          analysisSteps: [],
+
+          riskLevel: "Low",
+
+          department:
+            "General Medicine",
+
+          emergency: false,
+
+          isAnalyzing: false
+
         }),
 
-    // =====================
-    // ANALYZING STATE
-    // =====================
+      // =====================
+      // SET FULL RESULT
+      // =====================
 
-    setIsAnalyzing:
-      (isAnalyzing) =>
+      setAnalysisResult: (
+        data
+      ) =>
 
         set({
-          isAnalyzing
-        }),
 
-    // =====================
-    // RESET
-    // =====================
+          symptoms:
+            data.enteredSymptoms || [],
 
-    reset: () =>
+          predictions:
+            data.possibleDiseases || [],
 
-      set({
+          recommendedDoctors:
+            data.recommendedDoctors || [],
 
-        symptoms: [],
+          riskLevel:
 
-        predictions: [],
+            data
+              .possibleDiseases?.[0]
+              ?.riskLevel ||
 
-        recommendedDoctors: [],
+            "Low",
 
-        riskLevel: "Low",
+          department:
 
-        department:
-          "General Medicine",
+            data
+              .possibleDiseases?.[0]
+              ?.department ||
 
-        reasoning: [],
+            "General Medicine",
 
-        emergency: false,
+          emergency:
 
-        analysisSteps: [],
+            data
+              .emergency
+              ?.isEmergency ||
 
-        isAnalyzing: false
+            false
 
-      })
+        })
 
-  })
+    })
 
-);
+  );

@@ -3,29 +3,32 @@ require("dotenv").config();
 const app =
 require("./src/app");
 
-const authRoutes =
-require(
-  "./src/routes/authRoutes"
-);
-app.use(
-  "/api/auth",
-  authRoutes
-);
-
-const cors =
-require("cors");
-
-app.use(cors());
-
-
+// =========================
+// PORT
+// =========================
 
 const PORT =
-process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+  process.env.PORT ||
 
-  console.log(
-    `Server running on port ${PORT}`
-  );
+  5000;
 
-});
+// =========================
+// START SERVER
+// =========================
+
+app.listen(
+
+  PORT,
+
+  () => {
+
+    console.log(
+
+      `Server running on port ${PORT}`
+
+    );
+
+  }
+
+);

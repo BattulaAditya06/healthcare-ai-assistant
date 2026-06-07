@@ -1,5 +1,5 @@
 const masterSymptoms =
-require("../datasets/masterSymptoms.json");
+require("../../backend/src/ml/datasets/masterSymptoms.json");
 
 const encodeSymptoms =
 (symptoms = []) => {

@@ -1,28 +1,108 @@
-const symptomMap = {
-  "high temperature": "fever",
+const masterSymptoms =
+require(
+  "../ml/datasets/masterSymptoms.json"
+);
 
-  feverish: "fever",
+const symptomSynonyms =
+require(
+  "../ml/datasets/symptomSynonyms.json"
+);
 
-  "difficulty breathing": "breathing difficulty",
+const canonicalSymptoms =
+new Set(
 
-  breathlessness: "breathing difficulty",
+  masterSymptoms.map(
 
-  tiredness: "fatigue",
+    (symptom) =>
 
-  exhausted: "fatigue",
+      symptom
+        .toLowerCase()
+        .trim()
 
-  "throat pain": "sore throat",
+  )
 
-  "chest pressure": "chest pain"
+);
+
+// =========================
+// NORMALIZE SINGLE
+// =========================
+
+const normalizeSymptom = (
+  symptom = ""
+) => {
+
+  const cleanedSymptom =
+
+    String(symptom)
+      .toLowerCase()
+      .trim();
+
+  // =====================
+  // SYNONYM FIRST
+  // =====================
+
+  if (
+
+    symptomSynonyms[
+      cleanedSymptom
+    ]
+
+  ) {
+
+    return symptomSynonyms[
+      cleanedSymptom
+    ];
+
+  }
+
+  // =====================
+  // CANONICAL
+  // =====================
+
+  if (
+
+    canonicalSymptoms.has(
+      cleanedSymptom
+    )
+
+  ) {
+
+    return cleanedSymptom;
+
+  }
+
+  return null;
+
 };
 
-const normalizeSymptoms = (symptoms) => {
-  return symptoms.map((symptom) => {
-    return (
-      symptomMap[symptom.toLowerCase()] ||
-      symptom.toLowerCase()
-    );
-  });
+// =========================
+// NORMALIZE ARRAY
+// =========================
+
+const normalizeSymptoms = (
+  symptoms = []
+) => {
+
+  const normalized =
+
+    symptoms
+
+      .map(normalizeSymptom)
+
+      .filter(Boolean);
+
+  return [
+
+    ...new Set(normalized)
+
+  ];
+
 };
 
-module.exports = normalizeSymptoms;
+module.exports = {
+
+  normalizeSymptom,
+
+  normalizeSymptoms
+
+};

@@ -1,47 +1,46 @@
-
 const express =
 require("express");
 
 const router =
-express.Router();
+  express.Router();
 
-const appointmentController =
-require(
+const {
+
+  getAvailableSlots,
+
+  bookAppointment
+
+} = require(
   "../controllers/appointmentController"
 );
 
-const authMiddleware =
-require(
-  "../../middleware/authMiddleware"
-);
-
 // =========================
-// CREATE APPOINTMENT
-// =========================
-
-router.post(
-
-  "/",
-
-  authMiddleware,
-
-  appointmentController.bookAppointment
-
-);
-
-// =========================
-// GET APPOINTMENTS
+// GET AVAILABLE SLOTS
 // =========================
 
 router.get(
 
-  "/",
+  "/slots",
 
-  authMiddleware,
-
-  appointmentController.getAppointments
+  getAvailableSlots
 
 );
 
+// =========================
+// BOOK APPOINTMENT
+// =========================
+
+router.post(
+
+  "/book",
+
+  bookAppointment
+
+);
+
+// =========================
+// EXPORT
+// =========================
+
 module.exports =
-router;
+  router;

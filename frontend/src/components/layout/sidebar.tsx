@@ -1,118 +1,336 @@
+"use client";
 
-export function Sidebar() {
+import Link from "next/link";
+
+import {
+  usePathname
+} from "next/navigation";
+
+import {
+
+  Activity,
+
+  History,
+
+  Siren,
+
+  CalendarDays,
+
+  Stethoscope
+
+} from "lucide-react";
+
+// =========================
+// NAVIGATION ITEMS
+// =========================
+
+const navItems = [
+
+  {
+
+    label:
+      "New Diagnosis",
+
+    href:
+      "/chat",
+
+    icon:
+      Activity
+
+  },
+
+  {
+
+    label:
+      "History",
+
+    href:
+      "/history",
+
+    icon:
+      History
+
+  },
+
+  {
+
+    label:
+      "Emergency",
+
+    href:
+      "/emergency",
+
+    icon:
+      Siren
+
+  },
+
+  {
+
+    label:
+      "Appointments",
+
+    href:
+      "/appointments",
+
+    icon:
+      CalendarDays
+
+  }
+
+];
+
+// =========================
+// SIDEBAR
+// =========================
+
+export default function Sidebar() {
+
+  const pathname =
+    usePathname();
 
   return (
 
     <aside
       className="
-        w-72
+        flex
+        min-h-screen
+        w-[280px]
+        flex-col
         border-r
-        bg-card
-        p-6
+        border-slate-200
+        bg-white
+        px-6
+        py-8
       "
     >
 
+      {/* LOGO */}
+
       <div
         className="
-          flex
-          flex-col
-          gap-8
+          mb-14
         "
       >
 
-        <div>
-
-          <h1
-            className="
-              text-3xl
-              font-bold
-            "
-          >
-
-            MedAI
-
-          </h1>
-
-          <p
-            className="
-              mt-2
-              text-sm
-              text-muted-foreground
-            "
-          >
-
-            Intelligent healthcare workspace
-
-          </p>
-
-        </div>
-
-        <nav
+        <div
           className="
             flex
-            flex-col
+            items-center
             gap-3
           "
         >
 
-          <button
+          <div
             className="
-              rounded-xl
-              bg-primary
-              px-4
-              py-3
-              text-left
-              text-primary-foreground
+              flex
+              h-12
+              w-12
+              items-center
+              justify-center
+              rounded-2xl
+              bg-black
+              text-white
             "
           >
 
-            New Diagnosis
+            <Stethoscope
+              className="
+                h-6
+                w-6
+              "
+            />
 
-          </button>
+          </div>
 
-          <button
-            className="
-              rounded-xl
-              px-4
-              py-3
-              text-left
-              hover:bg-muted
-            "
-          >
+          <div>
 
-            History
+            <h1
+              className="
+                text-4xl
+                font-black
+                tracking-tight
+                text-slate-900
+              "
+            >
 
-          </button>
+              MedAI
 
-          <button
-            className="
-              rounded-xl
-              px-4
-              py-3
-              text-left
-              hover:bg-muted
-            "
-          >
+            </h1>
 
-            Emergency
+            <p
+              className="
+                mt-1
+                text-sm
+                text-slate-500
+              "
+            >
 
-          </button>
+              Intelligent healthcare workspace
 
-          <button
-            className="
-              rounded-xl
-              px-4
-              py-3
-              text-left
-              hover:bg-muted
-            "
-          >
+            </p>
 
-            Appointments
+          </div>
 
-          </button>
+        </div>
 
-        </nav>
+      </div>
+
+      {/* NAVIGATION */}
+
+      <nav
+        className="
+          flex
+          flex-col
+          gap-4
+        "
+      >
+
+        {
+
+          navItems.map(
+            (item) => {
+
+              const isActive =
+
+                pathname ===
+                item.href;
+
+              return (
+
+                <Link
+
+                  key={
+                    item.label
+                  }
+
+                  href={
+                    item.href
+                  }
+
+                  className={`
+
+                    group
+
+                    flex
+                    items-center
+                    gap-4
+
+                    rounded-2xl
+
+                    px-5
+                    py-4
+
+                    text-lg
+                    font-semibold
+
+                    transition-all
+                    duration-200
+
+                    ${
+                      isActive
+
+                        ? `
+
+                          bg-black
+                          text-white
+                          shadow-lg
+
+                        `
+
+                        : `
+
+                          text-slate-700
+
+                          hover:bg-slate-100
+                          hover:text-black
+
+                        `
+                    }
+
+                  `}
+                >
+
+                  <item.icon
+                    className={`
+
+                      h-5
+                      w-5
+
+                      transition
+
+                      ${
+                        isActive
+
+                          ? "text-white"
+
+                          : `
+                            text-slate-500
+
+                            group-hover:text-black
+                          `
+                      }
+
+                    `}
+                  />
+
+                  <span>
+
+                    {item.label}
+
+                  </span>
+
+                </Link>
+
+              );
+
+            }
+
+          )
+
+        }
+
+      </nav>
+
+      {/* FOOTER */}
+
+      <div
+        className="
+          mt-auto
+          rounded-3xl
+          border
+          border-slate-200
+          bg-slate-50
+          p-5
+        "
+      >
+
+        <h3
+          className="
+            text-lg
+            font-bold
+            text-slate-900
+          "
+        >
+
+          AI Health Assistant
+
+        </h3>
+
+        <p
+          className="
+            mt-2
+            text-sm
+            leading-relaxed
+            text-slate-600
+          "
+        >
+
+          Analyze symptoms, book appointments,
+          and receive intelligent healthcare
+          recommendations instantly.
+
+        </p>
 
       </div>
 

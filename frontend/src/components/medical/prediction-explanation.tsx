@@ -1,5 +1,18 @@
+"use client";
 
-interface Props {
+import {
+
+  Card,
+
+  CardContent,
+
+  CardHeader,
+
+  CardTitle
+
+} from "@/components/ui/card";
+
+type Props = {
 
   breakdown: {
 
@@ -11,15 +24,13 @@ interface Props {
 
     emergencyMatches: number;
 
-    missingPrimary: number;
+    coverageRatio?: number;
 
-    missingSignature: number;
-
-    reliability: number;
+    reliability?: number;
 
   };
 
-}
+};
 
 export function PredictionExplanation({
 
@@ -29,93 +40,219 @@ export function PredictionExplanation({
 
   return (
 
-    <div
+    <Card
       className="
-        rounded-2xl
         border
         bg-muted/30
-        p-4
       "
     >
 
-      <h3
+      <CardHeader>
+
+        <CardTitle
+          className="
+            text-sm
+          "
+        >
+
+          AI Prediction Explanation
+
+        </CardTitle>
+
+      </CardHeader>
+
+      <CardContent
         className="
+          space-y-3
           text-sm
-          font-semibold
         "
       >
 
-        AI Reasoning
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+          "
+        >
 
-      </h3>
+          <span>
+            Primary Matches
+          </span>
 
-      <div
-        className="
-          mt-4
-          space-y-2
-          text-sm
-        "
-      >
+          <span
+            className="
+              font-medium
+            "
+          >
 
-        <p>
+            {
+              breakdown.primaryMatches
+            }
 
-          ✓ Primary Matches:
-          {" "}
-          {breakdown.primaryMatches}
+          </span>
 
-        </p>
+        </div>
 
-        <p>
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+          "
+        >
 
-          ✓ Secondary Matches:
-          {" "}
-          {breakdown.secondaryMatches}
+          <span>
+            Secondary Matches
+          </span>
 
-        </p>
+          <span
+            className="
+              font-medium
+            "
+          >
 
-        <p>
+            {
+              breakdown.secondaryMatches
+            }
 
-          ✓ Signature Matches:
-          {" "}
-          {breakdown.signatureMatches}
+          </span>
 
-        </p>
+        </div>
 
-        <p>
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+          "
+        >
 
-          ✓ Emergency Matches:
-          {" "}
-          {breakdown.emergencyMatches}
+          <span>
+            Signature Matches
+          </span>
 
-        </p>
+          <span
+            className="
+              font-medium
+            "
+          >
 
-        <p>
+            {
+              breakdown.signatureMatches
+            }
 
-          ✗ Missing Primary:
-          {" "}
-          {breakdown.missingPrimary}
+          </span>
 
-        </p>
+        </div>
 
-        <p>
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+          "
+        >
 
-          ✗ Missing Signature:
-          {" "}
-          {breakdown.missingSignature}
+          <span>
+            Emergency Matches
+          </span>
 
-        </p>
+          <span
+            className="
+              font-medium
+            "
+          >
 
-        <p>
+            {
+              breakdown.emergencyMatches
+            }
 
-          Reliability:
-          {" "}
-          {breakdown.reliability}
+          </span>
 
-        </p>
+        </div>
 
-      </div>
+        {
 
-    </div>
+          breakdown.coverageRatio !==
+          undefined && (
+
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+              "
+            >
+
+              <span>
+                Coverage Ratio
+              </span>
+
+              <span
+                className="
+                  font-medium
+                "
+              >
+
+                {
+
+                  (
+                    breakdown.coverageRatio * 100
+                  ).toFixed(0)
+
+                }%
+
+              </span>
+
+            </div>
+
+          )
+
+        }
+
+        {
+
+          breakdown.reliability !==
+          undefined && (
+
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+              "
+            >
+
+              <span>
+                Reliability
+              </span>
+
+              <span
+                className="
+                  font-medium
+                "
+              >
+
+                {
+
+                  (
+                    breakdown.reliability * 100
+                  ).toFixed(0)
+
+                }%
+
+              </span>
+
+            </div>
+
+          )
+
+        }
+
+      </CardContent>
+
+    </Card>
 
   );
 

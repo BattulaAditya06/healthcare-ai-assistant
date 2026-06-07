@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "name": "Dr. Rajesh Kumar",
+    "department": "Pulmonology",
+    "experience": 12,
+    "rating": 4.8,
+    "hospital": "Apollo Hospital",
+    "availability": true
+  },
+  {
+    "id": 2,
+    "name": "Dr. Priya Sharma",
+    "department": "Neurology",
+    "experience": 9,
+    "rating": 4.7,
+    "hospital": "Care Hospital",
+    "availability": true
+  },
+  {
+    "id": 3,
+    "name": "Dr. Arjun Reddy",
+    "department": "General Medicine",
+    "experience": 15,
+    "rating": 4.9,
+    "hospital": "AIIMS",
+    "availability": true
+  },
+  {
+    "id": 4,
+    "name": "Dr. Sneha Patel",
+    "department": "Gastroenterology",
+    "experience": 10,
+    "rating": 4.6,
+    "hospital": "Yashoda Hospital",
+    "availability": true
+  },
+  {
+    "id": 5,
+    "name": "Dr. Sarah Johnson",
+    "department": "Pulmonology",
+    "experience": 12,
+    "rating": 4.8,
+    "hospital": "Apollo Hospital",
+    "availability": true
+  },
+  {
+    "id": 6,
+    "name": "Dr. Michael Chen",
+    "department": "General Medicine",
+    "experience": 10,
+    "rating": 4.7,
+    "hospital": "City Care Hospital",
+    "availability": true
+  },
+  {
+    "id": 7,
+    "name": "Dr. David Wilson",
+    "department": "Neurology",
+    "experience": 9,
+    "rating": 4.6,
+    "hospital": "Neuro Specialist Hospital",
+    "availability": true
+  },
+  {
+    "id": 8,
+    "name": "Dr. Emily Brown",
+    "department": "ENT",
+    "experience": 8,
+    "rating": 4.5,
+    "hospital": "Sunrise ENT Care",
+    "availability": true
+  },
+  {
+    "id": 9,
+    "name": "Dr. Raj Patel",
+    "department": "Orthopedics",
+    "experience": 15,
+    "rating": 4.8,
+    "hospital": "OrthoPlus Hospital",
+    "availability": true
+  },
+  {
+    "id": 10,
+    "name": "Dr. Lisa Anderson",
+    "department": "Gastroenterology",
+    "experience": 11,
+    "rating": 4.7,
+    "hospital": "Digestive Care Institute",
+    "availability": true
+  },
+  {
+    "id": 11,
+    "name": "Dr. Kevin Thomas",
+    "department": "Infectious Disease",
+    "experience": 13,
+    "rating": 4.9,
+    "hospital": "Global Health Center",
+    "availability": true
+  },
+  {
+    "id": 12,
+    "name": "Dr. Anjali Mehta",
+    "department": "Cardiology",
+    "experience": 14,
+    "rating": 4.8,
+    "hospital": "HeartCare Institute",
+    "availability": true
+  }
+]

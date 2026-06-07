@@ -1,7 +1,59 @@
-
 "use client";
+
 import {
+
+  AnimatePresence,
+
+  motion
+
+} from "framer-motion";
+
+import {
+
+  Card,
+
+  CardContent,
+
+  CardHeader,
+
+  CardTitle
+
+} from "@/components/ui/card";
+
+import {
+
+  Badge
+
+} from "@/components/ui/badge";
+
+import {
+
+  useDiagnosticStore
+
+} from "@/shared/store/diagnostic-store";
+
+import {
+
+  DiagnosticEventFeed
+
+} from "@/components/ai/diagnostic-event-feed";
+
+import {
+
+  DiseasePredictionCard
+
+} from "@/components/medical/disease-prediction-card";
+
+import {
+
+  StreamingAnalysis
+
+} from "@/components/ai/streaming-analysis";
+
+import {
+
   BodySymptomMap
+
 } from "@/components/medical/body-symptom-map";
 
 import {
@@ -10,51 +62,17 @@ import {
 
 } from "@/components/doctors/recommended-doctors";
 
-import {
-  AnimatePresence,
-  motion
-} from "framer-motion";
-
-import {
-  StreamingAnalysis
-} from "@/components/ai/streaming-analysis";
-
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
-
-import {
-  Badge
-} from "@/components/ui/badge";
-
-import {
-  useDiagnosticStore
-} from "@/shared/store/diagnostic-store";
-
-import {
-  DiagnosticEventFeed
-} from "@/components/ai/diagnostic-event-feed";
-
-import {
-  DiseasePredictionCard
-} from "@/components/medical/disease-prediction-card";
-
 export function DiagnosticWorkspace() {
 
-const {
+  const {
 
-  symptoms,
+    symptoms,
 
-  predictions,
+    predictions,
 
-  recommendedDoctors
+    recommendedDoctors
 
-} = useDiagnosticStore();
-
+  } = useDiagnosticStore();
 
   return (
 
@@ -64,7 +82,7 @@ const {
       "
     >
 
-      {/* HERO SECTION */}
+      {/* HERO */}
 
       <Card
         className="
@@ -123,17 +141,13 @@ const {
 
       </Card>
 
-<RecommendedDoctors
+      {/* STREAMING */}
 
-  doctors={
-    recommendedDoctors
-  }
+      <StreamingAnalysis />
 
-/>
+      {/* BODY MAP */}
 
-
-<StreamingAnalysis />
-<BodySymptomMap />
+      <BodySymptomMap />
 
       {/* ACTIVE SYMPTOMS */}
 
@@ -211,11 +225,11 @@ const {
 
       </Card>
 
-      {/* LIVE AI EVENT FEED */}
+      {/* AI EVENT FEED */}
 
       <DiagnosticEventFeed />
 
-      {/* DISEASE PREDICTIONS */}
+      {/* PREDICTIONS */}
 
       <Card
         className="
@@ -240,100 +254,121 @@ const {
           "
         >
 
-{predictions.length > 0 ? (
+          {predictions.length > 0 ? (
 
-  <AnimatePresence>
+            <AnimatePresence>
 
-    {[...predictions]
+              {[...predictions]
 
-      .sort(
-        (a, b) =>
+                .sort(
+                  (a, b) =>
 
-          b.confidence -
-          a.confidence
-      )
+                    b.confidence -
+                    a.confidence
+                )
 
-      .map(
-        (prediction) => (
+                .map(
+                  (prediction) => (
 
-          <motion.div
+                    <motion.div
 
-            key={
-              prediction.disease
-            }
+                      key={
+                        prediction.disease
+                      }
 
-            layout
+                      layout
 
-            initial={{
-              opacity: 0,
-              y: 20
-            }}
+                      initial={{
+                        opacity: 0,
+                        y: 20
+                      }}
 
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
+                      animate={{
+                        opacity: 1,
+                        y: 0
+                      }}
 
-            exit={{
-              opacity: 0
-            }}
+                      exit={{
+                        opacity: 0
+                      }}
 
-            transition={{
-              duration: 0.3
-            }}
+                      transition={{
+                        duration: 0.3
+                      }}
 
-          >
+                    >
 
-            <DiseasePredictionCard
+                      <DiseasePredictionCard
 
-              disease={
-                prediction.disease
-              }
+                        disease={
+                          prediction.disease
+                        }
 
-              confidence={
-                prediction.confidence
-              }
+                        confidence={
+                          prediction.confidence
+                        }
 
-              riskLevel={
-                prediction.riskLevel
-              }
+                        riskLevel={
+                          prediction.riskLevel
+                        }
 
-              department={
-                prediction.department
-              }
+                        department={
+                          prediction.department
+                        }
 
-            />
+                        recommendations={
+                          prediction.recommendations
+                        }
 
-          </motion.div>
+                        scoreBreakdown={
+                          prediction.scoreBreakdown
+                        }
 
-        )
-      )}
+                        recommendedDoctors={
+                          recommendedDoctors
+                        }
 
-  </AnimatePresence>
+                      />
 
-) : (
+                    </motion.div>
 
-  <div
-    className="
-      rounded-xl
-      border
-      border-dashed
-      p-8
-      text-center
-      text-muted-foreground
-    "
-  >
+                  )
+                )}
 
-    No predictions available yet
+            </AnimatePresence>
 
-  </div>
+          ) : (
 
-)}
+            <div
+              className="
+                rounded-xl
+                border
+                border-dashed
+                p-8
+                text-center
+                text-muted-foreground
+              "
+            >
 
+              No predictions available yet
+
+            </div>
+
+          )}
 
         </CardContent>
 
       </Card>
+
+      {/* DOCTORS */}
+
+      <RecommendedDoctors
+
+        doctors={
+          recommendedDoctors
+        }
+
+      />
 
     </div>
 

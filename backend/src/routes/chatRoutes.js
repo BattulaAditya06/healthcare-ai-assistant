@@ -20,13 +20,17 @@ require(
 );
 
 // =========================
-// SEND MESSAGE
+// ANALYZE CHAT MESSAGE
 // =========================
 
 router.post(
+
   "/",
+
   protect,
+
   analyzeChat
+
 );
 
 // =========================
@@ -34,10 +38,18 @@ router.post(
 // =========================
 
 router.get(
+
   "/messages",
+
   protect,
+
   getMessages
+
 );
+
+// =========================
+// EXPORT
+// =========================
 
 module.exports =
   router;

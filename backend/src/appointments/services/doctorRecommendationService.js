@@ -1,62 +1,38 @@
+const doctors =
+require("../data/doctors.json");
 
-const doctors = [
-
-  {
-    id: 1,
-    name: "Dr. Sharma",
-    department: "Pulmonology",
-    experience: "12 years"
-  },
-
-  {
-    id: 2,
-    name: "Dr. Reddy",
-    department: "Pulmonology",
-    experience: "8 years"
-  },
-
-  {
-    id: 3,
-    name: "Dr. Kumar",
-    department: "General Medicine",
-    experience: "10 years"
-  }
-
-];
+// =========================
+// RECOMMEND DOCTORS
+// =========================
 
 const recommendDoctors =
-(department) => {
+  (department) => {
 
-  console.log(
-    "DEPARTMENT:",
-    department
-  );
+    if (!department) {
 
-  if (!department) {
+      return [];
 
-    return [];
+    }
 
-  }
-
-  const matchedDoctors =
-
-    doctors.filter(
+    return doctors.filter(
 
       (doctor) =>
 
-        doctor.department ===
+        doctor.department
+          .toLowerCase()
+          .trim() ===
+
         department
+          .toLowerCase()
+          .trim()
 
     );
 
-  console.log(
-    "MATCHED DOCTORS:",
-    matchedDoctors
-  );
+  };
 
-  return matchedDoctors;
-
-};
+// =========================
+// EXPORT
+// =========================
 
 module.exports =
   recommendDoctors;

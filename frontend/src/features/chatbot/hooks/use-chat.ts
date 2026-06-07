@@ -1,43 +1,63 @@
 "use client";
 
 import {
+  useRouter
+} from "next/navigation";
 
+import {
   useEffect,
-
   useState
-
 } from "react";
 
 import {
-
   useDiagnosticStore
-
 } from "@/shared/store/diagnostic-store";
 
 import {
+  useEmergencyStore
+} from "@/features/emergency/store/emergency-store";
 
+import {
   sendChatMessage,
-
   getChatMessages
-
 } from "@/shared/services/chatbot-service";
 
 import {
-
   useChatStore
-
 } from "../store/chat-store";
 
 import {
-
   ChatResponse
-
 } from "../types/chat";
+
+import {
+  useHistoryStore
+} from "@/features/history/store/history-store";
+
+// =========================
+// HOOK
+// =========================
 
 export function useChat() {
 
-  const [loading, setLoading] =
-    useState(false);
+  // =====================
+  // ROUTER
+  // =====================
+
+  const router =
+    useRouter();
+
+  // =====================
+  // LOCAL STATE
+  // =====================
+
+  const [
+
+    loading,
+
+    setLoading
+
+  ] = useState(false);
 
   // =====================
   // CHAT STORE
@@ -54,28 +74,42 @@ export function useChat() {
   } = useChatStore();
 
   // =====================
+  // EMERGENCY STORE
+  // =====================
+
+  const {
+
+    setEmergencyData
+
+  } = useEmergencyStore();
+
+  // =====================
   // DIAGNOSTIC STORE
   // =====================
 
   const {
 
-    setSymptoms,
-
-    setPredictions,
-
-    setRiskLevel,
-
-    setDepartment,
+    setAnalysisResult,
 
     addReasoning,
 
-    setEmergency,
-
-    setAnalysisSteps,
-
-    setIsAnalyzing
+    clearReasoning
 
   } = useDiagnosticStore();
+
+  // =====================
+  // HISTORY STORE
+  // =====================
+
+  const addHistory =
+
+    useHistoryStore(
+
+      (state) =>
+
+        state.addHistory
+
+    );
 
   // =====================
   // LOAD CHAT HISTORY
@@ -92,6 +126,7 @@ export function useChat() {
             await getChatMessages();
 
           const formattedMessages =
+
             response.map(
 
               (
@@ -113,6 +148,7 @@ export function useChat() {
                 try {
 
                   parsedContent =
+
                     JSON.parse(
                       message.content
                     );
@@ -143,9 +179,7 @@ export function useChat() {
 
         } catch (error) {
 
-          console.log(
-            error
-          );
+          console.log(error);
 
         }
 
@@ -168,9 +202,11 @@ export function useChat() {
 
         setLoading(true);
 
-        setIsAnalyzing(true);
+        // =====================
+        // RESET AI REASONING
+        // =====================
 
-        setAnalysisSteps([]);
+        clearReasoning();
 
         // =====================
         // USER MESSAGE
@@ -193,52 +229,60 @@ export function useChat() {
         });
 
         // =====================
-        // STREAMING STEPS
+        // AI REASONING
         // =====================
 
-        const steps = [
+        addReasoning(
+          "Analyzing symptoms..."
+        );
 
-          "Analyzing symptoms...",
+        await new Promise(
 
-          "Checking disease patterns...",
+          (resolve) =>
 
-          "Evaluating emergency indicators...",
+            setTimeout(
+              resolve,
+              500
+            )
 
-          "Calculating diagnostic confidence...",
+        );
 
-          "Generating predictions..."
+        addReasoning(
+          "Checking disease patterns..."
+        );
 
-        ];
+        await new Promise(
 
-        for (
-          const step of steps
-        ) {
+          (resolve) =>
 
-          setAnalysisSteps([
+            setTimeout(
+              resolve,
+              500
+            )
 
-            ...useDiagnosticStore
-              .getState()
-              .analysisSteps,
+        );
 
-            step
+        addReasoning(
+          "Evaluating emergency indicators..."
+        );
 
-          ]);
+        await new Promise(
 
-          await new Promise(
+          (resolve) =>
 
-            (resolve) =>
+            setTimeout(
+              resolve,
+              500
+            )
 
-              setTimeout(
-                resolve,
-                700
-              )
+        );
 
-          );
-
-        }
+        addReasoning(
+          "Generating AI predictions..."
+        );
 
         // =====================
-        // API RESPONSE
+        // API CALL
         // =====================
 
         const response:
@@ -259,29 +303,46 @@ export function useChat() {
           response;
 
         // =====================
-        // FULL RESET
+        // SAVE TO HISTORY
         // =====================
 
-        useDiagnosticStore.setState({
+        if (
 
-          symptoms: [],
+          apiData
+            .possibleDiseases
+            ?.length > 0
 
-          predictions: [],
+        ) {
 
-          riskLevel: "Low",
+          const topDisease =
 
-          department:
-            "General Medicine",
+            apiData
+              .possibleDiseases[0];
 
-          reasoning: [],
+          addHistory({
 
-          emergency: false,
+            id:
+              crypto.randomUUID(),
 
-          analysisSteps: [],
+            disease:
+              topDisease.disease,
 
-          isAnalyzing: false
+            symptoms:
+              apiData.enteredSymptoms,
 
-        });
+            confidence:
+              topDisease.confidence,
+
+            riskLevel:
+              topDisease.riskLevel,
+
+            date:
+              new Date()
+                .toLocaleDateString()
+
+          });
+
+        }
 
         // =====================
         // ASSISTANT MESSAGE
@@ -304,104 +365,49 @@ export function useChat() {
         });
 
         // =====================
-        // SYMPTOMS
+        // UPDATE ANALYSIS STORE
         // =====================
 
-        setSymptoms(
-
-          apiData.enteredSymptoms || []
-
-        );
-
-        // =====================
-        // PREDICTIONS
-        // =====================
-
-        setPredictions(
-
-          (
-            apiData
-              .possibleDiseases || []
-
-          ).map(
-
-            (
-              disease: {
-
-                disease: string;
-
-                confidence: number;
-
-                riskLevel: string;
-
-                department: string;
-
-              }
-
-            ) => ({
-
-              disease:
-                disease.disease,
-
-              confidence:
-                disease.confidence,
-
-              riskLevel:
-                disease.riskLevel,
-
-              department:
-                disease.department
-
-            })
-
-          )
-
-        );
-
-        // =====================
-        // TOP PREDICTION
-        // =====================
-
-        const topPrediction =
-
+        setAnalysisResult(
           apiData
-            ?.possibleDiseases?.[0];
+        );
 
-        if (topPrediction) {
+        // =====================
+        // UPDATE EMERGENCY STORE
+        // =====================
 
-          // ===================
-          // SMART RISK
-          // ===================
+        if (
 
-          const calculatedRisk =
+          apiData.emergency
 
-            topPrediction.confidence >= 35
+        ) {
 
-              ? topPrediction.riskLevel
+         setEmergencyData(
+  apiData.emergency
+);
 
-              : "Low";
+        }
 
-          setRiskLevel(
-            calculatedRisk
-          );
+        // =====================
+        // AUTO REDIRECT
+        // =====================
 
-          setDepartment(
+        if (
 
-            topPrediction.department ||
+          apiData.emergency
+            ?.isEmergency
 
-            "General Medicine"
+        ) {
 
+          router.push(
+            "/emergency"
           );
 
         }
 
         // =====================
-        // AI REASONING
+        // FINAL REASONING
         // =====================
-
-        addReasoning(
-          "Symptoms analyzed"
-        );
 
         addReasoning(
           "Disease confidence recalculated"
@@ -411,53 +417,13 @@ export function useChat() {
           "Risk evaluation completed"
         );
 
-        // =====================
-        // SMART EMERGENCY
-        // =====================
-
-        const emergencyDetected =
-
-          apiData
-            ?.possibleDiseases
-            ?.some(
-
-              (
-                disease: {
-
-                  riskLevel: string;
-
-                  confidence: number;
-
-                  emergencyMatch?: boolean;
-
-                }
-
-              ) =>
-
-                (
-
-                  disease
-                    .riskLevel
-                    ?.toLowerCase() ===
-                  "high"
-
-                ) &&
-
-                disease.confidence >= 35 &&
-
-                disease.emergencyMatch
-
-            );
-
-        setEmergency(
-          emergencyDetected || false
+        addReasoning(
+          "Doctor recommendations generated"
         );
 
       } catch (error) {
 
-        console.error(
-          error
-        );
+        console.error(error);
 
         addMessage({
 
@@ -479,11 +445,13 @@ export function useChat() {
 
         setLoading(false);
 
-        setIsAnalyzing(false);
-
       }
 
     };
+
+  // =====================
+  // RETURN
+  // =====================
 
   return {
 
