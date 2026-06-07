@@ -32,7 +32,9 @@ const sessionRoutes =
 require("./routes/sessionRoutes");
 
 const healthRoutes =
-require("./routes/healthRoutes");
+  require(
+    "../src/routes/healthRoutes"
+  );
 
 const chatRoutes =
 require("./routes/chatRoutes");
@@ -94,6 +96,13 @@ app.use(
 
   })
 
+);
+
+
+
+app.use(
+  "/api",
+  healthRoutes
 );
 
 // =========================

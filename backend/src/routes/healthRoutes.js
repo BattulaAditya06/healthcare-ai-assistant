@@ -1,20 +1,26 @@
 const express =
-require("express");
+  require("express");
 
 const router =
-express.Router();
+  express.Router();
 
-router.get("/", (req, res) => {
+router.get(
 
-  res.status(200).json({
+  "/health",
 
-    success: true,
+  (req, res) => {
 
-    message:
-      "Backend running"
+    return res.status(200).json({
 
-  });
+      success: true,
 
-});
+      message:
+        "Backend server running"
+
+    });
+
+  }
+
+);
 
 module.exports = router;
