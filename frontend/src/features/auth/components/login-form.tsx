@@ -10,7 +10,7 @@ import {
 
 import {
   login
-} from "@/shared/services/auth-service";
+} from "@/shared/services/auth-services";
 
 export function LoginForm() {
 
