@@ -8,9 +8,10 @@ const {
   "../services/nlpProcessingService"
 );
 
-const predictionService =
-require(
-  "../services/predictionService"
+const {
+  predictDisease
+} = require(
+  "../services/mlService"
 );
 
 const recommendDoctors =
@@ -59,12 +60,36 @@ async (req, res) => {
     // PREDICTIONS
     // =====================
 
-    const possibleDiseases =
+    console.log(
+  "BEFORE ML CALL"
+);
 
-      predictionService(
-        symptoms
-      ) || [];
+const possibleDiseases =
+  await predictDisease(
+    symptoms
+  ) || [];
+if (!Array.isArray(possibleDiseases)) {
 
+  console.log(
+    "INVALID ML RESPONSE"
+  );
+
+  return res.status(500).json({
+
+    success: false,
+    message: "Invalid ML response"
+
+  });
+
+}
+console.log(
+  "AFTER ML CALL"
+);
+
+console.log(
+  "ML PREDICTIONS:",
+  possibleDiseases
+);
     // =====================
     // TOP PREDICTION
     // =====================

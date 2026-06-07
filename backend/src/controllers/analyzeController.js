@@ -232,19 +232,19 @@ asyncHandler(
 
       );
 
-    // =====================
-    // DISEASE PREDICTION
-    // =====================
+   // =====================
+// DISEASE PREDICTION
+// =====================
 
-   const possibleDiseases =
+const possibleDiseases =
   await predictDisease(
     symptoms
   ) || [];
 
-    console.log(
-      "PREDICTIONS:",
-      possibleDiseases
-    );
+console.log(
+  "ML PREDICTIONS:",
+  possibleDiseases
+);
 
 
     // =====================
