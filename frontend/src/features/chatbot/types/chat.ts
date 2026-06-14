@@ -12,21 +12,9 @@ export interface DiseasePrediction {
 
 }
 
-export interface Doctor {
-
-  id: number;
-
-  name: string;
-
-  department: string;
-
-  rating: number;
-
-  experience: number;
-
-  hospital: string;
-
-}
+import type {
+  Doctor
+} from "@/shared/types/doctor";
 
 export interface ChatResponse {
 
@@ -54,21 +42,7 @@ export interface ChatResponse {
 
   }[];
 
-  recommendedDoctors: {
-
-    id: number;
-
-    name: string;
-
-    department: string;
-
-    rating: number;
-
-    experience: number;
-
-    hospital: string;
-
-  }[];
+  recommendedDoctors: Doctor[];
 
   emergency?: {
 

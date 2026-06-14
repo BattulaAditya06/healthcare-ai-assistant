@@ -1,5 +1,9 @@
 "use client";
 
+import type {
+  Doctor
+} from "@/shared/types/doctor";
+
 import {
 
   AnimatePresence,

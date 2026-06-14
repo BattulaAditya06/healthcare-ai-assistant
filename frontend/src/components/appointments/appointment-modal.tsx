@@ -13,25 +13,8 @@ import {
 
 } from "@/features/appointments/store/appointment-store";
 
-// =========================
-// TYPES
-// =========================
-
-type Doctor = {
-
-  id: number;
-
-  name: string;
-
-  department: string;
-
-  rating: number;
-
-  experience: number;
-
-  hospital: string;
-
-};
+import type { Doctor }
+from "@/shared/types/doctor";
 
 type Appointment = {
 
@@ -69,19 +52,16 @@ export default function AppointmentModal({
 
 }: Props) {
 
+  const slots =
+  doctor?.availableSlots || [];
+
   const {
 
     addAppointment
 
   } = useAppointmentStore();
 
-  const [
-
-    slots,
-
-    setSlots
-
-  ] = useState<string[]>([]);
+  
 
 
   
@@ -127,54 +107,6 @@ export default function AppointmentModal({
     null
   );
 
-  // =====================
-  // FETCH SLOTS
-  // =====================
-
-  useEffect(() => {
-
-  if (
-
-    !open ||
-
-    !doctor
-
-  ) {
-
-    return;
-
-  }
-
-  const fetchSlots =
-    async () => {
-
-      try {
-
-        const response =
-          await fetch(
-
-            `http://localhost:5000/api/appointments/slots?doctorId=${doctor.id}`
-
-          );
-
-        const data =
-          await response.json();
-
-        setSlots(
-          data.slots || []
-        );
-
-      } catch (error) {
-
-        console.log(error);
-
-      }
-
-    };
-
-  fetchSlots();
-
-}, [open, doctor, success]);
 
   // =====================
   // BOOK APPOINTMENT
@@ -203,7 +135,7 @@ export default function AppointmentModal({
     const response =
       await fetch(
 
-        "http://localhost:5000/api/appointments/book",
+       `${process.env.NEXT_PUBLIC_API_URL}/appointments/book`,
 
         {
 
@@ -599,47 +531,38 @@ onClose();
             "
           >
 
-            {slots.map(
+            {slots.length === 0 ? (
 
-              (slot) => (
+  <p className="text-gray-500">
+    No slots available
+  </p>
 
-                <button
+) : (
 
-                  key={slot}
+  slots.map((slot) => (
 
-                  onClick={() =>
-                    setSelectedSlot(
-                      slot
-                    )
-                  }
+    <button
+      key={slot}
+      onClick={() =>
+        setSelectedSlot(slot)
+      }
+      className={`
+        rounded-xl
+        border
+        py-3
+        ${
+          selectedSlot === slot
+            ? "bg-black text-white"
+            : "bg-white"
+        }
+      `}
+    >
+      {slot}
+    </button>
 
-                  className={`
+  ))
 
-                    rounded-xl
-                    border
-                    py-3
-
-                    ${
-
-                      selectedSlot === slot
-
-                        ? "bg-black text-white"
-
-                        : "bg-white"
-
-                    }
-
-                  `}
-
-                >
-
-                  {slot}
-
-                </button>
-
-              )
-
-            )}
+)}
 
           </div>
 

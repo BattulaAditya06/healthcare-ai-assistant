@@ -4,11 +4,9 @@ import {
   useState
 } from "react";
 
-import type {
+import type { Doctor }
+from "@/shared/types/doctor";
 
-  Doctor
-
-} from "@/features/chatbot/types/chat";
 
 import AppointmentModal
 from "@/components/appointments/appointment-modal";

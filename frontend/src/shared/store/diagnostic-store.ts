@@ -40,21 +40,9 @@ type Prediction = {
 
 };
 
-type Doctor = {
-
-  id: number;
-
-  name: string;
-
-  department: string;
-
-  rating: number;
-
-  experience: number;
-
-  hospital: string;
-
-};
+import type {
+  Doctor
+} from "@/shared/types/doctor";
 
 type AnalysisResult = {
 

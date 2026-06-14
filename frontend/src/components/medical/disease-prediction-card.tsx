@@ -6,6 +6,9 @@ import {
 
 } from "react";
 
+import type { Doctor }
+from "@/shared/types/doctor";
+
 import {
 
   PredictionExplanation
@@ -29,25 +32,6 @@ import {
 
 } from "@/components/ui/badge";
 
-// =========================
-// TYPES
-// =========================
-
-type Doctor = {
-
-  id: number;
-
-  name: string;
-
-  department: string;
-
-  rating: number;
-
-  experience: number;
-
-  hospital: string;
-
-};
 
 interface Props {
 
