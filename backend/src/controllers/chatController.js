@@ -126,7 +126,46 @@ console.log(
 
     if (
       symptoms.length === 0
-    ) {
+    ) 
+    if (
+  symptoms.length < 2
+) {
+
+  console.timeEnd(
+    "TOTAL_CHAT"
+  );
+
+  return res.json({
+
+    success: true,
+
+    message:
+      "Please provide at least one more symptom for a reliable prediction.",
+
+    enteredSymptoms:
+      symptoms,
+
+    analysis: {
+
+      temporal:
+        temporalData,
+
+      severity:
+        severityData,
+
+      emergency:
+        emergencyData
+
+    },
+
+    possibleDiseases: [],
+
+    recommendedDoctors: []
+
+  });
+
+}
+    {
 
       console.timeEnd(
         "TOTAL_CHAT"
