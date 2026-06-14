@@ -3,6 +3,18 @@ require(
   "../datasets/emergencySymptoms.json"
 );
 
+const emergencyKeywords = [
+
+  "severe chest pain",
+  "cannot breathe",
+  "difficulty breathing",
+  "unconscious",
+  "loss of consciousness",
+  "stroke",
+  "seizure"
+
+];
+
 const detectEmergency =
 (symptoms = []) => {
 
@@ -15,6 +27,8 @@ const detectEmergency =
         )
     );
 
+
+    
   return {
 
     isEmergency:
@@ -24,6 +38,51 @@ const detectEmergency =
 
     matchedSymptoms:
       matchedEmergencySymptoms
+
+  };
+
+};
+
+
+const detectEmergency =
+(text = "") => {
+
+  const message =
+    text.toLowerCase();
+
+  for (
+    const keyword
+    of emergencyKeywords
+  ) {
+
+    if (
+      message.includes(
+        keyword
+      )
+    ) {
+
+      return {
+
+        emergency: true,
+
+        priority:
+          "critical",
+
+        action:
+          "Immediate medical attention required"
+
+      };
+
+    }
+
+  }
+
+  return {
+
+    emergency: false,
+
+    priority:
+      "normal"
 
   };
 

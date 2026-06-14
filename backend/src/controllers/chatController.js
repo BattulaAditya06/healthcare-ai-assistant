@@ -1,6 +1,21 @@
 const crypto =
 require("crypto");
 
+const temporalAnalyzer =
+require(
+ "../ml/preprocess/temporalAnalyzer"
+);
+
+const severityAnalyzer =
+require(
+ "../ml/preprocess/severityAnalyzer"
+);
+
+const emergencyDetector =
+require(
+ "../ml/preprocess/emergencyDetector"
+);
+
 const {
   processSymptoms
 } = require(
@@ -51,6 +66,59 @@ async (req, res) => {
       "CHAT MESSAGE:",
       message
     );
+
+// =====================
+// TEMPORAL ANALYSIS
+// =====================
+
+const temporalData =
+  temporalAnalyzer(
+    message
+  );
+
+// =====================
+// SEVERITY ANALYSIS
+// =====================
+
+const severityData =
+  severityAnalyzer(
+    message
+  );
+
+// =====================
+// EMERGENCY ANALYSIS
+// =====================
+
+const emergencyData =
+  emergencyDetector(
+    message
+  );
+
+if (
+  emergencyData.emergency
+) {
+
+  console.warn(
+    "EMERGENCY DETECTED:",
+    emergencyData.reason
+  );
+
+}
+
+console.log(
+  "TEMPORAL:",
+  temporalData
+);
+
+console.log(
+  "SEVERITY:",
+  severityData
+);
+
+console.log(
+  "EMERGENCY:",
+  emergencyData
+);
 
     // =====================
     // NLP PROCESSING
@@ -104,37 +172,7 @@ async (req, res) => {
 
     }
 
-    // =====================
-    // INSUFFICIENT DATA
-    // =====================
-
-    if (
-      symptoms.length < 2
-    ) {
-
-      console.timeEnd(
-        "TOTAL_CHAT"
-      );
-
-      return res.json({
-
-        success: true,
-
-        message:
-          "Please provide at least one more symptom for a reliable prediction.",
-
-        enteredSymptoms:
-          symptoms,
-
-        possibleDiseases:
-          [],
-
-        recommendedDoctors:
-          []
-
-      });
-
-    }
+ 
 
     // =====================
     // PREDICTION
@@ -264,18 +302,31 @@ async (req, res) => {
       "TOTAL_CHAT"
     );
 
-    return res.json({
+ return res.json({
 
-      success: true,
+  success: true,
 
-      enteredSymptoms:
-        symptoms,
+  enteredSymptoms:
+    symptoms,
 
-      possibleDiseases,
+  analysis: {
 
-      recommendedDoctors
+    temporal:
+      temporalData,
 
-    });
+    severity:
+      severityData,
+
+    emergency:
+      emergencyData
+
+  },
+
+  possibleDiseases,
+
+  recommendedDoctors
+
+});
 
   } catch (error) {
 

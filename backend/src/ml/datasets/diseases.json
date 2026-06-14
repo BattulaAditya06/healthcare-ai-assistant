@@ -393,10 +393,10 @@
     "department": "Neurology",
     "riskLevel": "medium",
     "severityScore": 5,
-
-    "primarySymptoms": [
-      "headache"
-    ],
+"primarySymptoms": [
+    "headache",
+    "nausea"
+  ],
 
     "secondarySymptoms": [
       "nausea",
