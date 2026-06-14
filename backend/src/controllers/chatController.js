@@ -170,6 +170,76 @@ if (
   symptoms.length < 2
 ) {
 
+  let followUpQuestions = [
+
+    "Can you describe any additional symptoms?",
+
+    "How long have you been experiencing this symptom?",
+
+    "Has the symptom become worse over time?"
+
+  ];
+
+  if (
+    symptoms.includes(
+      "wrist pain"
+    )
+  ) {
+
+    followUpQuestions = [
+
+      "Do you have swelling?",
+
+      "Was there a recent injury?",
+
+      "Do you have numbness or tingling?",
+
+      "How long have you had the pain?"
+
+    ];
+
+  }
+
+  if (
+    symptoms.includes(
+      "headache"
+    )
+  ) {
+
+    followUpQuestions = [
+
+      "Do you have nausea?",
+
+      "Are you sensitive to light?",
+
+      "Do you have dizziness?",
+
+      "How long has the headache lasted?"
+
+    ];
+
+  }
+
+  if (
+    symptoms.includes(
+      "fever"
+    )
+  ) {
+
+    followUpQuestions = [
+
+      "Do you have cough?",
+
+      "Do you have chills?",
+
+      "Have you noticed body pain?",
+
+      "How many days have you had fever?"
+
+    ];
+
+  }
+
   console.timeEnd(
     "TOTAL_CHAT"
   );
@@ -179,7 +249,7 @@ if (
     success: true,
 
     message:
-      "Please provide at least one more symptom for a reliable prediction.",
+      "More information is needed for a reliable prediction.",
 
     enteredSymptoms:
       symptoms,
@@ -197,14 +267,15 @@ if (
 
     },
 
+    followUpQuestions,
+
     possibleDiseases: [],
 
     recommendedDoctors: []
 
   });
 
-} 
-
+}
     // =====================
     // PREDICTION
     // =====================
