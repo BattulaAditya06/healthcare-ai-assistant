@@ -120,14 +120,53 @@ console.log(
   emergencyData
 );
 
-    // =====================
-    // EMPTY SYMPTOMS
-    // =====================
+   // =====================
+// EMPTY SYMPTOMS
+// =====================
 
-    if (
-      symptoms.length === 0
-    ) 
-    if (
+if (
+  symptoms.length === 0
+) {
+
+  console.timeEnd(
+    "TOTAL_CHAT"
+  );
+
+  return res.json({
+
+    success: true,
+
+    message:
+      "No symptoms detected. Please describe your symptoms.",
+
+    enteredSymptoms: [],
+
+    analysis: {
+
+      temporal:
+        temporalData,
+
+      severity:
+        severityData,
+
+      emergency:
+        emergencyData
+
+    },
+
+    possibleDiseases: [],
+
+    recommendedDoctors: []
+
+  });
+
+}
+
+// =====================
+// INSUFFICIENT SYMPTOMS
+// =====================
+
+if (
   symptoms.length < 2
 ) {
 
@@ -164,32 +203,7 @@ console.log(
 
   });
 
-}
-    {
-
-      console.timeEnd(
-        "TOTAL_CHAT"
-      );
-
-     return res.json({
-
-  success: true,
-
-  message:
-    "Additional symptoms are required for reliable disease prediction.",
-
-  enteredSymptoms:
-    symptoms,
-
-  possibleDiseases: [],
-
-  recommendedDoctors: []
-
-});
-
-    }
-
- 
+} 
 
     // =====================
     // PREDICTION
