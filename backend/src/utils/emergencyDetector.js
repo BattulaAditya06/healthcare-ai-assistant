@@ -15,78 +15,68 @@ const emergencyKeywords = [
 
 ];
 
-const detectEmergency =
-(symptoms = []) => {
+const detectEmergency = (
+  symptoms = [],
+  text = ""
+) => {
 
   const matchedEmergencySymptoms =
-    symptoms.filter(
-      (symptom) =>
 
+    symptoms.filter(
+      symptom =>
         emergencySymptoms.includes(
           symptom
         )
     );
 
-
-    
-  return {
-
-    isEmergency:
-
-      matchedEmergencySymptoms
-        .length > 0,
-
-    matchedSymptoms:
-      matchedEmergencySymptoms
-
-  };
-
-};
-
-
-const detectEmergency =
-(text = "") => {
-
   const message =
     text.toLowerCase();
 
-  for (
-    const keyword
-    of emergencyKeywords
-  ) {
+  const matchedKeywords =
 
-    if (
-      message.includes(
-        keyword
-      )
-    ) {
-
-      return {
-
-        emergency: true,
-
-        priority:
-          "critical",
-
-        action:
-          "Immediate medical attention required"
-
-      };
-
-    }
-
-  }
+    emergencyKeywords.filter(
+      keyword =>
+        message.includes(
+          keyword
+        )
+    );
 
   return {
 
-    emergency: false,
+    emergency:
+
+      matchedEmergencySymptoms.length > 0 ||
+
+      matchedKeywords.length > 0,
 
     priority:
-      "normal"
+
+      matchedEmergencySymptoms.length > 0 ||
+
+      matchedKeywords.length > 0
+
+        ? "critical"
+
+        : "normal",
+
+    matchedSymptoms:
+      matchedEmergencySymptoms,
+
+    matchedKeywords,
+
+    action:
+
+      matchedEmergencySymptoms.length > 0 ||
+
+      matchedKeywords.length > 0
+
+        ? "Immediate medical attention required"
+
+        : "Monitor symptoms"
 
   };
 
 };
 
 module.exports =
-detectEmergency;
+  detectEmergency;

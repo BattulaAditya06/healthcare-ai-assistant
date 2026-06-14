@@ -129,6 +129,12 @@ console.log(
       processedData
         ?.symptoms || [];
 
+        const emergencyData =
+  detectEmergency(
+    symptoms,
+    message
+  );
+
     console.log(
       "FINAL NORMALIZED SYMPTOMS:",
       symptoms
