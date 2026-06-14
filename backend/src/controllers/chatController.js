@@ -140,7 +140,10 @@ console.log(
         new Date()
 
     });
-
+console.log(
+  "RECOMMENDED DOCTORS:",
+  JSON.stringify(recommendedDoctors, null, 2)
+);
     // =====================
     // RESPONSE
     // =====================
@@ -157,6 +160,11 @@ console.log(
       recommendedDoctors
 
     });
+
+    console.log(
+  "RECOMMENDED DOCTORS:",
+  recommendedDoctors
+);
 
   } catch (error) {
 
