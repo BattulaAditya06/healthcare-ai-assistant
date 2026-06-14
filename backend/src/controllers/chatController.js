@@ -2,19 +2,13 @@ const crypto =
 require("crypto");
 
 const temporalAnalyzer =
-require(
- "../ml/preprocess/temporalAnalyzer"
-);
+require("../utils/temporalAnalyzer");
 
 const severityAnalyzer =
-require(
- "../ml/preprocess/severityAnalyzer"
-);
+require("../utils/severityAnalyzer");
 
 const emergencyDetector =
-require(
- "../ml/preprocess/emergencyDetector"
-);
+require("../utils/emergencyDetector");
 
 const {
   processSymptoms

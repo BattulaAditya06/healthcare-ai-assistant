@@ -1,18 +1,16 @@
+const emergencySymptoms =
+require(
+  "../datasets/emergencySymptoms.json"
+);
 
-const emergencySymptoms = [
+const emergencyKeywords = [
 
-  "chest pain",
-
+  "severe chest pain",
+  "cannot breathe",
   "difficulty breathing",
-
-  "shortness of breath",
-
   "unconscious",
-
-  "severe bleeding",
-
-  "blood vomiting",
-
+  "loss of consciousness",
+  "stroke",
   "seizure"
 
 ];
@@ -20,17 +18,75 @@ const emergencySymptoms = [
 const detectEmergency =
 (symptoms = []) => {
 
-  return symptoms.some(
+  const matchedEmergencySymptoms =
+    symptoms.filter(
+      (symptom) =>
 
-    (symptom) =>
+        emergencySymptoms.includes(
+          symptom
+        )
+    );
 
-      emergencySymptoms.includes(
-        symptom
+
+    
+  return {
+
+    isEmergency:
+
+      matchedEmergencySymptoms
+        .length > 0,
+
+    matchedSymptoms:
+      matchedEmergencySymptoms
+
+  };
+
+};
+
+
+const detectEmergency =
+(text = "") => {
+
+  const message =
+    text.toLowerCase();
+
+  for (
+    const keyword
+    of emergencyKeywords
+  ) {
+
+    if (
+      message.includes(
+        keyword
       )
+    ) {
 
-  );
+      return {
+
+        emergency: true,
+
+        priority:
+          "critical",
+
+        action:
+          "Immediate medical attention required"
+
+      };
+
+    }
+
+  }
+
+  return {
+
+    emergency: false,
+
+    priority:
+      "normal"
+
+  };
 
 };
 
 module.exports =
-  detectEmergency;
+detectEmergency;
