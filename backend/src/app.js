@@ -1,6 +1,8 @@
 const express =
 require("express");
 
+require("./src/utils/keepAlive");
+
 const cors =
 require("cors");
 
