@@ -1,4 +1,4 @@
-
+console.time("TOTAL_CHAT");
 const crypto =
 require("crypto");
 
@@ -147,7 +147,7 @@ console.log(
     // =====================
     // RESPONSE
     // =====================
-
+console.timeEnd("TOTAL_CHAT");
     return res.json({
 
       success: true,

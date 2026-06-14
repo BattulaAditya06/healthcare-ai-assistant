@@ -1,14 +1,10 @@
-const axios =
-  require("axios");
+const axios = require("axios");
+const cache = require("./predictionCache");
 
-const cache =
-  require("./predictionCache");
-
-const predictDisease =
-async (symptoms = []) => {
+const predictDisease = async (symptoms = []) => {
 
   const key =
-    symptoms
+    [...symptoms]
       .sort()
       .join(",");
 
@@ -17,34 +13,58 @@ async (symptoms = []) => {
 
   if (cached) {
 
-    console.log(
-      "CACHE HIT"
-    );
+    console.log("CACHE HIT");
 
     return cached;
 
   }
 
-  const response =
-    await axios.post(
+  try {
 
-      process.env.ML_SERVICE_URL +
-      "/predict",
+    console.time("ML_REQUEST");
 
-      { symptoms },
+    const response =
+      await axios.post(
 
-      {
-        timeout: 5000
-      }
+        `${process.env.ML_SERVICE_URL}/predict`,
 
+        { symptoms },
+
+        {
+          timeout: 5000
+        }
+
+      );
+
+    console.timeEnd("ML_REQUEST");
+
+    cache.set(
+      key,
+      response.data
     );
 
-  cache.set(
-    key,
-    response.data
-  );
+    return response.data;
 
-  return response.data;
+  } catch (error) {
+
+    console.error(
+      "ML SERVICE ERROR:",
+      error.message
+    );
+
+    return [
+      {
+        disease:
+          "Prediction Service Unavailable",
+        confidence: 0,
+        riskLevel: "unknown",
+        department:
+          "General Medicine"
+      }
+    ];
+
+  }
+
 };
 
 module.exports = {
