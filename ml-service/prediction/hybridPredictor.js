@@ -1,4 +1,3 @@
-
 const axios = require("axios");
 
 const predictDisease =
@@ -8,7 +7,7 @@ const masterSymptoms =
 require("../datasets/masterSymptoms.json");
 
 // =========================
-// CREATE VECTOR
+// VECTOR CREATION
 // =========================
 
 const createVector =
@@ -16,7 +15,7 @@ const createVector =
 
   return masterSymptoms.map(
 
-    (symptom) =>
+    symptom =>
 
       symptoms.includes(
         symptom
@@ -34,94 +33,128 @@ const createVector =
 // MERGE PREDICTIONS
 // =========================
 
-const mergePredictions =
-(
+const mergePredictions = (
+
   rulePredictions = [],
 
   mlPrediction = null
+
 ) => {
 
-  if (
-    !mlPrediction
-  ) {
+  if (!mlPrediction) {
 
     return rulePredictions;
 
   }
 
-  return rulePredictions.map(
+  const diseaseExists =
 
-    (prediction) => {
+    rulePredictions.some(
 
-      // =====================
-      // MATCHED DISEASE
-      // =====================
-
-      if (
+      prediction =>
 
         prediction.disease ===
 
         mlPrediction.disease
 
-      ) {
+    );
 
-        const mergedConfidence =
+  const mergedPredictions =
 
-          (
+    rulePredictions.map(
 
-            prediction.confidence *
+      prediction => {
 
-            0.45
+        if (
 
-          ) +
+          prediction.disease ===
 
-          (
+          mlPrediction.disease
 
-            mlPrediction.confidence *
+        ) {
 
-            0.55
+          const mergedConfidence =
 
-          );
+            (
 
-        return {
+              prediction.confidence *
 
-          ...prediction,
+              0.4
 
-          confidence:
-            Number(
-              mergedConfidence.toFixed(1)
-            ),
+            ) +
 
-          predictionType:
-            "Hybrid AI Prediction"
+            (
 
-        };
+              mlPrediction.confidence *
+
+              0.6
+
+            );
+
+          return {
+
+            ...prediction,
+
+            confidence:
+
+              Number(
+
+                mergedConfidence.toFixed(1)
+
+              ),
+
+            predictionType:
+
+              "Hybrid AI Prediction"
+
+          };
+
+        }
+
+        return prediction;
 
       }
 
-      // =====================
-      // NON-ML MATCH
-      // =====================
+    );
 
-      return {
+  if (!diseaseExists) {
 
-        ...prediction,
+    mergedPredictions.unshift({
 
-        predictionType:
-          "Weighted Prediction"
+      disease:
+        mlPrediction.disease,
 
-      };
+      confidence:
+        mlPrediction.confidence,
 
-    }
+      predictionType:
+        "ML Prediction",
 
-  )
+      riskLevel:
+        mlPrediction.riskLevel ||
+        "unknown",
 
-  .sort(
-    (a, b) =>
+      department:
+        mlPrediction.department ||
+        "General Medicine"
 
-      b.confidence -
-      a.confidence
-  );
+    });
+
+  }
+
+  return mergedPredictions
+
+    .sort(
+
+      (a, b) =>
+
+        b.confidence -
+
+        a.confidence
+
+    )
+
+    .slice(0, 3);
 
 };
 
@@ -138,11 +171,8 @@ async (
 
 ) => {
 
-  // =====================
-  // RULE ENGINE
-  // =====================
-
   const rulePredictions =
+
     predictDisease(
 
       symptoms,
@@ -153,57 +183,28 @@ async (
 
   try {
 
-    // =====================
-    // VECTOR
-    // =====================
-
     const vector =
+
       createVector(
         symptoms
       );
 
-    console.log(
-      "VECTOR:",
-      vector
-    );
-
-    // =====================
-    // VALIDATION
-    // =====================
-
-    if (
-
-      !Array.isArray(
-        vector
-      )
-
-    ) {
-
-      throw new Error(
-        "Invalid vector format"
-      );
-
-    }
-
-    // =====================
-    // ML REQUEST
-    // =====================
-
     const response =
+
       await axios.post(
 
-        "http://127.0.0.1:8000/predict",
+        `${process.env.ML_SERVICE_URL}/predict`,
 
         {
 
           vector:
-            vector.map(
-              Number
-            )
+            vector.map(Number)
 
         },
 
         {
+
+          timeout: 10000,
 
           headers: {
 
@@ -216,21 +217,8 @@ async (
 
       );
 
-    // =====================
-    // ML RESPONSE
-    // =====================
-
     const mlPrediction =
       response.data;
-
-    console.log(
-      "ML PREDICTION:",
-      mlPrediction
-    );
-
-    // =====================
-    // VALIDATE RESPONSE
-    // =====================
 
     if (
 
@@ -240,15 +228,9 @@ async (
 
     ) {
 
-      throw new Error(
-        "Invalid ML response"
-      );
+      return rulePredictions;
 
     }
-
-    // =====================
-    // MERGE
-    // =====================
 
     return mergePredictions(
 
@@ -264,17 +246,43 @@ async (
 
       "ML Prediction Error:",
 
-      error.response?.data ||
-
       error.message
 
     );
 
-    // =====================
-    // SAFE FALLBACK
-    // =====================
+    if (
 
-    return rulePredictions;
+      rulePredictions.length > 0
+
+    ) {
+
+      return rulePredictions;
+
+    }
+
+    return [
+
+      {
+
+        disease:
+          "Insufficient Information",
+
+        confidence: 0,
+
+        riskLevel: "unknown",
+
+        department:
+          "General Medicine",
+
+        recommendations: [
+
+          "Please provide more symptoms"
+
+        ]
+
+      }
+
+    ];
 
   }
 

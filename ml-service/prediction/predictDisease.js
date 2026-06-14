@@ -1,12 +1,8 @@
 const diseases =
-require(
-  "../datasets/diseases.json"
-);
+  require("../datasets/diseases.json");
 
 const symptomWeights =
-require(
-  "../datasets/symptomWeights.json"
-);
+  require("../datasets/symptomWeights.json");
 
 // =========================
 // GET SYMPTOM WEIGHT
@@ -17,9 +13,7 @@ const getWeight = (
 ) => {
 
   return (
-    symptomWeights[
-      symptom
-    ] || 1
+    symptomWeights[symptom] || 1
   );
 
 };
@@ -38,31 +32,17 @@ const predictDisease = (
 
   try {
 
-    // =====================
-    // EMPTY INPUT
-    // =====================
-
-    if (
-      !symptoms.length
-    ) {
+    if (!symptoms.length) {
 
       return [];
 
     }
-
-    // =====================
-    // PREDICTIONS
-    // =====================
 
     const predictions =
 
       diseases.map(
 
         (disease) => {
-
-          // =================
-          // DISEASE DATA
-          // =================
 
           const primarySymptoms =
             disease.primarySymptoms || [];
@@ -79,10 +59,6 @@ const predictDisease = (
           const symptomCombinations =
             disease.symptomCombinations || [];
 
-          // =================
-          // ALL SYMPTOMS
-          // =================
-
           const allSymptoms = [
 
             ...primarySymptoms,
@@ -97,20 +73,18 @@ const predictDisease = (
 
           const uniqueDiseaseSymptoms = [
 
-            ...new Set(
-              allSymptoms
-            )
+            ...new Set(allSymptoms)
 
           ];
 
-          // =================
+          // =====================
           // MATCHES
-          // =================
+          // =====================
 
           const matchedPrimary =
             symptoms.filter(
 
-              (symptom) =>
+              symptom =>
 
                 primarySymptoms.includes(
                   symptom
@@ -121,7 +95,7 @@ const predictDisease = (
           const matchedSecondary =
             symptoms.filter(
 
-              (symptom) =>
+              symptom =>
 
                 secondarySymptoms.includes(
                   symptom
@@ -132,7 +106,7 @@ const predictDisease = (
           const matchedEmergency =
             symptoms.filter(
 
-              (symptom) =>
+              symptom =>
 
                 emergencySymptoms.includes(
                   symptom
@@ -143,17 +117,13 @@ const predictDisease = (
           const matchedSignature =
             symptoms.filter(
 
-              (symptom) =>
+              symptom =>
 
                 signatureSymptoms.includes(
                   symptom
                 )
 
             );
-
-          // =================
-          // UNIQUE MATCHES
-          // =================
 
           const uniqueMatches = [
 
@@ -174,28 +144,15 @@ const predictDisease = (
           const totalMatches =
             uniqueMatches.length;
 
-          // =================
-          // NO MATCHES
-          // =================
-
-          if (
-            totalMatches === 0
-          ) {
-
-            return null;
-
-          }
-
-          // =================
-          // BLOCK SIGNATURE
-          // ONLY INFLATION
-          // =================
+          // =====================
+          // NO REAL EVIDENCE
+          // =====================
 
           if (
 
             matchedPrimary.length === 0 &&
 
-            matchedSignature.length > 0
+            matchedSignature.length === 0
 
           ) {
 
@@ -203,9 +160,28 @@ const predictDisease = (
 
           }
 
-          // =================
+          // =====================
+          // PREVENT
+          // FEVER -> 10 DISEASES
+          // =====================
+
+          if (
+
+            symptoms.length <= 1 &&
+
+            matchedPrimary.length < 2 &&
+
+            matchedSignature.length === 0
+
+          ) {
+
+            return null;
+
+          }
+
+          // =====================
           // SCORE
-          // =================
+          // =====================
 
           let score = 0;
 
@@ -213,13 +189,13 @@ const predictDisease = (
 
           matchedPrimary.forEach(
 
-            (symptom) => {
+            symptom => {
 
               score +=
-                12 *
-                getWeight(
-                  symptom
-                );
+
+                25 *
+
+                getWeight(symptom);
 
             }
 
@@ -229,13 +205,13 @@ const predictDisease = (
 
           matchedSecondary.forEach(
 
-            (symptom) => {
+            symptom => {
 
               score +=
-                5 *
-                getWeight(
-                  symptom
-                );
+
+                10 *
+
+                getWeight(symptom);
 
             }
 
@@ -245,13 +221,13 @@ const predictDisease = (
 
           matchedSignature.forEach(
 
-            (symptom) => {
+            symptom => {
 
               score +=
-                15 *
-                getWeight(
-                  symptom
-                );
+
+                40 *
+
+                getWeight(symptom);
 
             }
 
@@ -261,30 +237,31 @@ const predictDisease = (
 
           matchedEmergency.forEach(
 
-            (symptom) => {
+            symptom => {
 
               score +=
-                10 *
-                getWeight(
-                  symptom
-                );
+
+                20 *
+
+                getWeight(symptom);
 
             }
 
           );
 
-          // =================
+          // =====================
           // COMBINATION BONUS
-          // =================
+          // =====================
 
           symptomCombinations.forEach(
 
-            (combination) => {
+            combination => {
 
               const matched =
+
                 combination.every(
 
-                  (symptom) =>
+                  symptom =>
 
                     symptoms.includes(
                       symptom
@@ -294,7 +271,7 @@ const predictDisease = (
 
               if (matched) {
 
-                score += 10;
+                score += 25;
 
               }
 
@@ -302,9 +279,9 @@ const predictDisease = (
 
           );
 
-          // =================
+          // =====================
           // COVERAGE
-          // =================
+          // =====================
 
           const coverageRatio =
 
@@ -316,33 +293,26 @@ const predictDisease = (
             );
 
           score *=
+
             (
-              0.6 +
+
+              0.7 +
+
               (
-                coverageRatio * 0.4
+
+                coverageRatio * 0.3
+
               )
+
             );
 
-          // =================
-          // LOW INFORMATION
-          // PENALTY
-          // =================
-
-          if (
-            symptoms.length <= 1
-          ) {
-
-            score *= 0.45;
-
-          }
-
-          // =================
+          // =====================
           // NEGATIVE SYMPTOMS
-          // =================
+          // =====================
 
           negativeSymptoms.forEach(
 
-            (negativeSymptom) => {
+            negativeSymptom => {
 
               if (
 
@@ -360,45 +330,45 @@ const predictDisease = (
 
           );
 
-          // =================
-          // LARGE DISEASE
-          // STABILIZATION
-          // =================
+          // =====================
+          // CONFIDENCE
+          // =====================
+
+          const confidence =
+
+            Math.min(
+
+              95,
+
+              Math.max(
+
+                5,
+
+                (
+
+                  totalMatches /
+
+                  uniqueDiseaseSymptoms.length
+
+                ) * 100
+
+              )
+
+            );
+
+          // =====================
+          // MINIMUM QUALITY
+          // =====================
 
           if (
 
-            uniqueDiseaseSymptoms.length >= 8
+            confidence < 15
 
-          ) {
-
-            score *= 1.15;
-
-          }
-
-          // =================
-          // NORMALIZATION
-          // =================
-
-          score = Math.min(
-            score,
-            95
-          );
-
-          // =================
-          // MINIMUM THRESHOLD
-          // =================
-
-          if (
-            score < 5
           ) {
 
             return null;
 
           }
-
-          // =================
-          // RETURN
-          // =================
 
           return {
 
@@ -407,7 +377,7 @@ const predictDisease = (
 
             confidence:
               Number(
-                score.toFixed(1)
+                confidence.toFixed(1)
               ),
 
             predictionType:
@@ -457,24 +427,53 @@ const predictDisease = (
 
       .filter(Boolean)
 
-      // =====================
-      // SORT DESCENDING
-      // =====================
-
       .sort(
 
         (a, b) =>
 
           b.confidence -
+
           a.confidence
 
       )
 
-      // =====================
-      // TOP 5
-      // =====================
+      .slice(0, 3);
 
-      .slice(0, 5);
+    // =====================
+    // NOT ENOUGH DATA
+    // =====================
+
+    if (
+
+      predictions.length === 0
+
+    ) {
+
+      return [
+
+        {
+
+          disease:
+            "Insufficient Information",
+
+          confidence: 0,
+
+          riskLevel: "unknown",
+
+          department:
+            "General Medicine",
+
+          recommendations: [
+
+            "Please provide additional symptoms for a reliable prediction"
+
+          ]
+
+        }
+
+      ];
+
+    }
 
     return predictions;
 

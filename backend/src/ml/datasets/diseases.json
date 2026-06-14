@@ -132,7 +132,114 @@
       "Monitor oxygen levels",
       "Seek emergency care if breathing worsens"
     ]
-  },
+  }
+
+  ,
+{
+  "disease": "Wrist Tendonitis",
+  "category": "Orthopedics",
+  "department": "Orthopedics",
+  "riskLevel": "low",
+  "severityScore": 3,
+
+  "primarySymptoms": [
+    "wrist pain"
+  ],
+
+  "secondarySymptoms": [
+    "swelling"
+  ],
+
+  "signatureSymptoms": [
+    "wrist pain"
+  ],
+
+  "emergencySymptoms": [],
+
+  "negativeSymptoms": [
+    "fever"
+  ],
+
+  "symptomCombinations": [
+    ["wrist pain", "swelling"]
+  ],
+
+  "recommendations": [
+    "Rest affected wrist",
+    "Apply ice packs",
+    "Consult orthopedic specialist"
+  ]
+},
+{
+  "disease": "Carpal Tunnel Syndrome",
+  "category": "Orthopedics",
+  "department": "Orthopedics",
+  "riskLevel": "medium",
+  "severityScore": 4,
+
+  "primarySymptoms": [
+    "wrist pain",
+    "tingling sensation"
+  ],
+
+  "secondarySymptoms": [
+    "finger pain"
+  ],
+
+  "signatureSymptoms": [
+    "tingling sensation"
+  ],
+
+  "emergencySymptoms": [],
+
+  "negativeSymptoms": [
+    "fever"
+  ],
+
+  "symptomCombinations": [
+    ["wrist pain", "tingling sensation"]
+  ],
+
+  "recommendations": [
+    "Wear wrist splint",
+    "Avoid repetitive movements",
+    "Consult orthopedic specialist"
+  ]
+},
+{
+  "disease": "Tension Headache",
+  "category": "Neurology",
+  "department": "Neurology",
+  "riskLevel": "low",
+  "severityScore": 3,
+
+  "primarySymptoms": [
+    "headache"
+  ],
+
+  "secondarySymptoms": [
+    "fatigue",
+    "stress"
+  ],
+
+  "signatureSymptoms": [],
+
+  "emergencySymptoms": [],
+
+  "negativeSymptoms": [
+    "fever"
+  ],
+
+  "symptomCombinations": [
+    ["headache", "fatigue"]
+  ],
+
+  "recommendations": [
+    "Rest",
+    "Stay hydrated",
+    "Reduce stress"
+  ]
+},
 
   {
     "disease": "Pneumonia",
