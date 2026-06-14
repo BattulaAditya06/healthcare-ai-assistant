@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+require("./src/utils/keepAlive");
 const app =
 require("./src/app");
 
