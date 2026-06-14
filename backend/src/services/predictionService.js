@@ -65,7 +65,7 @@ const hasCombination = (
 const predictionService = (
   symptoms = []
 ) => {
-
+ 
   if (
 
     !Array.isArray(
@@ -79,6 +79,14 @@ const predictionService = (
     return [];
 
   }
+
+  if (
+  symptoms.length === 1
+) {
+
+  return [];
+
+}
 
   const rankedDiseases =
 
@@ -285,7 +293,22 @@ const predictionService = (
               totalSymptoms
 
             : 0;
+const minimumMatches =
 
+  symptoms.length <= 2
+    ? symptoms.length
+    : Math.ceil(
+        symptoms.length * 0.6
+      );
+
+if (
+  uniqueMatches.length <
+  minimumMatches
+) {
+
+  return null;
+
+}
         let  confidence = Math.min(
 
             90,
@@ -308,14 +331,7 @@ const predictionService = (
 
         // SINGLE SYMPTOM PENALTY
 
-        if (
-          symptoms.length === 1
-        ) {
-
-          confidence =
-            confidence * 0.6;
-
-        }
+    
 
         // LOW CONFIDENCE FILTER
 
@@ -367,7 +383,10 @@ const predictionService = (
     )
 
     .filter(Boolean)
-
+.filter(
+  disease =>
+    disease.confidence >= 20
+)
     .sort(
       (a, b) => {
 

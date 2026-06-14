@@ -132,23 +132,21 @@ console.log(
         "TOTAL_CHAT"
       );
 
-      return res.json({
+     return res.json({
 
-        success: true,
+  success: true,
 
-        message:
-          "No symptoms detected. Please describe your symptoms.",
+  message:
+    "Additional symptoms are required for reliable disease prediction.",
 
-        enteredSymptoms:
-          [],
+  enteredSymptoms:
+    symptoms,
 
-        possibleDiseases:
-          [],
+  possibleDiseases: [],
 
-        recommendedDoctors:
-          []
+  recommendedDoctors: []
 
-      });
+});
 
     }
 

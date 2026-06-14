@@ -235,24 +235,30 @@
   "severityScore": 3,
 
   "primarySymptoms": [
-    "headache"
+    "headache",
+    "fatigue"
   ],
 
   "secondarySymptoms": [
-    "fatigue",
+    "stress",
+    "sleep disturbance"
+  ],
+
+  "signatureSymptoms": [
     "stress"
   ],
 
-  "signatureSymptoms": [],
-
   "emergencySymptoms": [],
 
-  "negativeSymptoms": [
-    "fever"
-  ],
-
   "symptomCombinations": [
-    ["headache", "fatigue"]
+    [
+      "headache",
+      "stress"
+    ],
+    [
+      "headache",
+      "fatigue"
+    ]
   ],
 
   "recommendations": [
@@ -388,45 +394,38 @@
   },
 
   {
-    "disease": "Migraine",
-    "category": "Neurological",
-    "department": "Neurology",
-    "riskLevel": "medium",
-    "severityScore": 5,
-"primarySymptoms": [
+  "disease": "Migraine",
+  "category": "Neurological",
+  "department": "Neurology",
+  "riskLevel": "medium",
+  "severityScore": 5,
+
+  "primarySymptoms": [
     "headache",
     "nausea"
   ],
 
-    "secondarySymptoms": [
-      "nausea",
-      "vomiting",
-      "dizziness"
-    ],
+  "secondarySymptoms": [
+    "vomiting"
+  ],
 
-    "signatureSymptoms": [
-      "sensitivity to light",
-      "blurred vision"
-    ],
+  "signatureSymptoms": [
+    "sensitivity to light"
+  ],
 
-    "emergencySymptoms": [],
-
-    "negativeSymptoms": [
-      "fever",
-      "cough"
-    ],
-
-    "symptomCombinations": [
-      ["headache", "sensitivity to light"],
-      ["headache", "blurred vision"]
-    ],
-
-    "recommendations": [
-      "Rest in dark room",
-      "Avoid loud sounds",
-      "Consult neurologist if severe"
+  "symptomCombinations": [
+    [
+      "headache",
+      "nausea"
     ]
-  },
+  ],
+
+  "recommendations": [
+    "Rest in dark room",
+    "Avoid loud sounds",
+    "Consult neurologist if severe"
+  ]
+},
 
   {
     "disease": "Dengue",
