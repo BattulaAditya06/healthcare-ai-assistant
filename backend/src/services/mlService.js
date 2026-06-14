@@ -31,7 +31,7 @@ const predictDisease = async (symptoms = []) => {
         { symptoms },
 
         {
-          timeout: 5000
+          timeout: 30000
         }
 
       );

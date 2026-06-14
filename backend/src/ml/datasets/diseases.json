@@ -1,46 +1,4 @@
 [
-  {
-    "disease": "Common Cold",
-    "category": "Respiratory",
-    "department": "General Medicine",
-    "riskLevel": "low",
-    "severityScore": 2,
-
-    "primarySymptoms": [
-      "runny nose",
-      "nasal congestion",
-      "cough",
-      "sore throat",
-      "sneezing"
-    ],
-
-    "secondarySymptoms": [
-      "fatigue",
-      "headache",
-      "mild fever"
-    ],
-
-    "signatureSymptoms": ["runny nose"],
-
-    "emergencySymptoms": [],
-
-    "negativeSymptoms": [
-      "loss of taste",
-      "loss of smell",
-      "chest pain"
-    ],
-
-    "symptomCombinations": [
-      ["runny nose", "cough"],
-      ["sneezing", "nasal congestion"]
-    ],
-
-    "recommendations": [
-      "Drink warm fluids",
-      "Take rest",
-      "Use steam inhalation"
-    ]
-  },
 
   {
     "disease": "Flu",
@@ -132,41 +90,104 @@
       "Monitor oxygen levels",
       "Seek emergency care if breathing worsens"
     ]
-  }
-
-  ,
+  },
 {
+  "disease": "Arthritis",
+  "category": "Orthopedics",
+  "department": "Orthopedics",
+  "riskLevel": "medium",
+  "severityScore": 4,
+  "primarySymptoms": [
+    "joint pain",
+    "swelling"
+  ],
+  "secondarySymptoms": [
+    "wrist pain",
+    "knee pain"
+  ],
+  "signatureSymptoms": [
+    "joint pain"
+  ],
+  "emergencySymptoms": [],
+  "negativeSymptoms": [
+    "fever"
+  ],
+  "symptomCombinations": [
+    [
+      "joint pain",
+      "swelling"
+    ]
+  ],
+  "recommendations": [
+    "Consult orthopedic doctor",
+    "Avoid excessive joint strain"
+  ]
+},
+{
+  "disease": "Common Cold",
+  "category": "ENT",
+  "department": "ENT",
+  "riskLevel": "low",
+  "severityScore": 1,
+  "primarySymptoms": [
+    "runny nose",
+    "sneezing",
+    "sore throat"
+  ],
+  "secondarySymptoms": [
+    "cough",
+    "nasal congestion"
+  ],
+  "signatureSymptoms": [
+    "sneezing"
+  ],
+  "emergencySymptoms": [],
+  "negativeSymptoms": [
+    "chest pain",
+    "shortness of breath"
+  ],
+  "symptomCombinations": [
+    [
+      "runny nose",
+      "sneezing"
+    ]
+  ],
+  "recommendations": [
+    "Drink warm fluids",
+    "Take adequate rest",
+    "Monitor symptoms"
+  ]
+},
+  {
   "disease": "Wrist Tendonitis",
   "category": "Orthopedics",
   "department": "Orthopedics",
   "riskLevel": "low",
-  "severityScore": 3,
-
+  "severityScore": 2,
   "primarySymptoms": [
-    "wrist pain"
-  ],
-
-  "secondarySymptoms": [
+    "wrist pain",
     "swelling"
   ],
-
+  "secondarySymptoms": [
+    "joint pain"
+  ],
   "signatureSymptoms": [
     "wrist pain"
   ],
-
   "emergencySymptoms": [],
-
   "negativeSymptoms": [
-    "fever"
+    "fever",
+    "cough"
   ],
-
   "symptomCombinations": [
-    ["wrist pain", "swelling"]
+    [
+      "wrist pain",
+      "swelling"
+    ]
   ],
-
   "recommendations": [
     "Rest affected wrist",
-    "Apply ice packs",
+    "Apply ice",
     "Consult orthopedic specialist"
   ]
 },

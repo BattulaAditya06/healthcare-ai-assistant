@@ -1,4 +1,3 @@
-console.time("TOTAL_CHAT");
 const crypto =
 require("crypto");
 
@@ -8,8 +7,14 @@ const {
   "../services/nlpProcessingService"
 );
 
+const predictionService =
+require(
+  "../services/predictionService"
+);
+
 const {
-  predictDisease
+  predictDisease:
+  mlPredictDisease
 } = require(
   "../services/mlService"
 );
@@ -32,14 +37,23 @@ const messages = [];
 const analyzeChat =
 async (req, res) => {
 
+  console.time(
+    "TOTAL_CHAT"
+  );
+
   try {
 
     const {
       message = ""
     } = req.body;
 
+    console.log(
+      "CHAT MESSAGE:",
+      message
+    );
+
     // =====================
-    // NLP
+    // NLP PROCESSING
     // =====================
 
     const processedData =
@@ -49,7 +63,9 @@ async (req, res) => {
       );
 
     const symptoms =
-      processedData.symptoms;
+
+      processedData
+        ?.symptoms || [];
 
     console.log(
       "FINAL NORMALIZED SYMPTOMS:",
@@ -57,39 +73,133 @@ async (req, res) => {
     );
 
     // =====================
-    // PREDICTIONS
+    // EMPTY SYMPTOMS
+    // =====================
+
+    if (
+      symptoms.length === 0
+    ) {
+
+      console.timeEnd(
+        "TOTAL_CHAT"
+      );
+
+      return res.json({
+
+        success: true,
+
+        message:
+          "No symptoms detected. Please describe your symptoms.",
+
+        enteredSymptoms:
+          [],
+
+        possibleDiseases:
+          [],
+
+        recommendedDoctors:
+          []
+
+      });
+
+    }
+
+    // =====================
+    // INSUFFICIENT DATA
+    // =====================
+
+    if (
+      symptoms.length < 2
+    ) {
+
+      console.timeEnd(
+        "TOTAL_CHAT"
+      );
+
+      return res.json({
+
+        success: true,
+
+        message:
+          "Please provide at least one more symptom for a reliable prediction.",
+
+        enteredSymptoms:
+          symptoms,
+
+        possibleDiseases:
+          [],
+
+        recommendedDoctors:
+          []
+
+      });
+
+    }
+
+    // =====================
+    // PREDICTION
     // =====================
 
     console.log(
-  "BEFORE ML CALL"
-);
+      "BEFORE PREDICTION"
+    );
 
-const possibleDiseases =
-  await predictDisease(
-    symptoms
-  ) || [];
-if (!Array.isArray(possibleDiseases)) {
+    let possibleDiseases =
 
-  console.log(
-    "INVALID ML RESPONSE"
-  );
+      predictionService(
+        symptoms
+      );
 
-  return res.status(500).json({
+    // =====================
+    // ML FALLBACK
+    // =====================
 
-    success: false,
-    message: "Invalid ML response"
+    if (
+      possibleDiseases.length === 0
+    ) {
 
-  });
+      console.log(
+        "RULE ENGINE FAILED - USING ML"
+      );
 
-}
-console.log(
-  "AFTER ML CALL"
-);
+      possibleDiseases =
 
-console.log(
-  "ML PREDICTIONS:",
-  possibleDiseases
-);
+        await mlPredictDisease(
+          symptoms
+        ) || [];
+
+    }
+
+    // =====================
+    // VALIDATION
+    // =====================
+
+    if (
+      !Array.isArray(
+        possibleDiseases
+      )
+    ) {
+
+      console.timeEnd(
+        "TOTAL_CHAT"
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          "Invalid prediction response"
+
+      });
+
+    }
+
+    console.log(
+      "PREDICTIONS:",
+      possibleDiseases
+    );
+
     // =====================
     // TOP PREDICTION
     // =====================
@@ -106,23 +216,28 @@ console.log(
       [];
 
     if (
-
       topPrediction?.department
-
     ) {
 
       recommendedDoctors =
 
         recommendDoctors(
-
           topPrediction.department
-
         );
 
     }
 
+    console.log(
+      "RECOMMENDED DOCTORS:",
+      JSON.stringify(
+        recommendedDoctors,
+        null,
+        2
+      )
+    );
+
     // =====================
-    // STORE MESSAGE
+    // STORE CHAT
     // =====================
 
     messages.push({
@@ -140,14 +255,15 @@ console.log(
         new Date()
 
     });
-console.log(
-  "RECOMMENDED DOCTORS:",
-  JSON.stringify(recommendedDoctors, null, 2)
-);
+
     // =====================
     // RESPONSE
     // =====================
-console.timeEnd("TOTAL_CHAT");
+
+    console.timeEnd(
+      "TOTAL_CHAT"
+    );
+
     return res.json({
 
       success: true,
@@ -161,14 +277,16 @@ console.timeEnd("TOTAL_CHAT");
 
     });
 
-    console.log(
-  "RECOMMENDED DOCTORS:",
-  recommendedDoctors
-);
-
   } catch (error) {
 
-    console.log(error);
+    console.error(
+      "CHAT ERROR:",
+      error
+    );
+
+    console.timeEnd(
+      "TOTAL_CHAT"
+    );
 
     return res.status(500).json({
 

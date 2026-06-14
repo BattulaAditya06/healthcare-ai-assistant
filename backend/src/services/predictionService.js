@@ -9,15 +9,15 @@ require(
 
 const WEIGHTS = {
 
-  primary: 25,
+  primary: 30,
 
   secondary: 10,
 
   signature: 40,
 
-  emergency: 60,
+  emergency: 80,
 
-  combination: 45,
+  combination: 30,
 
   negative: -20
 
@@ -50,13 +50,10 @@ const hasCombination = (
 ) => {
 
   return combination.every(
-
-    (symptom) =>
-
+    symptom =>
       symptoms.includes(
         symptom
       )
-
   );
 
 };
@@ -68,10 +65,6 @@ const hasCombination = (
 const predictionService = (
   symptoms = []
 ) => {
-
-  // =====================
-  // VALIDATION
-  // =====================
 
   if (
 
@@ -87,10 +80,6 @@ const predictionService = (
 
   }
 
-  // =====================
-  // RANK DISEASES
-  // =====================
-
   const rankedDiseases =
 
     diseases.map(
@@ -104,23 +93,17 @@ const predictionService = (
         const matchedSymptoms =
           [];
 
-        // =================
         // PRIMARY
-        // =================
 
         safeArray(
-
           diseaseData.primarySymptoms
-
         ).forEach(
-          (symptom) => {
+          symptom => {
 
             if (
-
               symptoms.includes(
                 symptom
               )
-
             ) {
 
               score +=
@@ -135,23 +118,17 @@ const predictionService = (
           }
         );
 
-        // =================
         // SECONDARY
-        // =================
 
         safeArray(
-
           diseaseData.secondarySymptoms
-
         ).forEach(
-          (symptom) => {
+          symptom => {
 
             if (
-
               symptoms.includes(
                 symptom
               )
-
             ) {
 
               score +=
@@ -166,23 +143,17 @@ const predictionService = (
           }
         );
 
-        // =================
         // SIGNATURE
-        // =================
 
         safeArray(
-
           diseaseData.signatureSymptoms
-
         ).forEach(
-          (symptom) => {
+          symptom => {
 
             if (
-
               symptoms.includes(
                 symptom
               )
-
             ) {
 
               score +=
@@ -197,23 +168,17 @@ const predictionService = (
           }
         );
 
-        // =================
         // EMERGENCY
-        // =================
 
         safeArray(
-
           diseaseData.emergencySymptoms
-
         ).forEach(
-          (symptom) => {
+          symptom => {
 
             if (
-
               symptoms.includes(
                 symptom
               )
-
             ) {
 
               score +=
@@ -231,23 +196,17 @@ const predictionService = (
           }
         );
 
-        // =================
         // NEGATIVE
-        // =================
 
         safeArray(
-
           diseaseData.negativeSymptoms
-
         ).forEach(
-          (symptom) => {
+          symptom => {
 
             if (
-
               symptoms.includes(
                 symptom
               )
-
             ) {
 
               score +=
@@ -258,27 +217,18 @@ const predictionService = (
           }
         );
 
-        // =================
-        // COMBINATIONS
-        // =================
+        // COMBINATION BONUS
 
         safeArray(
-
           diseaseData.symptomCombinations
-
         ).forEach(
-          (combination) => {
+          combination => {
 
             if (
-
               hasCombination(
-
                 symptoms,
-
                 combination
-
               )
-
             ) {
 
               score +=
@@ -289,9 +239,25 @@ const predictionService = (
           }
         );
 
-        // =================
-        // MATCH COUNT
-        // =================
+        const uniqueMatches =
+
+          [
+            ...new Set(
+              matchedSymptoms
+            )
+          ];
+
+        // NO MATCH
+
+        if (
+          uniqueMatches.length === 0
+        ) {
+
+          return null;
+
+        }
+
+        // MATCH RATIO
 
         const totalSymptoms =
 
@@ -311,14 +277,6 @@ const predictionService = (
             diseaseData.emergencySymptoms
           ).length;
 
-        const uniqueMatches =
-
-          [
-            ...new Set(
-              matchedSymptoms
-            )
-          ];
-
         const matchRatio =
 
           totalSymptoms > 0
@@ -328,59 +286,46 @@ const predictionService = (
 
             : 0;
 
-        // =================
-        // CONFIDENCE
-        // =================
+        let  confidence = Math.min(
 
-        let confidence =
+            90,
 
-          Math.min(
+            Number(
 
-            92,
-
-            Math.max(
-
-              5,
-
-              Number(
+              (
+                score *
 
                 (
-                  score *
-                  0.75 *
+                  0.5 +
+                  matchRatio
+                )
 
-                  (
-                    0.5 +
-                    matchRatio
-                  )
-
-                ).toFixed(1)
-
-              )
+              ).toFixed(1)
 
             )
 
           );
 
-        // =================
-        // LOW MATCH FILTER
-        // =================
+        // SINGLE SYMPTOM PENALTY
 
         if (
+          symptoms.length === 1
+        ) {
 
-          uniqueMatches.length ===
-            0 ||
+          confidence =
+            confidence * 0.6;
 
+        }
+
+        // LOW CONFIDENCE FILTER
+
+        if (
           confidence < 15
-
         ) {
 
           return null;
 
         }
-
-        // =================
-        // RESULT
-        // =================
 
         return {
 
@@ -390,7 +335,10 @@ const predictionService = (
           category:
             diseaseData.category,
 
-          confidence,
+          confidence:
+            Number(
+              confidence.toFixed(1)
+            ),
 
           department:
             diseaseData.department,
@@ -407,10 +355,10 @@ const predictionService = (
           emergencyMatch,
 
           recommendations:
-            diseaseData.recommendations,
+            diseaseData.recommendations || [],
 
           predictionType:
-            "Advanced Weighted Prediction"
+            "Rule Based Prediction"
 
         };
 
@@ -423,14 +371,9 @@ const predictionService = (
     .sort(
       (a, b) => {
 
-        // Emergency priority
-
         if (
-
           a.emergencyMatch &&
-
           !b.emergencyMatch
-
         ) {
 
           return -1;
@@ -438,24 +381,17 @@ const predictionService = (
         }
 
         if (
-
           !a.emergencyMatch &&
-
           b.emergencyMatch
-
         ) {
 
           return 1;
 
         }
 
-        // Confidence
-
         return (
-
           b.confidence -
           a.confidence
-
         );
 
       }
@@ -463,63 +399,8 @@ const predictionService = (
 
     .slice(0, 5);
 
-  // =====================
-  // FALLBACK
-  // =====================
-
-  if (
-
-    rankedDiseases.length === 0
-
-  ) {
-
-    rankedDiseases.push({
-
-      disease:
-        "General Viral Infection",
-
-      category:
-        "General Medicine",
-
-      confidence: 20,
-
-      department:
-        "General Medicine",
-
-      riskLevel:
-        "low",
-
-      severityScore: 2,
-
-      matchedSymptoms:
-        symptoms,
-
-      emergencyMatch:
-        false,
-
-      recommendations: [
-
-        "Take rest",
-
-        "Stay hydrated",
-
-        "Monitor symptoms"
-
-      ],
-
-      predictionType:
-        "Fallback Prediction"
-
-    });
-
-  }
-
-  // =====================
-  // DEBUG
-  // =====================
-
   console.log(
-    "RANKED:",
+    "RULE PREDICTIONS:",
     rankedDiseases
   );
 
