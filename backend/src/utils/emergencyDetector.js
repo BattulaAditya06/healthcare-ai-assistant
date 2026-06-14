@@ -1,6 +1,6 @@
 const emergencySymptoms =
 require(
-  "../datasets/emergencySymptoms.json"
+  "../ml/datasets/emergencySymptoms.json"
 );
 
 const emergencyKeywords = [

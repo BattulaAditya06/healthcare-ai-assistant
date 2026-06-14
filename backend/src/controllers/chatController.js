@@ -61,30 +61,36 @@ async (req, res) => {
       message
     );
 
-// =====================
-// TEMPORAL ANALYSIS
-// =====================
 
-const temporalData =
+
+    // =====================
+    // NLP PROCESSING
+    // =====================
+
+    const processedData =
+
+      processSymptoms(
+        message
+      );
+
+    const symptoms =
+
+      processedData
+        ?.symptoms || [];
+
+        const temporalData =
   temporalAnalyzer(
     message
   );
-
-// =====================
-// SEVERITY ANALYSIS
-// =====================
 
 const severityData =
   severityAnalyzer(
     message
   );
 
-// =====================
-// EMERGENCY ANALYSIS
-// =====================
-
 const emergencyData =
   emergencyDetector(
+    symptoms,
     message
   );
 
@@ -94,7 +100,7 @@ if (
 
   console.warn(
     "EMERGENCY DETECTED:",
-    emergencyData.reason
+    emergencyData
   );
 
 }
@@ -113,32 +119,6 @@ console.log(
   "EMERGENCY:",
   emergencyData
 );
-
-    // =====================
-    // NLP PROCESSING
-    // =====================
-
-    const processedData =
-
-      processSymptoms(
-        message
-      );
-
-    const symptoms =
-
-      processedData
-        ?.symptoms || [];
-
-        const emergencyData =
-  detectEmergency(
-    symptoms,
-    message
-  );
-
-    console.log(
-      "FINAL NORMALIZED SYMPTOMS:",
-      symptoms
-    );
 
     // =====================
     // EMPTY SYMPTOMS
