@@ -83,9 +83,13 @@ const severityData =
 
 const emergencyData =
   emergencyDetector(
-  
     message
   );
+
+console.log(
+  "EMERGENCY DATA:",
+  emergencyData
+);
 
 if (
   emergencyData.emergency

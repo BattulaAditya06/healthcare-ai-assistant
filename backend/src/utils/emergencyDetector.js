@@ -26,6 +26,16 @@ const detectEmergency = (
         message.includes(keyword)
     );
 
+console.log(
+  "EMERGENCY CHECK:",
+  message
+);
+
+console.log(
+  "MATCHED:",
+  matchedKeywords
+);
+
   return {
 
     emergency:
