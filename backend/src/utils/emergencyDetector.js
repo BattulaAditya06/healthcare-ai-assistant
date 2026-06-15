@@ -17,7 +17,7 @@ const detectEmergency = (
 ) => {
 
   const message =
-    text.toLowerCase();
+    String(text).toLowerCase();
 
   const matchedKeywords =
 

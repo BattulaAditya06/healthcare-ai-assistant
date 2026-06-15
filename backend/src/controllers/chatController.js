@@ -56,13 +56,6 @@ async (req, res) => {
       message = ""
     } = req.body;
 
-    console.log(
-      "CHAT MESSAGE:",
-      message
-    );
-
-
-
     // =====================
     // NLP PROCESSING
     // =====================
@@ -90,7 +83,7 @@ const severityData =
 
 const emergencyData =
   emergencyDetector(
-    symptoms,
+  
     message
   );
 
