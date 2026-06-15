@@ -8,9 +8,10 @@
     "severityScore": 5,
 
     "primarySymptoms": [
-      "fever",
+      "High Fever",
       "cough",
       "body pain",
+      "Severe Body Aches",
       "fatigue"
     ],
 
