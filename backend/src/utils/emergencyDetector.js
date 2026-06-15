@@ -1,33 +1,20 @@
-const emergencySymptoms =
-require(
-  "../ml/datasets/emergencySymptoms.json"
-);
-
 const emergencyKeywords = [
 
+  "stroke",
+  "stroke symptoms",
+  "heart attack",
   "severe chest pain",
   "cannot breathe",
   "difficulty breathing",
-  "unconscious",
   "loss of consciousness",
-  "stroke",
+  "unconscious",
   "seizure"
 
 ];
 
 const detectEmergency = (
-  symptoms = [],
   text = ""
 ) => {
-
-  const matchedEmergencySymptoms =
-
-    symptoms.filter(
-      symptom =>
-        emergencySymptoms.includes(
-          symptom
-        )
-    );
 
   const message =
     text.toLowerCase();
@@ -36,42 +23,26 @@ const detectEmergency = (
 
     emergencyKeywords.filter(
       keyword =>
-        message.includes(
-          keyword
-        )
+        message.includes(keyword)
     );
 
   return {
 
     emergency:
-
-      matchedEmergencySymptoms.length > 0 ||
-
       matchedKeywords.length > 0,
 
     priority:
-
-      matchedEmergencySymptoms.length > 0 ||
-
       matchedKeywords.length > 0
-
         ? "critical"
-
         : "normal",
 
-    matchedSymptoms:
-      matchedEmergencySymptoms,
+    matchedSymptoms: [],
 
     matchedKeywords,
 
     action:
-
-      matchedEmergencySymptoms.length > 0 ||
-
       matchedKeywords.length > 0
-
         ? "Immediate medical attention required"
-
         : "Monitor symptoms"
 
   };
