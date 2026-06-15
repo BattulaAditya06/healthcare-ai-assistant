@@ -52,9 +52,39 @@ type AnalysisResult = {
 
   recommendedDoctors: Doctor[];
 
-  emergency?: {
+  emergency?: boolean;
 
-    isEmergency: boolean;
+  analysis?: {
+
+    temporal?: {
+
+      durationDays?: number;
+
+      chronic?: boolean;
+
+    };
+
+    severity?: {
+
+      score?: number;
+
+      level?: string;
+
+    };
+
+    emergency?: {
+
+      emergency?: boolean;
+
+      priority?: string;
+
+      matchedSymptoms?: string[];
+
+      matchedKeywords?: string[];
+
+      action?: string;
+
+    };
 
   };
 
@@ -396,14 +426,15 @@ export const useDiagnosticStore =
 
             "General Medicine",
 
-          emergency:
+         emergency:
 
-            data
-              .emergency
-              ?.isEmergency ||
+  data.emergency ||
 
-            false
+  data.analysis
+    ?.emergency
+    ?.emergency ||
 
+  false
         })
 
     })

@@ -376,34 +376,32 @@ export function useChat() {
         // UPDATE EMERGENCY STORE
         // =====================
 
-        if (
+    if (
+  apiData.analysis?.emergency
+) {
 
-          apiData.emergency
+  setEmergencyData(
+    apiData.analysis.emergency
+  );
 
-        ) {
-
-         setEmergencyData(
-  apiData.emergency
-);
-
-        }
+}
 
         // =====================
         // AUTO REDIRECT
         // =====================
+if (
 
-        if (
+  apiData.analysis
+    ?.emergency
+    ?.emergency
 
-          apiData.emergency
-            ?.isEmergency
+) {
 
-        ) {
+  router.push(
+    "/emergency"
+  );
 
-          router.push(
-            "/emergency"
-          );
-
-        }
+}
 
         // =====================
         // FINAL REASONING

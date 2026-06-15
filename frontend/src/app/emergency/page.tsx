@@ -22,13 +22,17 @@ export default function EmergencyPage() {
 
   const {
 
-    isEmergency,
+  emergency,
 
-    severity,
+  priority,
 
-    matchedSymptoms
+  matchedSymptoms,
 
-  } = useEmergencyStore();
+  matchedKeywords,
+
+  action
+
+} = useEmergencyStore();
 
   return (
 
@@ -152,7 +156,7 @@ export default function EmergencyPage() {
 
             {
 
-              isEmergency
+              emergency
 
                 ? "ACTIVE"
 
@@ -192,7 +196,7 @@ export default function EmergencyPage() {
             "
           >
 
-            {severity}
+            {priority}
 
           </h2>
 

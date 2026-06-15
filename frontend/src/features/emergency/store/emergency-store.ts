@@ -1,31 +1,39 @@
 "use client";
 
-import {
-  create
-} from "zustand";
+import { create } from "zustand";
 
 // =========================
 // TYPES
 // =========================
 
+type EmergencyData = {
+
+  emergency?: boolean;
+
+  priority?: string;
+
+  matchedSymptoms?: string[];
+
+  matchedKeywords?: string[];
+
+  action?: string;
+
+};
+
 type EmergencyStore = {
 
-  isEmergency: boolean;
+  emergency: boolean;
 
-  severity: string;
+  priority: string;
 
   matchedSymptoms: string[];
 
+  matchedKeywords: string[];
+
+  action: string;
+
   setEmergencyData: (
-    data: {
-
-      isEmergency: boolean;
-
-      severity: string;
-
-      matchedSymptoms: string[];
-
-    }
+    data: EmergencyData
   ) => void;
 
   clearEmergency: () => void;
@@ -41,25 +49,35 @@ export const useEmergencyStore =
   create<EmergencyStore>(
     (set) => ({
 
-      isEmergency: false,
+      emergency: false,
 
-      severity: "low",
+      priority: "normal",
 
       matchedSymptoms: [],
+
+      matchedKeywords: [],
+
+      action: "",
 
       setEmergencyData:
         (data) =>
 
           set({
 
-            isEmergency:
-              data.isEmergency,
+            emergency:
+              data.emergency || false,
 
-            severity:
-              data.severity,
+            priority:
+              data.priority || "normal",
 
             matchedSymptoms:
-              data.matchedSymptoms
+              data.matchedSymptoms || [],
+
+            matchedKeywords:
+              data.matchedKeywords || [],
+
+            action:
+              data.action || ""
 
           }),
 
@@ -67,11 +85,15 @@ export const useEmergencyStore =
 
         set({
 
-          isEmergency: false,
+          emergency: false,
 
-          severity: "low",
+          priority: "normal",
 
-          matchedSymptoms: []
+          matchedSymptoms: [],
+
+          matchedKeywords: [],
+
+          action: ""
 
         })
 
