@@ -155,10 +155,165 @@ export function ChatMessage({
         >
 
           <p className="font-medium">
+  {data.message}
+</p>
 
-            {data.message}
+{/* EMERGENCY ALERT */}
 
-          </p>
+{data.emergency && (
+
+  <div
+    className="
+      mt-4
+      rounded-xl
+      border
+      border-red-500
+      bg-red-50
+      p-4
+    "
+  >
+
+    <div
+      className="
+        font-semibold
+        text-red-700
+      "
+    >
+      🚨 Medical Emergency
+    </div>
+
+    <p
+      className="
+        mt-1
+        text-sm
+        text-red-600
+      "
+    >
+      Immediate medical attention is recommended.
+      Contact emergency services or visit the nearest hospital.
+    </p>
+
+  </div>
+
+)}
+{/* SEVERITY ALERT */}
+
+{data.analysis?.severity?.level === "high" && (
+
+  <div
+    className="
+      mt-4
+      rounded-xl
+      border
+      border-orange-500
+      bg-orange-50
+      p-4
+    "
+  >
+
+    <div
+      className="
+        font-semibold
+        text-orange-700
+      "
+    >
+      ⚠️ High Severity Symptoms
+    </div>
+
+    <p
+      className="
+        mt-1
+        text-sm
+        text-orange-600
+      "
+    >
+      Symptoms appear severe.
+      Prompt medical consultation is recommended.
+    </p>
+
+  </div>
+
+)}
+
+{/* TEMPORAL ALERT */}
+
+{data.analysis?.temporal?.durationDays &&
+ data.analysis.temporal.durationDays >= 3 && (
+
+  <div
+    className="
+      mt-4
+      rounded-xl
+      border
+      border-yellow-500
+      bg-yellow-50
+      p-4
+    "
+  >
+
+    <div
+      className="
+        font-semibold
+        text-yellow-700
+      "
+    >
+      ⏳ Persistent Symptoms
+    </div>
+
+    <p
+      className="
+        mt-1
+        text-sm
+        text-yellow-600
+      "
+    >
+      Symptoms have persisted for
+      {` ${data.analysis.temporal.durationDays} `}
+      days. Medical consultation is advised.
+    </p>
+
+  </div>
+
+)}
+
+{/* URGENT FOLLOWUP ALERT */}
+
+{data.urgentFollowup && (
+
+  <div
+    className="
+      mt-4
+      rounded-xl
+      border
+      border-yellow-500
+      bg-yellow-50
+      p-4
+    "
+  >
+
+    <div
+      className="
+        font-semibold
+        text-yellow-700
+      "
+    >
+      ⚠️ Persistent or Severe Symptom
+    </div>
+
+    <p
+      className="
+        mt-1
+        text-sm
+        text-yellow-600
+      "
+    >
+      This symptom has persisted for several days
+      or appears severe. Medical consultation is recommended.
+    </p>
+
+  </div>
+
+)}
 
           {data.enteredSymptoms
             ?.length > 0 && (
@@ -272,8 +427,7 @@ export function ChatMessage({
 
         {/* FOLLOW-UP QUESTIONS */}
 
-        {data.followUpQuestions
-          ?.length > 0 && (
+        {(data.followUpQuestions?.length ?? 0) > 0 && (
 
           <div
             className="
@@ -297,7 +451,7 @@ export function ChatMessage({
 
             <div className="flex flex-col gap-2">
 
-              {data.followUpQuestions.map(
+              {data.followUpQuestions?.map(
 
                 (
                   question: string,

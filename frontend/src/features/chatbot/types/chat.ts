@@ -26,6 +26,44 @@ export interface ChatResponse {
 
   followUpQuestions: string[];
 
+  emergency?: boolean;
+
+  urgentFollowup?: boolean;
+
+  analysis?: {
+
+    temporal?: {
+
+      durationDays?: number;
+
+      chronic?: boolean;
+
+    };
+
+    severity?: {
+
+      score?: number;
+
+      level?: string;
+
+    };
+
+    emergency?: {
+
+      emergency?: boolean;
+
+      priority?: string;
+
+      matchedSymptoms?: string[];
+
+      matchedKeywords?: string[];
+
+      action?: string;
+
+    };
+
+  };
+
   possibleDiseases: {
 
     disease: string;
@@ -43,16 +81,6 @@ export interface ChatResponse {
   }[];
 
   recommendedDoctors: Doctor[];
-
-  emergency?: {
-
-  isEmergency: boolean;
-
-  severity: string;
-
-  matchedSymptoms: string[];
-
-};
 
 }
 

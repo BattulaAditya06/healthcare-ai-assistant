@@ -193,16 +193,10 @@ const hasMeaningfulContext =
 
   (temporalData?.durationDays || 0) >= 3 ||
 
-  severityData?.level === "high" ||
-
-  emergencyData?.emergency === true;
+  severityData?.level === "high";
 
 if (
-
-  symptoms.length < 2 &&
-
-  !hasMeaningfulContext
-
+  symptoms.length < 2
 ) {
 
   let followUpQuestions = [
@@ -285,6 +279,9 @@ if (
 
     message:
       "More information is needed for a reliable prediction.",
+
+urgentFollowup:
+  hasMeaningfulContext,
 
     enteredSymptoms:
       symptoms,
