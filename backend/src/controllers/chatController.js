@@ -333,20 +333,68 @@ if (
     // =====================
 
     if (
-      possibleDiseases.length === 0
-    ) {
+  possibleDiseases.length === 0
+) {
 
-      console.log(
-        "RULE ENGINE FAILED - USING ML"
-      );
+  if (
+    symptoms.length < 2
+  ) {
 
-      possibleDiseases =
+    console.timeEnd(
+      "TOTAL_CHAT"
+    );
 
-        await mlPredictDisease(
-          symptoms
-        ) || [];
+    return res.json({
 
-    }
+      success: true,
+
+      message:
+        "More information is needed for a reliable prediction.",
+
+      enteredSymptoms:
+        symptoms,
+
+      analysis: {
+
+        temporal:
+          temporalData,
+
+        severity:
+          severityData,
+
+        emergency:
+          emergencyData
+
+      },
+
+      followUpQuestions: [
+
+        "Can you describe any additional symptoms?",
+
+        "Has the symptom worsened?",
+
+        "Have you consulted a doctor already?"
+
+      ],
+
+      possibleDiseases: [],
+
+      recommendedDoctors: []
+
+    });
+
+  }
+
+  console.log(
+    "RULE ENGINE FAILED - USING ML"
+  );
+
+  possibleDiseases =
+    await mlPredictDisease(
+      symptoms
+    ) || [];
+
+}
 
     // =====================
     // VALIDATION
