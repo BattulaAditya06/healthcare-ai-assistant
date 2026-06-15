@@ -91,43 +91,6 @@ console.log(
   emergencyData
 );
 
-if (
-  emergencyData.emergency
-) {
-
-console.timeEnd(
-    "TOTAL_CHAT"
-  );
-
-  return res.json({
-
-    success: true,
-
-    emergency: true,
-
-    analysis: {
-
-      temporal: temporalData,
-
-      severity: severityData,
-
-      emergency: emergencyData
-
-    },
-
-    message:
-      emergencyData.action,
-
-    possibleDiseases: [],
-
-    recommendedDoctors: []
-
-  });
-
-}
-
-
-
 console.log(
   "TEMPORAL:",
   temporalData
@@ -484,9 +447,29 @@ urgentFollowup:
       "TOTAL_CHAT"
     );
 
- return res.json({
+return res.json({
 
   success: true,
+
+  emergency:
+    emergencyData.emergency,
+
+  urgentFollowup:
+
+    emergencyData.emergency ||
+
+    severityData.level ===
+      "high" ||
+
+    (temporalData.durationDays || 0) >= 5,
+
+  message:
+
+    emergencyData.emergency
+
+      ? emergencyData.action
+
+      : "Analysis completed",
 
   enteredSymptoms:
     symptoms,

@@ -507,12 +507,12 @@ async (
     // EMERGENCY CHECK
     // =========================
 
-    const isEmergency =
+    const emergency =
       detectEmergency(
         currentSymptoms
       );
 
-    if (isEmergency) {
+    if (emergency) {
 
       const emergencyResponse = {
 

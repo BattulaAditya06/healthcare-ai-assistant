@@ -1,4 +1,21 @@
 {
+
+  "stroke symptoms": "stroke",
+  "stroke sign": "stroke",
+  "heart attack": "severe chest pain",
+  "heart pain": "severe chest pain",
+  "chest pressure": "severe chest pain",
+  "tight chest": "severe chest pain",
+  "cannot breathe": "difficulty breathing",
+  "can't breathe": "difficulty breathing",
+  "unable to breathe": "difficulty breathing",
+  "breathing problem": "difficulty breathing",
+  "breathing difficulty": "difficulty breathing",
+  "fainting": "loss of consciousness",
+  "passed out": "loss of consciousness",
+  "blackout": "loss of consciousness",
+  "convulsions": "seizure",
+
   "high temperature": "fever",
   "mild fever": "fever",
   "low fever": "fever",

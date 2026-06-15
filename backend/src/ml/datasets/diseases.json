@@ -47,6 +47,121 @@
     ]
   },
 
+{
+  "disease": "Heart Attack",
+  "category": "Cardiology",
+  "department": "Cardiology",
+  "riskLevel": "critical",
+  "severityScore": 10,
+
+  "primarySymptoms": [
+    "chest pain",
+    "severe chest pain",
+    "shortness of breath"
+  ],
+
+  "secondarySymptoms": [
+    "nausea",
+    "fatigue",
+    "dizziness"
+  ],
+
+  "signatureSymptoms": [
+    "severe chest pain"
+  ],
+
+  "emergencySymptoms": [
+    "severe chest pain"
+  ],
+
+  "negativeSymptoms": [],
+
+  "symptomCombinations": [
+    ["severe chest pain", "shortness of breath"]
+  ],
+
+  "recommendations": [
+    "Call emergency services immediately",
+    "Seek immediate hospital care"
+  ]
+},
+
+{
+  "disease": "Stroke",
+  "category": "Neurology",
+  "department": "Neurology",
+  "riskLevel": "critical",
+  "severityScore": 10,
+
+  "primarySymptoms": [
+    "stroke",
+    "weakness",
+    "difficulty speaking"
+  ],
+
+  "secondarySymptoms": [
+    "headache",
+    "dizziness"
+  ],
+
+  "signatureSymptoms": [
+    "difficulty speaking"
+  ],
+
+  "emergencySymptoms": [
+    "stroke"
+  ],
+
+  "negativeSymptoms": [],
+
+  "symptomCombinations": [
+    ["weakness", "difficulty speaking"]
+  ],
+
+  "recommendations": [
+    "Immediate emergency care required",
+    "Call ambulance immediately"
+  ]
+},
+
+{
+  "disease": "Pulmonary Embolism",
+  "category": "Respiratory",
+  "department": "Pulmonology",
+  "riskLevel": "critical",
+  "severityScore": 10,
+
+  "primarySymptoms": [
+    "chest pain",
+    "difficulty breathing"
+  ],
+
+  "secondarySymptoms": [
+    "dizziness",
+    "fatigue"
+  ],
+
+  "signatureSymptoms": [
+    "difficulty breathing"
+  ],
+
+  "emergencySymptoms": [
+    "difficulty breathing"
+  ],
+
+  "negativeSymptoms": [],
+
+  "symptomCombinations": [
+    ["chest pain", "difficulty breathing"]
+  ],
+
+  "recommendations": [
+    "Seek emergency care immediately"
+  ]
+},
+
+
+
   {
     "disease": "COVID-19",
     "category": "Respiratory",

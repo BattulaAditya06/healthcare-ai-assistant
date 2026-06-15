@@ -397,9 +397,13 @@ if (
 
 ) {
 
-  router.push(
-    "/emergency"
-  );
+  setTimeout(() => {
+
+    router.push(
+      "/emergency"
+    );
+
+  }, 5000);
 
 }
 

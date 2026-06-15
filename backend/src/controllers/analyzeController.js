@@ -377,7 +377,7 @@ console.log(
 
         emergency: {
 
-  isEmergency:
+  emergency:
     emergency,
 
   severity,
