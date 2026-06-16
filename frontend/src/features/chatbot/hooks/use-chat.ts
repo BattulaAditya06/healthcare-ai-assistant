@@ -69,8 +69,9 @@ export function useChat() {
 
     messages,
 
-    setMessages
-
+    setMessages,
+ currentSymptoms,
+  setCurrentSymptoms
   } = useChatStore();
 
   // =====================
@@ -285,14 +286,28 @@ export function useChat() {
         // API CALL
         // =====================
 
-        const response:
-          ChatResponse =
+        let finalMessage =
+  message;
 
-          await sendChatMessage({
+// Append previous symptoms
 
-            message
+if (
+  currentSymptoms.length > 0
+) {
 
-          });
+  finalMessage =
+
+    `${currentSymptoms.join(" ")} ${message}`;
+
+}
+
+const response =
+  await sendChatMessage({
+
+    message:
+      finalMessage
+
+  });
 
         console.log(
           "API RESPONSE:",
@@ -301,6 +316,16 @@ export function useChat() {
 
         const apiData =
           response;
+
+          if (
+  apiData.enteredSymptoms
+) {
+
+  setCurrentSymptoms(
+    apiData.enteredSymptoms
+  );
+
+}
 
           console.log(
   "API DATA:",
@@ -318,7 +343,7 @@ export function useChat() {
             ?.length > 0
 
         ) {
-
+            setCurrentSymptoms([]);
           const topDisease =
 
             apiData
@@ -459,6 +484,8 @@ if (
 
     };
 
+
+    
   // =====================
   // RETURN
   // =====================

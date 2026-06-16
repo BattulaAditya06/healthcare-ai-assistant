@@ -429,7 +429,7 @@ export function ChatMessage({
           </div>
 
         )}
-
+        
         {/* FOLLOW-UP QUESTIONS */}
 
         {(data.followUpQuestions?.length ?? 0) > 0 && (
@@ -443,16 +443,28 @@ export function ChatMessage({
             "
           >
 
-            <p
-              className="
-                mb-3
-                font-medium
-              "
-            >
+           <div className="mb-3">
 
-              Follow-up Questions
+  <p
+    className="
+      font-medium
+    "
+  >
+    Follow-up Questions
+  </p>
 
-            </p>
+  <p
+    className="
+      mt-1
+      text-xs
+      text-muted-foreground
+    "
+  >
+    Reply in the chat box with your answer.
+    Example: yes nausea
+  </p>
+
+</div>
 
             <div className="flex flex-col gap-2">
 
