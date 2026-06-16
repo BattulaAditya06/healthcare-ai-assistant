@@ -17,71 +17,48 @@ import type {
 } from "@/shared/types/doctor";
 
 export interface ChatResponse {
-
   success: boolean;
 
   message?: string;
 
-  enteredSymptoms: string[];
-
-  followUpQuestions: string[];
-
-  emergency?: boolean;
-
   urgentFollowup?: boolean;
 
+  enteredSymptoms: string[];
+
+  followUpQuestions?: string[];
+
   analysis?: {
-
     temporal?: {
-
       durationDays?: number | null;
-
       chronic?: boolean;
-
     };
 
     severity?: {
-
       score?: number;
-
       level?: string;
-
     };
 
     emergency?: {
-
       emergency?: boolean;
-
       priority?: string;
-
       matchedSymptoms?: string[];
-
       matchedKeywords?: string[];
-
       action?: string;
-
     };
-
   };
 
   possibleDiseases: {
-
     disease: string;
-
     confidence: number;
-
     riskLevel: string;
-
     department: string;
-
     emergencyMatch?: boolean;
-
     recommendations?: string[];
-
   }[];
 
-  recommendedDoctors: Doctor[];
+  recommendedDoctors: string[];
 
+  emergency?: boolean;
 }
 
 export interface StoredMessage {

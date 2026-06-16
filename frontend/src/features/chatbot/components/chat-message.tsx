@@ -167,7 +167,10 @@ console.log(
           <p className="font-medium">
   {data.message}
 </p>
-
+<div className="bg-red-500 text-white p-2">
+  Followups:
+  {JSON.stringify(data.followUpQuestions)}
+</div>  
 {/* EMERGENCY ALERT */}
 
 {data.emergency && (

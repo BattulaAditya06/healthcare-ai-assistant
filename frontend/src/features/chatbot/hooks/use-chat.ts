@@ -316,7 +316,10 @@ const response =
 
         const apiData =
           response;
-
+        console.log(
+  "FOLLOWUPS FROM API:",
+  apiData.followUpQuestions
+);
           if (
   apiData.enteredSymptoms
 ) {
