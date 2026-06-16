@@ -70,7 +70,7 @@ async (req, res) => {
 
       processedData
         ?.symptoms || [];
-        
+
 const temporalData =
   temporalAnalyzer(
     message
@@ -160,6 +160,9 @@ const allowSingleSymptomPrediction =
   (temporalData?.durationDays || 0) >= 3 ||
 
   severityData?.level === "high";
+
+  const hasMeaningfulContext =
+  allowSingleSymptomPrediction;
 
 if (
   symptoms.length < 2 &&
