@@ -468,28 +468,27 @@ export function ChatMessage({
 
             <div className="flex flex-col gap-2">
 
-              {data.followUpQuestions?.map(
+             {data.followUpQuestions?.map(
 
-                (
-                  question: string,
-                  index: number
-                ) => (
+  (
+    question: string,
+    index: number
+  ) => (
 
-                  <FollowUpActions
+    <div
+      key={index}
+      className="
+        rounded-lg
+        border
+        p-3
+      "
+    >
+      {question}
+    </div>
 
-                    key={`${question}-${index}`}
+  )
 
-                    question={question}
-
-                    sendMessage={
-                      sendMessage
-                    }
-
-                  />
-
-                )
-
-              )}
+)}
 
             </div>
 
