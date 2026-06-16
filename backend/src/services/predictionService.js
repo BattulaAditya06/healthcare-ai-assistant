@@ -80,14 +80,6 @@ const predictionService = (
 
   }
 
-  if (
-  symptoms.length === 1
-) {
-
-  return [];
-
-}
-
   const rankedDiseases =
 
     diseases.map(

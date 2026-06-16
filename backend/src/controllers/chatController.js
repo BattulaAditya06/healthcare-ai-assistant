@@ -70,8 +70,8 @@ async (req, res) => {
 
       processedData
         ?.symptoms || [];
-
-        const temporalData =
+        
+const temporalData =
   temporalAnalyzer(
     message
   );
@@ -82,7 +82,8 @@ const severityData =
   );
 
 const emergencyData =
-  processSymptoms(
+  emergencyDetector(
+    symptoms,
     message
   );
 
@@ -152,14 +153,19 @@ if (
 // INSUFFICIENT SYMPTOMS
 // =====================
 
-const hasMeaningfulContext =
+const allowSingleSymptomPrediction =
+
+  emergencyData.emergency ||
 
   (temporalData?.durationDays || 0) >= 3 ||
 
   severityData?.level === "high";
 
 if (
-  symptoms.length < 2
+  symptoms.length < 2 &&
+
+  !allowSingleSymptomPrediction
+
 ) {
 
   let followUpQuestions = [
@@ -288,15 +294,17 @@ urgentFollowup:
     // =====================
     // ML FALLBACK
     // =====================
-
-    if (
+if (
   possibleDiseases.length === 0
 ) {
 
   if (
-    symptoms.length < 2
-  ) {
 
+    symptoms.length < 2 &&
+
+    !allowSingleSymptomPrediction
+
+  ) {
     console.timeEnd(
       "TOTAL_CHAT"
     );
