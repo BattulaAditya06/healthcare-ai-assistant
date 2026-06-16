@@ -302,6 +302,11 @@ export function useChat() {
         const apiData =
           response;
 
+          console.log(
+  "API DATA:",
+  apiData
+);
+
         // =====================
         // SAVE TO HISTORY
         // =====================
@@ -363,7 +368,10 @@ export function useChat() {
             apiData
 
         });
-
+console.log(
+  "MESSAGE ADDED:",
+  apiData
+);
         // =====================
         // UPDATE ANALYSIS STORE
         // =====================
