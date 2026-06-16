@@ -34,7 +34,7 @@ export interface ChatResponse {
 
     temporal?: {
 
-      durationDays?: number;
+      durationDays?: number | null;
 
       chronic?: boolean;
 

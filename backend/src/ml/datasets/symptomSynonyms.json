@@ -16,6 +16,8 @@
   "blackout": "loss of consciousness",
   "convulsions": "seizure",
 
+
+
   "high temperature": "fever",
   "mild fever": "fever",
   "low fever": "fever",
@@ -179,5 +181,16 @@
 
   "confused": "confusion",
 
-  "skin peeling off": "skin peeling"
+  "skin peeling off": "skin peeling",
+  
+  "hedache": "headache",
+  "head ache": "headache",
+  "nausia": "nausea",
+  "nasea": "nausea",
+  "dizzines": "dizziness",
+  "dizzyness": "dizziness",
+  "feverr": "fever",
+  "couhg": "cough",
+  "cof": "cough",
+  "fatige": "fatigue"
 }

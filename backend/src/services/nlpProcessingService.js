@@ -80,7 +80,33 @@ const processSymptoms = (
     String(message)
       .toLowerCase()
       .trim();
+    // Remove yes/no prefixes
 
+normalizedMessage =
+
+  normalizedMessage
+
+    .replace(
+      /^yes\s+/i,
+      ""
+    )
+
+    .replace(
+      /^yeah\s+/i,
+      ""
+    )
+
+    .replace(
+      /^yup\s+/i,
+      ""
+    )
+
+    .replace(
+      /^i have\s+/i,
+      ""
+    )
+
+    .trim();
   console.log(
     "CHAT MESSAGE:",
     normalizedMessage

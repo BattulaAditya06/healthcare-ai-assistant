@@ -1,7 +1,6 @@
 
 import { DiseaseCard } from "./disease-card";
 
-import { FollowUpActions } from "./follow-up-actions";
 
 import {
 
@@ -125,22 +124,18 @@ export function ChatMessage({
   // DIAGNOSIS MESSAGE
   // =========================
 
-  const data =
+ const data =
     message.content as ChatResponse;
-console.log("CHAT MESSAGE DATA:", data);
-
-console.log(
-  "FOLLOWUP QUESTIONS:",
-  data.followUpQuestions
-);
 
 console.log(
   "FOLLOWUP LENGTH:",
   data.followUpQuestions?.length
 );
-    console.log(
-  "CHAT MESSAGE DATA:",
-  data
+   
+
+console.log(
+  "FOLLOWUP QUESTIONS:",
+  data.followUpQuestions
 );
 
   return (
@@ -442,83 +437,66 @@ console.log(
         
         {/* FOLLOW-UP QUESTIONS */}
 
-        {(data.followUpQuestions?.length ?? 0) > 0 && (
+{data.followUpQuestions?.length ? (
 
-          <div
-            className="
-              rounded-2xl
-              border
-              bg-card
-              p-5
-            "
-          >
-<div
-  className="
-    mb-4
-    rounded-lg
-    bg-blue-50
-    p-3
-    text-sm
-  "
->
-  Reply in the chat box.
-  Example: <b>yes nausea</b>
-</div>
-           <div className="mb-3">
-
-  <p
+  <div
     className="
-      font-medium
+      rounded-2xl
+      border
+      bg-card
+      p-5
     "
   >
-    Follow-up Questions
-  </p>
 
-  <p
-    className="
-      mt-1
-      text-xs
-      text-muted-foreground
-    "
-  >
-    Reply in the chat box with your answer.
-    Example: yes nausea
-  </p>
-
-</div>
-
-            <div className="flex flex-col gap-2">
-
-             {data.followUpQuestions?.map(
-
-  (
-    question: string,
-    index: number
-  ) => (
+    <h3 className="mb-3 font-semibold">
+      Follow-up Questions
+    </h3>
 
     <div
-      key={index}
       className="
+        mb-4
         rounded-lg
-        border
+        bg-blue-50
         p-3
+        text-sm
       "
     >
-      {question}
+      Reply in the chat box.
+      Example: <b>yes nausea</b>
     </div>
 
-  )
+    <div className="flex flex-col gap-2">
 
-)}
+      {data.followUpQuestions.map(
 
-            </div>
+        (
+          question,
+          index
+        ) => (
 
+          <div
+            key={index}
+            className="
+              rounded-lg
+              border
+              p-3
+              bg-muted/30
+            "
+          >
+            {question}
           </div>
 
-        )}
+        )
+
+      )}
+
+    </div>
+
+  </div>
+
+) : null}
 
       </div>
-
     </div>
 
   );
