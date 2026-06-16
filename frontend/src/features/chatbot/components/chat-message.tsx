@@ -128,6 +128,11 @@ export function ChatMessage({
   const data =
     message.content as ChatResponse;
 
+    console.log(
+  "CHAT MESSAGE DATA:",
+  data
+);
+
   return (
 
     <div className="flex justify-start">
