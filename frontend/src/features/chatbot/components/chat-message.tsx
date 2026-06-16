@@ -127,7 +127,17 @@ export function ChatMessage({
 
   const data =
     message.content as ChatResponse;
+console.log("CHAT MESSAGE DATA:", data);
 
+console.log(
+  "FOLLOWUP QUESTIONS:",
+  data.followUpQuestions
+);
+
+console.log(
+  "FOLLOWUP LENGTH:",
+  data.followUpQuestions?.length
+);
     console.log(
   "CHAT MESSAGE DATA:",
   data
@@ -442,7 +452,18 @@ export function ChatMessage({
               p-5
             "
           >
-
+<div
+  className="
+    mb-4
+    rounded-lg
+    bg-blue-50
+    p-3
+    text-sm
+  "
+>
+  Reply in the chat box.
+  Example: <b>yes nausea</b>
+</div>
            <div className="mb-3">
 
   <p
