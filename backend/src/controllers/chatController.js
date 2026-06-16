@@ -82,7 +82,7 @@ const severityData =
   );
 
 const emergencyData =
-  emergencyDetector(
+  processSymptoms(
     message
   );
 
