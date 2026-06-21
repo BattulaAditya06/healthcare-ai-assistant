@@ -79,17 +79,24 @@ export function ChatContainer() {
           "
         >
 
-          {messages.map((message) => (
+          {messages.map((message) => {
 
-            <ChatMessage
-  key={message.id}
-  message={message}
-  sendMessage={
-    sendMessage
-  }
-/>
+  console.log(
+    "RENDERING:",
+    message
+  );
 
-          ))}
+  return (
+
+    <ChatMessage
+      key={message.id}
+      message={message}
+      sendMessage={sendMessage}
+    />
+
+  );
+
+})}
 
           {loading && (
 

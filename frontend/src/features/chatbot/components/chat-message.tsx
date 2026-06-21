@@ -127,6 +127,16 @@ export function ChatMessage({
  const data =
     message.content as ChatResponse;
 
+    console.log(
+  "MESSAGE TYPE:",
+  message.type
+);
+
+console.log(
+  "DIAGNOSIS DATA:",
+  data
+);
+
 console.log(
   "FOLLOWUP LENGTH:",
   data.followUpQuestions?.length

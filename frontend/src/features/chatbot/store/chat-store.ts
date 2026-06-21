@@ -52,19 +52,23 @@ create<ChatStore>(
       "",
 
     addMessage:
-      (message) =>
+  (message) => {
 
-        set((state) => ({
+    console.log(
+      "STORE MESSAGE:",
+      message
+    );
 
-          messages: [
+    set((state) => ({
 
-            ...state.messages,
+      messages: [
+        ...state.messages,
+        message
+      ]
 
-            message
+    }));
 
-          ]
-
-        })),
+  },
 
     setMessages:
       (messages) =>
