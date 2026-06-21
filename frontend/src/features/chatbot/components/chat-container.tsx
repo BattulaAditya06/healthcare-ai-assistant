@@ -24,7 +24,11 @@ export function ChatContainer() {
   loading
 } = useChat();
 
- 
+const {
+
+  activeFollowUpQuestions
+
+} = useChatStore(); 
 
   // AUTO SCROLL REF
   const messagesEndRef =
@@ -89,14 +93,13 @@ export function ChatContainer() {
   return (
 
     <ChatMessage
-      key={message.id}
-      message={message}
-      sendMessage={sendMessage}
-    />
+  key={message.id}
+  message={message}
+/>
 
   );
 
-})}
+}  )}
 
           {loading && (
 
@@ -121,7 +124,66 @@ export function ChatContainer() {
             </div>
 
           )}
+{activeFollowUpQuestions.length > 0 && (
 
+  <div
+    className="
+      mt-4
+      rounded-2xl
+      border
+      bg-card
+      p-5
+    "
+  >
+
+    <h3
+      className="
+        mb-3
+        font-semibold
+      "
+    >
+      Follow-up Questions
+    </h3>
+
+    <div
+      className="
+        mb-4
+        rounded-lg
+        bg-blue-50
+        p-3
+        text-sm
+      "
+    >
+      Reply in the chat box below.
+      Example: yes nausea
+    </div>
+
+    {activeFollowUpQuestions.map(
+
+      (
+        question,
+        index
+      ) => (
+
+        <div
+          key={index}
+          className="
+            mb-2
+            rounded-lg
+            border
+            p-3
+          "
+        >
+          {question}
+        </div>
+
+      )
+
+    )}
+
+  </div>
+
+)}
           {/* AUTO SCROLL TARGET */}
           <div ref={messagesEndRef} />
 

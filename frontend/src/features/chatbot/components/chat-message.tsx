@@ -16,19 +16,18 @@ interface ChatMessageProps {
 
   message: ChatMessageType;
 
-  sendMessage: (
-    message: string
-  ) => Promise<void>;
 
 }
 
 export function ChatMessage({
 
-  message,
-
-  sendMessage
+  message
 
 }: ChatMessageProps) {
+  console.log(
+  "CHAT MESSAGE RENDERED:",
+  message
+);
 
   const isUser =
     message.role === "user";
@@ -450,68 +449,74 @@ console.log(
 
         )}
         
-        {/* FOLLOW-UP QUESTIONS */}
+                {/* FOLLOW-UP QUESTIONS */}
 
-{data.followUpQuestions?.length ? (
-
-  <div
-    className="
-      rounded-2xl
-      border
-      bg-card
-      p-5
-    "
-  >
-
-    <h3 className="mb-3 font-semibold">
-      Follow-up Questions
-    </h3>
-
-    <div
-      className="
-        mb-4
-        rounded-lg
-        bg-blue-50
-        p-3
-        text-sm
-      "
-    >
-      Reply in the chat box.
-      Example: <b>yes nausea</b>
-    </div>
-
-    <div className="flex flex-col gap-2">
-
-      {data.followUpQuestions.map(
-
-        (
-          question,
-          index
-        ) => (
+        {Array.isArray(data.followUpQuestions) &&
+          data.followUpQuestions.length > 0 && (
 
           <div
-            key={index}
             className="
-              rounded-lg
+              rounded-2xl
               border
-              p-3
-              bg-muted/30
+              bg-card
+              p-5
             "
           >
-            {question}
+
+            <h3
+              className="
+                mb-3
+                font-semibold
+              "
+            >
+              Follow-up Questions
+            </h3>
+
+            <div
+              className="
+                mb-4
+                rounded-lg
+                bg-blue-50
+                p-3
+                text-sm
+              "
+            >
+              Reply in the chat box below.
+              Example: yes nausea
+            </div>
+
+            <div className="flex flex-col gap-2">
+
+              {data.followUpQuestions.map(
+
+                (
+                  question: string,
+                  index: number
+                ) => (
+
+                  <div
+                    key={index}
+                    className="
+                      rounded-lg
+                      border
+                      p-3
+                    "
+                  >
+                    {question}
+                  </div>
+
+                )
+
+              )}
+
+            </div>
+
           </div>
 
-        )
-
-      )}
-
-    </div>
-
-  </div>
-
-) : null}
+        )}
 
       </div>
+
     </div>
 
   );

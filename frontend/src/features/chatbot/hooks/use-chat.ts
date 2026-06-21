@@ -65,14 +65,19 @@ export function useChat() {
 
   const {
 
-    addMessage,
+  addMessage,
 
-    messages,
+  messages,
 
-    setMessages,
- currentSymptoms,
-  setCurrentSymptoms
-  } = useChatStore();
+  setMessages,
+
+  currentSymptoms,
+
+  setCurrentSymptoms,
+
+  setActiveFollowUpQuestions
+
+} = useChatStore();
 
   // =====================
   // EMERGENCY STORE
@@ -320,6 +325,15 @@ const response =
 
         const apiData =
           response;
+          if (
+  apiData.followUpQuestions
+) {
+
+  setActiveFollowUpQuestions(
+    apiData.followUpQuestions
+  );
+
+}
         console.log(
   "FOLLOWUPS FROM API:",
   apiData.followUpQuestions
@@ -350,6 +364,9 @@ const response =
             ?.length > 0
 
         ) {
+          setActiveFollowUpQuestions(
+  []
+);
            
           const topDisease =
 

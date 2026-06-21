@@ -1,5 +1,4 @@
-import { create }
-from "zustand";
+import { create } from "zustand";
 
 import {
   ChatMessageType
@@ -10,96 +9,105 @@ interface ChatStore {
   messages:
     ChatMessageType[];
 
- 
+  currentSymptoms:
+    string[];
+
+  activeFollowUpQuestions:
+    string[];
 
   lastFollowUpSymptom:
     string;
 
-  addMessage:
-    (
-      message:
-        ChatMessageType
-    ) => void;
+  addMessage: (
+    message: ChatMessageType
+  ) => void;
 
-  setMessages:
-    (
-      messages:
-        ChatMessageType[]
-    ) => void;
- currentSymptoms:
-    string[];
-  setCurrentSymptoms:
-    (
-      symptoms:
-        string[]
-    ) => void;
+  setMessages: (
+    messages: ChatMessageType[]
+  ) => void;
 
-  setLastFollowUpSymptom:
-    (
-      symptom: string
-    ) => void;
+  setCurrentSymptoms: (
+    symptoms: string[]
+  ) => void;
+
+  setActiveFollowUpQuestions: (
+    questions: string[]
+  ) => void;
+
+  setLastFollowUpSymptom: (
+    symptom: string
+  ) => void;
 
 }
 
 export const useChatStore =
-create<ChatStore>(
-  (set) => ({
+create<ChatStore>((set) => ({
 
-    messages: [],
+  messages: [],
 
-    
-    lastFollowUpSymptom:
-      "",
+  currentSymptoms: [],
 
-    addMessage:
-  (message) => {
+  activeFollowUpQuestions: [],
 
-    console.log(
-      "STORE MESSAGE:",
-      message
-    );
+  lastFollowUpSymptom: "",
+
+  addMessage: (
+    message
+  ) =>
 
     set((state) => ({
 
       messages: [
+
         ...state.messages,
+
         message
+
       ]
 
-    }));
+    })),
 
-  },
+  setMessages: (
+    messages
+  ) =>
 
-    setMessages:
-      (messages) =>
+    set({
 
-        set({
+      messages
 
-          messages
+    }),
 
-        }),
-currentSymptoms:
-      [],
+  setCurrentSymptoms: (
+    symptoms
+  ) =>
 
-    setCurrentSymptoms:
-      (symptoms) =>
+    set({
 
-        set({
+      currentSymptoms:
+        symptoms
 
-          currentSymptoms:
-            symptoms
+    }),
 
-        }),
+  setActiveFollowUpQuestions: (
+    questions
+  ) =>
 
-    setLastFollowUpSymptom:
-      (symptom) =>
+    set({
 
-        set({
+      activeFollowUpQuestions:
+        questions
 
-          lastFollowUpSymptom:
-            symptom
+    }),
 
-        })
+  setLastFollowUpSymptom: (
+    symptom
+  ) =>
 
-  })
-);
+    set({
+
+      lastFollowUpSymptom:
+        symptom
+
+    })
+
+}));
