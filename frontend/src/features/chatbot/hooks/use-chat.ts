@@ -380,7 +380,10 @@ const response =
         // =====================
         // ASSISTANT MESSAGE
         // =====================
-
+console.log(
+  "ADDING DIAGNOSIS MESSAGE",
+  apiData
+);
         addMessage({
 
           id:
