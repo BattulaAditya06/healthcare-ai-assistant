@@ -286,18 +286,22 @@ export function useChat() {
         // API CALL
         // =====================
 
-        let finalMessage =
+       let finalMessage =
   message;
-
-// Append previous symptoms
 
 if (
   currentSymptoms.length > 0
 ) {
 
+  const previousSymptoms =
+
+    currentSymptoms.join(
+      " "
+    );
+
   finalMessage =
 
-    `${currentSymptoms.join(" ")} ${message}`;
+    `${previousSymptoms} ${message}`;
 
 }
 
@@ -346,7 +350,7 @@ const response =
             ?.length > 0
 
         ) {
-            setCurrentSymptoms([]);
+           
           const topDisease =
 
             apiData

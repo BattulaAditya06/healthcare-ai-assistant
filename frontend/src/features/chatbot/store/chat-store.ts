@@ -10,8 +10,7 @@ interface ChatStore {
   messages:
     ChatMessageType[];
 
-  currentSymptoms:
-    string[];
+ 
 
   lastFollowUpSymptom:
     string;
@@ -27,7 +26,8 @@ interface ChatStore {
       messages:
         ChatMessageType[]
     ) => void;
-
+ currentSymptoms:
+    string[];
   setCurrentSymptoms:
     (
       symptoms:
@@ -47,9 +47,7 @@ create<ChatStore>(
 
     messages: [],
 
-    currentSymptoms:
-      [],
-
+    
     lastFollowUpSymptom:
       "",
 
@@ -76,6 +74,8 @@ create<ChatStore>(
           messages
 
         }),
+currentSymptoms:
+      [],
 
     setCurrentSymptoms:
       (symptoms) =>
