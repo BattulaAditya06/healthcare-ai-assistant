@@ -30,6 +30,11 @@ const {
 
 } = useChatStore(); 
 
+console.log(
+  "ACTIVE FOLLOWUPS:",
+  activeFollowUpQuestions
+);
+
   // AUTO SCROLL REF
   const messagesEndRef =
     useRef<HTMLDivElement | null>(
@@ -124,6 +129,17 @@ const {
             </div>
 
           )}
+
+          <div
+  className="
+    bg-red-500
+    text-white
+    p-4git 
+  "
+>
+  FOLLOWUP COUNT:
+  {activeFollowUpQuestions.length}
+</div>
 {activeFollowUpQuestions.length > 0 && (
 
   <div

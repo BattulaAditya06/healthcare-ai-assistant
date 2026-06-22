@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  useChatStore
+} from "@/features/chatbot/store/chat-store";
+
+import {
 
   motion
 
@@ -73,6 +77,12 @@ export function AIHealthPanel() {
     emergency = false
 
   } = useDiagnosticStore();
+
+const {
+
+  activeFollowUpQuestions
+
+} = useChatStore();
 
   // =========================
   // TOP PREDICTION
@@ -657,51 +667,101 @@ export function AIHealthPanel() {
 
             </CardHeader>
 
-            <CardContent
-              className="
-                flex
-                flex-wrap
-                gap-2
-              "
-            >
+           <CardContent>
 
-              {symptoms.length > 0 ? (
+  <div
+    className="
+      flex
+      flex-wrap
+      gap-2
+    "
+  >
 
-                symptoms.map(
-                  (symptom) => (
+    {symptoms.length > 0 ? (
 
-                    <Badge
+      symptoms.map(
+        (symptom) => (
 
-                      key={symptom}
+          <Badge
+            key={symptom}
+            variant="secondary"
+          >
+            {symptom}
+          </Badge>
 
-                      variant="secondary"
+        )
+      )
 
-                    >
+    ) : (
 
-                      {symptom}
+      <p
+        className="
+          text-sm
+          text-muted-foreground
+        "
+      >
+        No active symptoms
+      </p>
 
-                    </Badge>
+    )}
 
-                  )
-                )
+  </div>
 
-              ) : (
+  {activeFollowUpQuestions.length > 0 && (
 
-                <p
-                  className="
-                    text-sm
-                    text-muted-foreground
-                  "
-                >
+    <div className="mt-5">
 
-                  No active symptoms
+      <h4
+        className="
+          mb-3
+          font-semibold
+        "
+      >
+        Follow-up Questions
+      </h4>
 
-                </p>
+      <div
+        className="
+          mb-3
+          rounded-lg
+          bg-blue-50
+          p-3
+          text-sm
+        "
+      >
+        Reply in the chat input below.
+        Example: yes nausea
+      </div>
 
-              )}
+      {activeFollowUpQuestions.map(
 
-            </CardContent>
+        (
+          question,
+          index
+        ) => (
 
+          <div
+            key={index}
+            className="
+              mb-2
+              rounded-lg
+              border
+              p-3
+              text-sm
+            "
+          >
+            {question}
+          </div>
+
+        )
+
+      )}
+
+    </div>
+
+  )}
+
+</CardContent>
           </Card>
 
         </motion.div>

@@ -6,17 +6,15 @@ import {
 
 interface ChatStore {
 
-  messages:
-    ChatMessageType[];
+  messages: ChatMessageType[];
 
-  currentSymptoms:
-    string[];
+  currentSymptoms: string[];
 
-  activeFollowUpQuestions:
-    string[];
+  activeFollowUpQuestions: string[];
 
-  lastFollowUpSymptom:
-    string;
+  lastFollowUpSymptom: string;
+
+  isFollowUpMode: boolean;
 
   addMessage: (
     message: ChatMessageType
@@ -38,6 +36,10 @@ interface ChatStore {
     symptom: string
   ) => void;
 
+  setFollowUpMode: (
+    value: boolean
+  ) => void;
+
 }
 
 export const useChatStore =
@@ -50,6 +52,8 @@ create<ChatStore>((set) => ({
   activeFollowUpQuestions: [],
 
   lastFollowUpSymptom: "",
+
+  isFollowUpMode: false,
 
   addMessage: (
     message
@@ -107,6 +111,16 @@ create<ChatStore>((set) => ({
 
       lastFollowUpSymptom:
         symptom
+
+    }),
+
+  setFollowUpMode: (
+  value: boolean
+) =>
+    set({
+
+      isFollowUpMode:
+        value
 
     })
 

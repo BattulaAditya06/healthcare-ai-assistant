@@ -8,69 +8,46 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  chats     Chat[]
-  createdAt DateTime @default(now())
-  
-appointments Appointment[]
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+  chats        Chat[]
 }
 
 model Chat {
-  id String @id @default(uuid())
-
-  userId String
-
-  currentSymptoms Json?
-
+  id               String    @id @default(uuid())
+  userId           String
+  currentSymptoms  Json?
   negativeSymptoms Json?
-
-  askedSymptoms Json?
-
-  lastQuestion String?
-
-  createdAt DateTime @default(now())
-
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  messages Message[]
+  askedSymptoms    Json?
+  lastQuestion     String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id])
+  messages         Message[]
 }
 
 model Message {
-  id     String @id @default(uuid())
-  chatId String
-
-  chat Chat @relation(fields: [chatId], references: [id])
-
-  role    String
-  type    String
-  content Json
-
+  id        String   @id @default(uuid())
+  chatId    String
+  role      String
+  type      String
+  content   Json
   createdAt DateTime @default(now())
+  chat      Chat     @relation(fields: [chatId], references: [id])
 }
+
 model Appointment {
-
-  id String @id @default(uuid())
-
-  userId String
-
-  doctorName String
-
-  department String
-
+  id              String   @id @default(uuid())
+  userId          String
+  doctorName      String
+  department      String
   appointmentDate DateTime
-
-  timeSlot String
-
-  status String @default("upcoming")
-
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-
+  timeSlot        String
+  status          String   @default("upcoming")
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id])
 }
-

@@ -75,7 +75,13 @@ export function useChat() {
 
   setCurrentSymptoms,
 
-  setActiveFollowUpQuestions
+  activeFollowUpQuestions,
+
+  setActiveFollowUpQuestions,
+
+  isFollowUpMode,
+
+  setFollowUpMode
 
 } = useChatStore();
 
@@ -242,46 +248,17 @@ export function useChat() {
           "Analyzing symptoms..."
         );
 
-        await new Promise(
-
-          (resolve) =>
-
-            setTimeout(
-              resolve,
-              500
-            )
-
-        );
 
         addReasoning(
           "Checking disease patterns..."
         );
 
-        await new Promise(
-
-          (resolve) =>
-
-            setTimeout(
-              resolve,
-              500
-            )
-
-        );
 
         addReasoning(
           "Evaluating emergency indicators..."
         );
 
-        await new Promise(
-
-          (resolve) =>
-
-            setTimeout(
-              resolve,
-              500
-            )
-
-        );
+        
 
         addReasoning(
           "Generating AI predictions..."
@@ -290,12 +267,61 @@ export function useChat() {
         // =====================
         // API CALL
         // =====================
+const symptomKeywords = [
 
-       let finalMessage =
+  "headache",
+  "fever",
+  "cold",
+  "cough",
+  "stomach pain",
+  "abdominal pain",
+  "vomiting",
+  "dizziness",
+  "fatigue",
+  "chest pain"
+
+];
+
+const isNewConversation =
+
+  symptomKeywords.some(
+
+    symptom =>
+
+      message
+        .toLowerCase()
+        .includes(
+          symptom
+        )
+
+  );
+
+if (
+  isNewConversation
+) {
+
+  setFollowUpMode(
+    false
+  );
+
+  setCurrentSymptoms(
+    []
+  );
+
+  setActiveFollowUpQuestions(
+    []
+  );
+
+}
+      let finalMessage =
   message;
 
 if (
+
+  isFollowUpMode &&
+
   currentSymptoms.length > 0
+
 ) {
 
   const previousSymptoms =
@@ -326,8 +352,12 @@ const response =
         const apiData =
           response;
           if (
-  apiData.followUpQuestions
+  apiData.followUpQuestions?.length
 ) {
+
+  setFollowUpMode(
+    true
+  );
 
   setActiveFollowUpQuestions(
     apiData.followUpQuestions
@@ -357,46 +387,55 @@ const response =
         // SAVE TO HISTORY
         // =====================
 
-        if (
+       if (
 
-          apiData
-            .possibleDiseases
-            ?.length > 0
+  apiData
+    .possibleDiseases
+    ?.length > 0
 
-        ) {
-          setActiveFollowUpQuestions(
-  []
-);
-           
-          const topDisease =
+) {
 
-            apiData
-              .possibleDiseases[0];
+  setFollowUpMode(
+    false
+  );
 
-          addHistory({
+  setCurrentSymptoms(
+    []
+  );
 
-            id:
-              crypto.randomUUID(),
+  setActiveFollowUpQuestions(
+    []
+  );
 
-            disease:
-              topDisease.disease,
+  const topDisease =
 
-            symptoms:
-              apiData.enteredSymptoms,
+    apiData
+      .possibleDiseases[0];
 
-            confidence:
-              topDisease.confidence,
+  addHistory({
 
-            riskLevel:
-              topDisease.riskLevel,
+    id:
+      crypto.randomUUID(),
 
-            date:
-              new Date()
-                .toLocaleDateString()
+    disease:
+      topDisease.disease,
 
-          });
+    symptoms:
+      apiData.enteredSymptoms,
 
-        }
+    confidence:
+      topDisease.confidence,
+
+    riskLevel:
+      topDisease.riskLevel,
+
+    date:
+      new Date()
+        .toLocaleDateString()
+
+  });
+
+}
 
         // =====================
         // ASSISTANT MESSAGE
