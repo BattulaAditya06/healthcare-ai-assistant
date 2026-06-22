@@ -18,6 +18,8 @@ type EmergencyData = {
 
   action?: string;
 
+  department?: string;
+
 };
 
 type EmergencyStore = {
@@ -31,6 +33,8 @@ type EmergencyStore = {
   matchedKeywords: string[];
 
   action: string;
+
+  department: string;
 
   setEmergencyData: (
     data: EmergencyData
@@ -47,55 +51,62 @@ type EmergencyStore = {
 export const useEmergencyStore =
 
   create<EmergencyStore>(
-    (set) => ({
+  (set) => ({
 
-      emergency: false,
+    emergency: false,
 
-      priority: "normal",
+    priority: "normal",
 
-      matchedSymptoms: [],
+    matchedSymptoms: [],
 
-      matchedKeywords: [],
+    matchedKeywords: [],
 
-      action: "",
+    action: "",
 
-      setEmergencyData:
-        (data) =>
+    department: "",
 
-          set({
-
-            emergency:
-              data.emergency || false,
-
-            priority:
-              data.priority || "normal",
-
-            matchedSymptoms:
-              data.matchedSymptoms || [],
-
-            matchedKeywords:
-              data.matchedKeywords || [],
-
-            action:
-              data.action || ""
-
-          }),
-
-      clearEmergency: () =>
+    setEmergencyData:
+      (data) =>
 
         set({
 
-          emergency: false,
+          emergency:
+            data.emergency || false,
 
-          priority: "normal",
+          priority:
+            data.priority || "normal",
 
-          matchedSymptoms: [],
+          matchedSymptoms:
+            data.matchedSymptoms || [],
 
-          matchedKeywords: [],
+          matchedKeywords:
+            data.matchedKeywords || [],
 
-          action: ""
+          action:
+            data.action || "",
 
-        })
+          department:
+            data.department || ""
 
-    })
-  );
+        }),
+
+    clearEmergency: () =>
+
+      set({
+
+        emergency: false,
+
+        priority: "normal",
+
+        matchedSymptoms: [],
+
+        matchedKeywords: [],
+
+        action: "",
+
+        department: ""
+
+      })
+
+  })
+);

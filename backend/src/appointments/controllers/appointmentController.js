@@ -245,7 +245,53 @@ const bookAppointment =
   });
 
 };
+//============================
+// EMERGENCY DOCTORS
+//============================
 
+const getEmergencyDoctors =
+(req, res) => {
+
+  const {
+    department
+  } = req.query;
+
+  let emergencyDoctors =
+    doctors.filter(
+      doctor =>
+        doctor.availability
+    );
+
+  if (department) {
+
+    emergencyDoctors =
+
+      emergencyDoctors.filter(
+
+        doctor =>
+
+          doctor.department
+            .toLowerCase()
+            .trim() ===
+
+          department
+            .toLowerCase()
+            .trim()
+
+      );
+
+  }
+
+  return res.json({
+
+    success: true,
+
+    doctors:
+      emergencyDoctors
+
+  });
+
+};
 // =========================
 // EXPORTS
 // =========================
@@ -254,6 +300,8 @@ module.exports = {
 
   getAvailableSlots,
 
-  bookAppointment
+  bookAppointment,
+
+  getEmergencyDoctors
 
 };

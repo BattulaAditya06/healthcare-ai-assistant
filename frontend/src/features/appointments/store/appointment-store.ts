@@ -1,5 +1,9 @@
 "use client";
 
+import type {
+  Doctor
+} from "@/shared/types/doctor";
+
 import {
   create
 } from "zustand";
@@ -31,17 +35,20 @@ export type Appointment = {
 
 };
 
-// =========================
-// STORE TYPE
-// =========================
-
 type AppointmentStore = {
 
   appointments:
     Appointment[];
 
+  selectedDoctor:
+    Doctor | null;
+
   addAppointment: (
     appointment: Appointment
+  ) => void;
+
+  setSelectedDoctor: (
+    doctor: Doctor
   ) => void;
 
 };
@@ -59,14 +66,12 @@ export const useAppointmentStore =
 
         appointments: [],
 
+        selectedDoctor:
+          null,
+
         addAppointment: (
           appointment
-        ) => {
-
-          console.log(
-            "ADDING APPOINTMENT:",
-            appointment
-          );
+        ) =>
 
           set((state) => ({
 
@@ -78,9 +83,18 @@ export const useAppointmentStore =
 
             ]
 
-          }));
+          })),
 
-        }
+        setSelectedDoctor: (
+          doctor
+        ) =>
+
+          set({
+
+            selectedDoctor:
+              doctor
+
+          })
 
       }),
 

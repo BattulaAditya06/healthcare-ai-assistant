@@ -8,7 +8,9 @@ const {
 
   getAvailableSlots,
 
-  bookAppointment
+  bookAppointment,
+
+  getEmergencyDoctors
 
 } = require(
   "../controllers/appointmentController"
@@ -19,11 +21,8 @@ const {
 // =========================
 
 router.get(
-
-  "/slots",
-
-  getAvailableSlots
-
+  "/emergency-doctors",
+  getEmergencyDoctors
 );
 
 // =========================

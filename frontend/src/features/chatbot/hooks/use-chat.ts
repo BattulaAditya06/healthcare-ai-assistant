@@ -475,13 +475,18 @@ console.log(
         // UPDATE EMERGENCY STORE
         // =====================
 
-    if (
+  if (
   apiData.analysis?.emergency
 ) {
 
-  setEmergencyData(
-    apiData.analysis.emergency
-  );
+  setEmergencyData({
+
+    ...apiData.analysis.emergency,
+
+    department:
+      apiData.emergencyDepartment
+
+  });
 
 }
 

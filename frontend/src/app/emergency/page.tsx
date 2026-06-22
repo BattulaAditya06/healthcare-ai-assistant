@@ -1,4 +1,18 @@
 "use client";
+import { useEffect, useState } from "react";
+
+import DoctorCard
+from "@/components/appointments/doctor-card";
+
+import AppointmentModal
+from "@/components/appointments/appointment-modal";
+
+import type { Doctor }
+from "@/shared/types/doctor";
+
+import {
+  useRouter
+} from "next/navigation";
 
 import {
 
@@ -20,6 +34,36 @@ import {
 
 export default function EmergencyPage() {
 
+
+const router =
+  useRouter();
+
+const [
+
+  doctors,
+
+  setDoctors
+
+] = useState<Doctor[]>([]);
+
+const [
+
+  selectedDoctor,
+
+  setSelectedDoctor
+
+] = useState<Doctor | null>(
+  null
+);
+
+const [
+
+  openModal,
+
+  setOpenModal
+
+] = useState(false);
+
   const {
 
   emergency,
@@ -30,10 +74,69 @@ export default function EmergencyPage() {
 
   matchedKeywords,
 
-  action
+  action,
+
+  department
 
 } = useEmergencyStore();
+const loadEmergencyDoctors =
+async () => {
+console.log(
+  "EMERGENCY DEPARTMENT:",
+  department
+);
+  if (!department) {
 
+    alert(
+      "Emergency department not detected"
+    );
+
+    return;
+
+  }
+
+  try {
+
+    const response =
+      await fetch(
+
+`${process.env.NEXT_PUBLIC_API_URL}/appointments/emergency-doctors?department=${department}`
+
+);
+
+    const data =
+      await response.json();
+
+    if (data.success) {
+
+      setDoctors(
+        data.doctors
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
+const handleBookDoctor =
+(
+  doctor: Doctor
+) => {
+
+  setSelectedDoctor(
+    doctor
+  );
+
+  setOpenModal(
+    true
+  );
+
+};
   return (
 
     <main
@@ -362,33 +465,102 @@ export default function EmergencyPage() {
         </button>
 
         <button
-          className="
-            flex
-            items-center
-            justify-center
-            gap-3
-            rounded-3xl
-            bg-black
-            p-6
-            text-lg
-            font-bold
-            text-white
-          "
-        >
 
-          <Activity
-            className="
-              h-6
-              w-6
-            "
-          />
+  onClick={
+    loadEmergencyDoctors
+  }
 
-          Find Emergency Doctor
+  className="
+    flex
+    items-center
+    justify-center
+    gap-3
+    rounded-3xl
+    bg-black
+    p-6
+    text-lg
+    font-bold
+    text-white
+  "
+>
 
-        </button>
+  <Activity
+    className="
+      h-6
+      w-6
+    "
+  />
+
+  Find Emergency Doctor
+
+</button>
 
       </div>
+{doctors.length > 0 && (
 
+  <div
+    className="
+      mt-10
+    "
+  >
+
+    <h2
+      className="
+        mb-5
+        text-2xl
+        font-bold
+      "
+    >
+      Emergency Specialists
+    </h2>
+
+    <div
+      className="
+        grid
+        gap-5
+        md:grid-cols-2
+      "
+    >
+
+      {doctors.map(
+
+        (doctor) => (
+
+          <DoctorCard
+
+            key={doctor.id}
+
+            doctor={doctor}
+
+            onBook={
+              handleBookDoctor
+            }
+
+          />
+
+        )
+
+      )}
+
+    </div>
+
+  </div>
+
+)}
+
+<AppointmentModal
+
+  open={openModal}
+
+  onClose={() =>
+    setOpenModal(false)
+  }
+
+  doctor={
+    selectedDoctor
+  }
+
+/>
     </main>
 
   );

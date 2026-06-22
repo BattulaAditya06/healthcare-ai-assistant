@@ -7,8 +7,12 @@ require("../utils/temporalAnalyzer");
 const severityAnalyzer =
 require("../utils/severityAnalyzer");
 
-const emergencyDetector =
-require("../utils/emergencyDetector");
+const {
+  detectEmergency,
+  getEmergencyDepartment
+} = require(
+  "../utils/emergencyDetector"
+);
 
 const {
   processSymptoms
@@ -82,9 +86,14 @@ const severityData =
   );
 
 const emergencyData =
-  emergencyDetector(
+  detectEmergency(
     symptoms,
     message
+  );
+
+  const emergencyDepartment =
+  getEmergencyDepartment(
+    symptoms
   );
 
 console.log(
@@ -464,6 +473,8 @@ return res.json({
 
   emergency:
     emergencyData.emergency,
+
+    emergencyDepartment,
 
   urgentFollowup:
 

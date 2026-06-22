@@ -1,54 +1,35 @@
-
 const API_URL =
-"http://localhost:5000/api/appointments";
+  "http://localhost:5000/api/appointments";
 
 // =========================
-// CREATE APPOINTMENT
+// GET EMERGENCY DOCTORS
 // =========================
 
-export const createAppointment =
+export const getEmergencyDoctors =
+async () => {
+
+  const response =
+    await fetch(
+      `${API_URL}/emergency-doctors`
+    );
+
+  return response.json();
+
+};
+
+// =========================
+// GET AVAILABLE SLOTS
+// =========================
+
+export const getAvailableSlots =
 async (
-
-  token: string,
-
-  payload: {
-
-    doctorName: string;
-
-    department: string;
-
-    appointmentDate: string;
-
-    timeSlot: string;
-
-  }
-
+  doctorId: number
 ) => {
 
   const response =
     await fetch(
 
-      API_URL,
-
-      {
-
-        method: "POST",
-
-        headers: {
-
-          "Content-Type":
-            "application/json",
-
-          Authorization:
-            `Bearer ${token}`
-
-        },
-
-        body: JSON.stringify(
-          payload
-        )
-
-      }
+      `${API_URL}/slots?doctorId=${doctorId}`
 
     );
 
@@ -57,28 +38,37 @@ async (
 };
 
 // =========================
-// GET APPOINTMENTS
+// BOOK APPOINTMENT
 // =========================
 
-export const getAppointments =
+export const bookAppointment =
 async (
-  token: string
+  payload: {
+    doctorId: number;
+    patientName: string;
+    appointmentDate: string;
+    appointmentTime: string;
+    symptoms?: string[];
+    severity?: string;
+  }
 ) => {
 
   const response =
     await fetch(
 
-      API_URL,
+      `${API_URL}/book`,
 
       {
+        method: "POST",
 
         headers: {
+          "Content-Type":
+            "application/json"
+        },
 
-          Authorization:
-            `Bearer ${token}`
-
-        }
-
+        body: JSON.stringify(
+          payload
+        )
       }
 
     );
