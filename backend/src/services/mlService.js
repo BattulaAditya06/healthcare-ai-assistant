@@ -43,7 +43,19 @@ const predictDisease = async (symptoms = []) => {
       response.data
     );
 
-    return response.data;
+ 
+
+const predictions =
+
+Array.isArray(response.data)
+
+? response.data
+
+: [response.data];
+
+return predictions.map(
+  normalizePrediction
+);
 
   } catch (error) {
 

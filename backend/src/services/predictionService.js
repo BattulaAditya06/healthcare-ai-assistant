@@ -1,10 +1,13 @@
-const diseases =
-require(
+// =========================
+// DISEASE DATASET
+// =========================
+
+const diseases = require(
   "../ml/datasets/diseases.json"
 );
 
 // =========================
-// WEIGHTS
+// WEIGHT CONFIGURATION
 // =========================
 
 const WEIGHTS = {
@@ -13,13 +16,23 @@ const WEIGHTS = {
 
   secondary: 10,
 
-  signature: 40,
+  signature: 50,
 
   emergency: 80,
 
-  combination: 30,
+  combination: 35,
 
-  negative: -20
+  negative: -35,
+
+  diseaseCoverage: 30,
+
+  symptomCoverage: 25,
+
+  primaryBonus: 8,
+
+  signatureBonus: 10,
+
+  noPrimaryPenalty: -20
 
 };
 
@@ -27,15 +40,21 @@ const WEIGHTS = {
 // SAFE ARRAY
 // =========================
 
-const safeArray = (
-  value
-) => {
+const safeArray = (value) =>
 
-  return Array.isArray(value)
+  Array.isArray(value)
+
     ? value
+
     : [];
 
-};
+// =========================
+// UNIQUE ARRAY
+// =========================
+
+const unique = (arr) =>
+
+  [...new Set(arr)];
 
 // =========================
 // CHECK COMBINATION
@@ -50,27 +69,36 @@ const hasCombination = (
 ) => {
 
   return combination.every(
+
     symptom =>
-      symptoms.includes(
-        symptom
-      )
+
+      symptoms.includes(symptom)
+
   );
 
 };
+
+// =========================
+// ROUND NUMBER
+// =========================
+
+const round = (value) =>
+
+  Number(value.toFixed(2));
 
 // =========================
 // PREDICTION ENGINE
 // =========================
 
 const predictionService = (
+
   symptoms = []
+
 ) => {
- 
+
   if (
 
-    !Array.isArray(
-      symptoms
-    ) ||
+    !Array.isArray(symptoms) ||
 
     symptoms.length === 0
 
@@ -80,260 +108,519 @@ const predictionService = (
 
   }
 
-  const rankedDiseases =
+  console.log(
 
-    diseases.map(
+    "INPUT SYMPTOMS:",
+
+    symptoms
+
+  );
+
+  const predictions =
+
+    diseases.map (
+
       (diseaseData) => {
+
+        // =====================
+        // INITIALIZE
+        // =====================
+
+      
+
+        let emergencyMatch = false;
 
         let score = 0;
 
-        let emergencyMatch =
-          false;
+let primaryMatches = 0;
 
-        const matchedSymptoms =
-          [];
+let secondaryMatches = 0;
 
-        // PRIMARY
+let signatureMatches = 0;
 
-        safeArray(
-          diseaseData.primarySymptoms
-        ).forEach(
-          symptom => {
+let emergencyMatches = 0;
 
-            if (
-              symptoms.includes(
-                symptom
-              )
-            ) {
+        
 
-              score +=
-                WEIGHTS.primary;
+        const matchedSymptoms = [];
 
-              matchedSymptoms.push(
-                symptom
-              );
+        // =====================
+        // DISEASE ARRAYS
+        // =====================
 
-            }
-
-          }
-        );
-
-        // SECONDARY
-
-        safeArray(
-          diseaseData.secondarySymptoms
-        ).forEach(
-          symptom => {
-
-            if (
-              symptoms.includes(
-                symptom
-              )
-            ) {
-
-              score +=
-                WEIGHTS.secondary;
-
-              matchedSymptoms.push(
-                symptom
-              );
-
-            }
-
-          }
-        );
-
-        // SIGNATURE
-
-        safeArray(
-          diseaseData.signatureSymptoms
-        ).forEach(
-          symptom => {
-
-            if (
-              symptoms.includes(
-                symptom
-              )
-            ) {
-
-              score +=
-                WEIGHTS.signature;
-
-              matchedSymptoms.push(
-                symptom
-              );
-
-            }
-
-          }
-        );
-
-        // EMERGENCY
-
-        safeArray(
-          diseaseData.emergencySymptoms
-        ).forEach(
-          symptom => {
-
-            if (
-              symptoms.includes(
-                symptom
-              )
-            ) {
-
-              score +=
-                WEIGHTS.emergency;
-
-              emergencyMatch =
-                true;
-
-              matchedSymptoms.push(
-                symptom
-              );
-
-            }
-
-          }
-        );
-
-        // NEGATIVE
-
-        safeArray(
-          diseaseData.negativeSymptoms
-        ).forEach(
-          symptom => {
-
-            if (
-              symptoms.includes(
-                symptom
-              )
-            ) {
-
-              score +=
-                WEIGHTS.negative;
-
-            }
-
-          }
-        );
-
-        // COMBINATION BONUS
-
-        safeArray(
-          diseaseData.symptomCombinations
-        ).forEach(
-          combination => {
-
-            if (
-              hasCombination(
-                symptoms,
-                combination
-              )
-            ) {
-
-              score +=
-                WEIGHTS.combination;
-
-            }
-
-          }
-        );
-
-        const uniqueMatches =
-
-          [
-            ...new Set(
-              matchedSymptoms
-            )
-          ];
-
-        // NO MATCH
-
-        if (
-          uniqueMatches.length === 0
-        ) {
-
-          return null;
-
-        }
-
-        // MATCH RATIO
-
-        const totalSymptoms =
+        const primarySymptoms =
 
           safeArray(
+
             diseaseData.primarySymptoms
-          ).length +
+
+          );
+        
+
+        const secondarySymptoms =
 
           safeArray(
+
             diseaseData.secondarySymptoms
-          ).length +
+
+          );
+
+        const signatureSymptoms =
 
           safeArray(
+
             diseaseData.signatureSymptoms
-          ).length +
+
+          );
+
+        const emergencySymptoms =
 
           safeArray(
+
             diseaseData.emergencySymptoms
-          ).length;
 
-        const matchRatio =
+          );
 
-          totalSymptoms > 0
+        const negativeSymptoms =
 
-            ? uniqueMatches.length /
-              totalSymptoms
+          safeArray(
 
-            : 0;
+            diseaseData.negativeSymptoms
+
+          );
+
+        const combinations =
+
+          safeArray(
+
+            diseaseData.symptomCombinations
+
+          );
+        // =====================
+        // PRIMARY SYMPTOMS
+        // =====================
+
+        primarySymptoms.forEach((symptom) => {
+
+          if (symptoms.includes(symptom)) {
+
+            primaryMatches++;
+
+            score += WEIGHTS.primary;
+
+            matchedSymptoms.push(symptom);
+
+          }
+
+        });
+
+        // =====================
+        // SECONDARY SYMPTOMS
+        // =====================
+
+        secondarySymptoms.forEach((symptom) => {
+
+          if (symptoms.includes(symptom)) {
+
+            secondaryMatches++;
+
+            score += WEIGHTS.secondary;
+
+            matchedSymptoms.push(symptom);
+
+          }
+
+        });
+
+        // =====================
+        // SIGNATURE SYMPTOMS
+        // =====================
+
+        signatureSymptoms.forEach((symptom) => {
+
+          if (symptoms.includes(symptom)) {
+
+            signatureMatches++;
+
+            score += WEIGHTS.signature;
+
+            matchedSymptoms.push(symptom);
+
+          }
+
+        });
+
+        // =====================
+        // EMERGENCY SYMPTOMS
+        // =====================
+
+        emergencySymptoms.forEach((symptom) => {
+
+          if (symptoms.includes(symptom)) {
+
+            emergencyMatches++;
+
+            emergencyMatch = true;
+
+            score += WEIGHTS.emergency;
+
+            matchedSymptoms.push(symptom);
+
+          }
+
+        });
+
+        // =====================
+        // NEGATIVE SYMPTOMS
+        // =====================
+
+        negativeSymptoms.forEach((symptom) => {
+
+          if (symptoms.includes(symptom)) {
+
+            score += WEIGHTS.negative;
+
+          }
+
+        });
+
+        // =====================
+        // SYMPTOM COMBINATIONS
+        // =====================
+
+        combinations.forEach((combination) => {
+
+          if (
+
+            Array.isArray(combination) &&
+
+            hasCombination(symptoms, combination)
+
+          ) {
+
+            score += WEIGHTS.combination;
+
+          }
+
+        });
+
+        // =====================
+        // REMOVE DUPLICATES
+        // =====================
+
+        const uniqueMatches = unique(
+
+          matchedSymptoms
+
+        );
+        // =====================
+// MINIMUM MATCH CHECK
+// =====================
+
 const minimumMatches =
 
   symptoms.length <= 2
+
     ? symptoms.length
+
     : Math.ceil(
+
         symptoms.length * 0.6
+
       );
 
 if (
+
   uniqueMatches.length <
+
   minimumMatches
+
 ) {
 
   return null;
 
 }
-        let  confidence = Math.min(
 
-            90,
-
-            Number(
-
-              (
-                score *
-
-                (
-                  0.5 +
-                  matchRatio
-                )
-
-              ).toFixed(1)
-
-            )
-
-          );
-
-        // SINGLE SYMPTOM PENALTY
-
-    
-
-        // LOW CONFIDENCE FILTER
+        // =====================
+        // SKIP IF NOTHING MATCHED
+        // =====================
 
         if (
-          confidence < 15
+
+          uniqueMatches.length === 0
+
         ) {
 
           return null;
 
         }
+
+        // =====================
+        // DISEASE PROFILE
+        // =====================
+
+        const diseaseProfile = [
+
+          ...primarySymptoms,
+
+          ...secondarySymptoms,
+
+          ...signatureSymptoms,
+
+          ...emergencySymptoms
+
+        ];
+
+        const totalDiseaseSymptoms =
+
+          diseaseProfile.length;
+
+        // =====================
+        // COVERAGE SCORES
+        // =====================
+
+        const diseaseCoverage =
+
+          totalDiseaseSymptoms > 0
+
+            ? uniqueMatches.length /
+
+              totalDiseaseSymptoms
+
+            : 0;
+
+        const symptomCoverage =
+
+          symptoms.length > 0
+
+            ? uniqueMatches.length /
+
+              symptoms.length
+
+            : 0;
+                    // =====================
+        // BASE CONFIDENCE
+        // =====================
+
+        let confidence = score;
+
+        // =====================
+        // DISEASE COVERAGE BONUS
+        // =====================
+
+        confidence +=
+
+          diseaseCoverage *
+
+          WEIGHTS.diseaseCoverage;
+
+        // =====================
+        // USER SYMPTOM COVERAGE BONUS
+        // =====================
+
+        confidence +=
+
+          symptomCoverage *
+
+          WEIGHTS.symptomCoverage;
+          // =====================
+// HIGH COVERAGE BONUS
+// =====================
+
+if (
+
+  diseaseCoverage >= 0.75
+
+) {
+
+  confidence += 10;
+
+}
+
+if (
+
+  symptomCoverage >= 0.80
+
+) {
+
+  confidence += 10;
+
+}
+
+        // =====================
+        // PRIMARY MATCH BONUS
+        // =====================
+
+        confidence +=
+
+          primaryMatches *
+
+          WEIGHTS.primaryBonus;
+
+        // =====================
+        // SIGNATURE BONUS
+        // =====================
+
+        confidence +=
+
+          signatureMatches *
+
+          WEIGHTS.signatureBonus;
+
+        // =====================
+        // PENALTY:
+        // NO PRIMARY MATCH
+        // =====================
+
+        if (
+
+          primaryMatches === 0
+
+        ) {
+
+          confidence +=
+
+            WEIGHTS.noPrimaryPenalty;
+
+        }
+
+        // =====================
+        // PENALTY:
+        // TOO MANY USER SYMPTOMS
+        // NOT EXPLAINED
+        // =====================
+
+        const unexplainedSymptoms =
+
+          symptoms.length -
+
+          uniqueMatches.length;
+
+        if (
+
+          unexplainedSymptoms >= 3
+
+        ) {
+
+          confidence -=
+
+            unexplainedSymptoms * 5;
+
+        }
+
+        // =====================
+        // PENALTY:
+        // LOW DISEASE COVERAGE
+        // =====================
+
+        if (
+
+          diseaseCoverage < 0.30
+
+        ) {
+
+          confidence -= 10;
+
+        }
+
+        // =====================
+        // EMERGENCY BOOST
+        // =====================
+
+        if (
+
+          emergencyMatch
+
+        ) {
+
+          confidence += 10;
+
+        }
+
+        // =====================
+        // CLAMP SCORE
+        // =====================
+
+        confidence = Math.max(
+
+          5,
+
+          Math.min(
+
+            99,
+
+            round(confidence)
+
+          )
+
+        );
+
+        // =====================
+        // REMOVE VERY WEAK MATCHES
+        // =====================
+
+        if (
+
+          confidence < 15
+
+        ) {
+
+          return null;
+
+        }
+
+        // =====================
+        // FORCE EMERGENCY CONFIDENCE
+        // =====================
+
+        if (
+
+          emergencyMatch &&
+
+          confidence < 85
+
+        ) {
+
+          confidence = 85;
+
+        }
+
+        // =====================
+        // RELIABILITY SCORE
+        // =====================
+
+        let reliability =
+
+          symptomCoverage * 100;
+
+        if (
+
+          primaryMatches === 0
+
+        ) {
+
+          reliability -= 20;
+
+        }
+
+        reliability =
+
+          Math.max(
+
+            0,
+
+            Math.min(
+
+              100,
+
+              round(reliability)
+
+            )
+
+          );
+        // =====================
+        // BUILD PREDICTION
+        // =====================
 
         return {
 
@@ -341,50 +628,99 @@ if (
             diseaseData.disease,
 
           category:
-            diseaseData.category,
+            diseaseData.category ||
 
-          confidence:
-            Number(
-              confidence.toFixed(1)
-            ),
+            "General",
+
+          confidence,
 
           department:
-            diseaseData.department,
+            diseaseData.department ||
+
+            "General Medicine",
 
           riskLevel:
-            diseaseData.riskLevel,
+            diseaseData.riskLevel ||
+
+            "Low",
 
           severityScore:
-            diseaseData.severityScore,
+            diseaseData.severityScore ||
+
+            0,
+
+          emergencyMatch,
 
           matchedSymptoms:
             uniqueMatches,
 
-          emergencyMatch,
-
           recommendations:
-            diseaseData.recommendations || [],
+
+            diseaseData.recommendations ||
+
+            [],
+
+          scoreBreakdown: {
+
+            totalScore:
+              round(score),
+
+            primaryMatches,
+
+            secondaryMatches,
+
+            signatureMatches,
+
+            emergencyMatches,
+
+            diseaseCoverage:
+
+              round(
+
+                diseaseCoverage * 100
+
+              ),
+
+            symptomCoverage:
+
+              round(
+
+                symptomCoverage * 100
+
+              ),
+
+            reliability
+
+          },
 
           predictionType:
+
             "Rule Based Prediction"
 
         };
 
-      }
+      })
 
-    )
+      // =====================
+      // REMOVE NULLS
+      // =====================
 
-    .filter(Boolean)
-.filter(
-  disease =>
-    disease.confidence >= 20
-)
-    .sort(
-      (a, b) => {
+      .filter(Boolean)
+
+      // =====================
+      // FINAL SORTING
+      // =====================
+
+      .sort((a, b) => {
+
+        // Emergency diseases first
 
         if (
+
           a.emergencyMatch &&
+
           !b.emergencyMatch
+
         ) {
 
           return -1;
@@ -392,32 +728,90 @@ if (
         }
 
         if (
+
           !a.emergencyMatch &&
+
           b.emergencyMatch
+
         ) {
 
           return 1;
 
         }
 
-        return (
-          b.confidence -
+        // Higher confidence
+
+        if (
+
+          b.confidence !==
+
           a.confidence
+
+        ) {
+
+          return (
+
+            b.confidence -
+
+            a.confidence
+
+          );
+
+        }
+
+        // Better reliability
+
+        if (
+
+          b.scoreBreakdown.reliability !==
+
+          a.scoreBreakdown.reliability
+
+        ) {
+
+          return (
+
+            b.scoreBreakdown.reliability -
+
+            a.scoreBreakdown.reliability
+
+          );
+
+        }
+
+        // Better disease coverage
+
+        return (
+
+          b.scoreBreakdown.diseaseCoverage -
+
+          a.scoreBreakdown.diseaseCoverage
+
         );
 
-      }
-    )
+      })
 
-    .slice(0, 5);
+      // =====================
+      // LIMIT RESULTS
+      // =====================
+
+      .slice(0, 5);
 
   console.log(
+
     "RULE PREDICTIONS:",
-    rankedDiseases
+
+    predictions
+
   );
 
-  return rankedDiseases;
+  return predictions;
 
 };
+
+// =========================
+// EXPORT
+// =========================
 
 module.exports =
   predictionService;
