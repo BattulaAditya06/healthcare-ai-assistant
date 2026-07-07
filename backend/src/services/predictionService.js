@@ -7,71 +7,94 @@ const diseases = require(
 );
 
 // =========================
-// WEIGHT CONFIGURATION
-// =========================
-
-const WEIGHTS = {
-
-  // =========================
 // CRITICAL DISEASE PRIORITY
 // =========================
 
 const CRITICAL_DISEASES = {
 
   "Heart Attack": {
+
     bonus: 120,
+
     symptoms: [
+
       "chest pain",
+
       "shortness of breath"
+
     ]
+
   },
 
   "Pulmonary Embolism": {
+
     bonus: 110,
+
     symptoms: [
+
       "chest pain",
+
       "shortness of breath"
+
     ]
+
   },
 
   "Aortic Dissection": {
+
     bonus: 130,
+
     symptoms: [
+
       "chest pain"
+
     ]
+
   },
 
   "Stroke": {
+
     bonus: 120,
+
     symptoms: [
+
       "slurred speech",
+
       "weakness"
+
     ]
+
   }
 
 };
 
-  primary: 30,
+// =========================
+// WEIGHTS
+// =========================
 
-  secondary: 10,
+const WEIGHTS = {
 
-  signature: 50,
+  primary:30,
 
-  emergency: 80,
+  secondary:10,
 
-  combination: 35,
+  signature:50,
 
-  negative: -35,
+  emergency:80,
 
-  diseaseCoverage: 30,
+  combination:35,
 
-  symptomCoverage: 25,
+  negative:-35,
 
-  primaryBonus: 8,
+  diseaseCoverage:30,
 
-  signatureBonus: 10,
+  symptomCoverage:25,
 
-  noPrimaryPenalty: -20
+  primaryBonus:8,
+
+  signatureBonus:10,
+
+  noPrimaryPenalty:-20
 
 };
 
@@ -342,6 +365,39 @@ let emergencyMatches = 0;
           }
 
         });
+        // =====================
+// CRITICAL PRIORITY BONUS
+// =====================
+
+const criticalDisease =
+
+CRITICAL_DISEASES[
+  diseaseData.disease
+];
+
+if (criticalDisease) {
+
+  const matched =
+
+    criticalDisease.symptoms.every(
+
+      symptom =>
+
+        symptoms.includes(symptom)
+
+    );
+
+  if (matched) {
+
+    score +=
+
+      criticalDisease.bonus;
+
+    emergencyMatch = true;
+
+  }
+
+}
 
         // =====================
         // REMOVE DUPLICATES
@@ -750,85 +806,81 @@ if (
       // FINAL SORTING
       // =====================
 
-      .sort((a, b) => {
+     .sort((a,b)=>{
 
-        // Emergency diseases first
+if(
 
-        if (
+a.emergencyMatch &&
 
-          a.emergencyMatch &&
+!b.emergencyMatch
 
-          !b.emergencyMatch
+){
 
-        ) {
+return -1;
 
-          return -1;
+}
 
-        }
+if(
 
-        if (
+!a.emergencyMatch &&
 
-          !a.emergencyMatch &&
+b.emergencyMatch
 
-          b.emergencyMatch
+){
 
-        ) {
+return 1;
 
-          return 1;
+}
 
-        }
+if(
 
-        // Higher confidence
+a.severityScore!==
 
-        if (
+b.severityScore
 
-          b.confidence !==
+){
 
-          a.confidence
+return (
 
-        ) {
+b.severityScore-
 
-          return (
+a.severityScore
 
-            b.confidence -
+);
 
-            a.confidence
+}
 
-          );
+if(
 
-        }
+b.confidence!==
 
-        // Better reliability
+a.confidence
 
-        if (
+){
 
-          b.scoreBreakdown.reliability !==
+return (
 
-          a.scoreBreakdown.reliability
+b.confidence-
 
-        ) {
+a.confidence
 
-          return (
+);
 
-            b.scoreBreakdown.reliability -
+}
 
-            a.scoreBreakdown.reliability
+return (
 
-          );
+b.scoreBreakdown.
 
-        }
+reliability-
 
-        // Better disease coverage
+a.scoreBreakdown.
 
-        return (
+reliability
 
-          b.scoreBreakdown.diseaseCoverage -
+);
 
-          a.scoreBreakdown.diseaseCoverage
-
-        );
-
-      })
+})
 
       // =====================
       // LIMIT RESULTS
