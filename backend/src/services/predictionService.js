@@ -12,6 +12,45 @@ const diseases = require(
 
 const WEIGHTS = {
 
+  // =========================
+// CRITICAL DISEASE PRIORITY
+// =========================
+
+const CRITICAL_DISEASES = {
+
+  "Heart Attack": {
+    bonus: 120,
+    symptoms: [
+      "chest pain",
+      "shortness of breath"
+    ]
+  },
+
+  "Pulmonary Embolism": {
+    bonus: 110,
+    symptoms: [
+      "chest pain",
+      "shortness of breath"
+    ]
+  },
+
+  "Aortic Dissection": {
+    bonus: 130,
+    symptoms: [
+      "chest pain"
+    ]
+  },
+
+  "Stroke": {
+    bonus: 120,
+    symptoms: [
+      "slurred speech",
+      "weakness"
+    ]
+  }
+
+};
+
   primary: 30,
 
   secondary: 10,
