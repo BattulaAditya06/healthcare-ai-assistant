@@ -27,19 +27,25 @@ for (const symptom of normalizedSymptoms) {
       symptom
     );
 
-    return {
+   return {
 
-      type: "followup",
+  type: "followup",
 
-      matched: symptom,
+  matched: symptom,
 
-      followUpQuestions:
-        followUpSymptoms[symptom].questions,
+  followUpQuestions:
 
-      minimumAnswers:
-        followUpSymptoms[symptom].minimumAnswers
+    followUpSymptoms[symptom].questions,
 
-    };
+  minimumAnswers:
+
+    followUpSymptoms[symptom].minimumAnswers,
+
+  currentQuestion:
+
+    followUpSymptoms[symptom].questions[0]
+
+};
 
   }
 
@@ -73,13 +79,17 @@ for (const symptom of normalizedSymptoms) {
 
     return {
 
-      type: "emergency",
+  type: "emergency",
 
-      matched: emergencyMatch,
+  matched: emergencyMatch,
 
-      followUpQuestions: []
+  followUpQuestions: [],
 
-    };
+  currentQuestion: null,
+
+  minimumAnswers: 0
+
+};
 
   }
 
@@ -126,6 +136,8 @@ return {
   matched: null,
 
   followUpQuestions: [],
+
+  currentQuestion: null,
 
   minimumAnswers: 0
 

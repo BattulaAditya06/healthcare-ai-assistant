@@ -1,22 +1,27 @@
 {
-
   "stroke symptoms": "stroke",
   "stroke sign": "stroke",
+
   "heart attack": "severe chest pain",
   "heart pain": "severe chest pain",
   "chest pressure": "severe chest pain",
   "tight chest": "severe chest pain",
-  "cannot breathe": "difficulty breathing",
-  "can't breathe": "difficulty breathing",
-  "unable to breathe": "difficulty breathing",
-  "breathing problem": "difficulty breathing",
-  "breathing difficulty": "difficulty breathing",
+
+  "cannot breathe": "shortness of breath",
+  "can't breathe": "shortness of breath",
+  "cant breathe": "shortness of breath",
+  "unable to breathe": "shortness of breath",
+  "breathing problem": "shortness of breath",
+  "breathing difficulty": "shortness of breath",
+  "breathing issue": "shortness of breath",
+  "trouble breathing": "shortness of breath",
+  "breathlessness": "shortness of breath",
+
   "fainting": "loss of consciousness",
   "passed out": "loss of consciousness",
   "blackout": "loss of consciousness",
+
   "convulsions": "seizure",
-
-
 
   "high temperature": "fever",
   "mild fever": "fever",
@@ -29,7 +34,8 @@
   "head hurts": "headache",
   "head hurting": "headache",
   "pain in head": "headache",
-  "migraine": "headache",
+  "head ache": "headache",
+  "hedache": "headache",
 
   "body ache": "body pain",
   "body aches": "body pain",
@@ -48,12 +54,6 @@
   "loose motions": "diarrhea",
   "watery stool": "diarrhea",
 
-  "breathing difficulty": "shortness of breath",
-  "breathing issue": "shortness of breath",
-  "trouble breathing": "shortness of breath",
-  "difficulty breathing": "shortness of breath",
-  "breathlessness": "shortness of breath",
-
   "throat pain": "sore throat",
   "pain in throat": "sore throat",
   "throat irritation": "sore throat",
@@ -67,36 +67,38 @@
   "common cold": "runny nose",
   "having cold": "runny nose",
   "caught cold": "runny nose",
+  "nose running": "runny nose",
 
   "stress": "stress",
-"stressed": "stress",
-"mental stress": "stress",
-"work stress": "stress",
-"under stress": "stress",
-
-  "nose running": "runny nose",
+  "stressed": "stress",
+  "mental stress": "stress",
+  "work stress": "stress",
+  "under stress": "stress",
 
   "burning chest": "chest pain",
   "chest irritation": "chest pain",
+  "heavy chest": "chest pain",
 
   "stomach ache": "abdominal pain",
   "stomach pain": "abdominal pain",
   "pain in stomach": "abdominal pain",
   "belly pain": "abdominal pain",
-   "abdomen pain": "abdominal pain",
+  "abdomen pain": "abdominal pain",
   "tummy pain": "abdominal pain",
 
   "feeling dizzy": "dizziness",
   "lightheaded": "dizziness",
   "dizzy": "dizziness",
 
-  "feeling weak": "fatigue",
+  "feeling weak": "weakness",
+  "weak": "weakness",
+  "body weakness": "weakness",
+
+  "feeling tired": "fatigue",
   "tired": "fatigue",
   "very tired": "fatigue",
   "exhausted": "fatigue",
   "low energy": "fatigue",
-  "weak": "fatigue",
-  "body weakness": "fatigue",
   "fatigued": "fatigue",
 
   "itchy": "itching",
@@ -138,6 +140,7 @@
 
   "panic": "panic attacks",
   "panic attack": "panic attacks",
+
   "nervous": "anxiety",
   "anxious": "anxiety",
 
@@ -154,39 +157,23 @@
   "passing out": "fainting",
   "fainted": "fainting",
 
-  "blackout": "loss of consciousness",
-
   "pins and needles": "tingling sensation",
 
   "bloody cough": "cough with blood",
-
   "yellow phlegm": "yellow mucus",
   "green phlegm": "green mucus",
 
   "high bp": "high blood pressure",
   "low bp": "low blood pressure",
 
-  "cant breathe": "difficulty breathing",
-  "unable to breathe": "difficulty breathing",
-
-  "heavy chest": "chest pain",
-
   "cant walk properly": "difficulty walking",
-
   "blurry vision": "blurred vision",
-
   "red eyes": "eye redness",
-
   "sweating too much": "excessive sweating",
-
   "memory issues": "memory loss",
-
   "confused": "confusion",
-
   "skin peeling off": "skin peeling",
-  
-  "hedache": "headache",
-  "head ache": "headache",
+
   "nausia": "nausea",
   "nasea": "nausea",
   "dizzines": "dizziness",

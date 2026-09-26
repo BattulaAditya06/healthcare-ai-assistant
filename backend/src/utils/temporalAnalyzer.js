@@ -1,66 +1,83 @@
 const temporalAnalyzer = (text = "") => {
+  const message = String(text).toLowerCase();
 
-  const message =
-    text.toLowerCase();
+  let durationDays = null;
 
-  let duration = null;
+  // =========================
+  // DAYS
+  // =========================
 
-  if (
-    message.match(
-      /(\d+)\s*day/
-    )
-  ) {
+  const dayMatch = message.match(
+    /(\d+)\s*(day|days)\b/
+  );
 
-    duration =
-      parseInt(
-        message.match(
-          /(\d+)\s*day/
-        )[1]
-      );
-
+  if (dayMatch) {
+    durationDays = parseInt(dayMatch[1], 10);
   }
 
-  if (
-    message.includes(
-      "today"
-    )
-  ) {
+  // =========================
+  // WEEKS
+  // =========================
 
-    duration = 1;
+  const weekMatch = message.match(
+    /(\d+)\s*(week|weeks)\b/
+  );
 
+  if (weekMatch) {
+    durationDays =
+      parseInt(weekMatch[1], 10) * 7;
   }
 
-  if (
-    message.includes(
-      "yesterday"
-    )
-  ) {
+  // =========================
+  // MONTHS
+  // =========================
 
-    duration = 2;
+  const monthMatch = message.match(
+    /(\d+)\s*(month|months)\b/
+  );
 
+  if (monthMatch) {
+    durationDays =
+      parseInt(monthMatch[1], 10) * 30;
   }
 
-  if (
-    message.includes(
-      "week"
-    )
-  ) {
+  // =========================
+  // YEARS
+  // =========================
 
-    duration = 7;
+  const yearMatch = message.match(
+    /(\d+)\s*(year|years)\b/
+  );
 
+  if (yearMatch) {
+    durationDays =
+      parseInt(yearMatch[1], 10) * 365;
   }
+
+  // =========================
+  // RELATIVE TIME
+  // =========================
+
+  if (message.includes("today")) {
+    durationDays = 1;
+  }
+
+  if (message.includes("yesterday")) {
+    durationDays = 2;
+  }
+
+  // =========================
+  // CHRONIC STATUS
+  // =========================
+
+  const chronic =
+    durationDays !== null &&
+    durationDays >= 14;
 
   return {
-
-    durationDays:
-      duration,
-
-    chronic:
-      duration >= 14
-
+    durationDays,
+    chronic
   };
-
 };
 
-module.exports =
-  temporalAnalyzer;
+module.exports = temporalAnalyzer;

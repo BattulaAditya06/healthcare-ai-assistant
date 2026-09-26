@@ -8,10 +8,10 @@
     "severityScore": 5,
 
     "primarySymptoms": [
-      "High Fever",
+      "Fever",
       "cough",
       "body pain",
-      "Severe Body Aches",
+      "body pain",
       "fatigue"
     ],
 
@@ -56,32 +56,46 @@
 
   "primarySymptoms": [
     "chest pain",
-    "severe chest pain",
-    "shortness of breath"
+    "shortness of breath",
+    "left arm pain",
+    "jaw pain"
   ],
 
   "secondarySymptoms": [
+    "cold sweat",
     "nausea",
     "fatigue",
     "dizziness"
   ],
 
   "signatureSymptoms": [
-    "severe chest pain"
+    "left arm pain",
+    "jaw pain",
+    "cold sweat"
   ],
 
   "emergencySymptoms": [
-    "severe chest pain"
+    "chest pain",
+    "shortness of breath"
   ],
 
-  "negativeSymptoms": [],
+  "negativeSymptoms": [
+    "runny nose",
+    "loss of smell",
+    "loss of taste",
+    "sneezing"
+  ],
 
   "symptomCombinations": [
-    ["severe chest pain", "shortness of breath"]
+    ["chest pain","shortness of breath"],
+    ["chest pain","left arm pain"],
+    ["chest pain","jaw pain"],
+    ["chest pain","cold sweat"]
   ],
 
   "recommendations": [
     "Call emergency services immediately",
+    "Do not drive yourself to the hospital",
     "Seek immediate hospital care"
   ]
 },
@@ -123,7 +137,6 @@
     "Call ambulance immediately"
   ]
 },
-
 {
   "disease": "Pulmonary Embolism",
   "category": "Respiratory",
@@ -133,80 +146,92 @@
 
   "primarySymptoms": [
     "chest pain",
+    "shortness of breath",
     "difficulty breathing"
   ],
 
   "secondarySymptoms": [
-    "dizziness",
-    "fatigue"
+    "rapid heartbeat",
+    "fatigue",
+    "dizziness"
   ],
 
   "signatureSymptoms": [
-    "difficulty breathing"
+    "rapid heartbeat"
+  ],
+
+  "emergencySymptoms": [
+    "chest pain",
+    "shortness of breath"
+  ],
+
+  "negativeSymptoms": [
+    "runny nose",
+    "loss of smell"
+  ],
+
+  "symptomCombinations": [
+    ["chest pain","shortness of breath"],
+    ["difficulty breathing","rapid heartbeat"]
+  ],
+
+  "recommendations": [
+    "Seek emergency care immediately",
+    "Call emergency medical services"
+  ]
+},
+
+  {
+  "disease": "COVID-19",
+  "category": "Respiratory",
+  "department": "Pulmonology",
+  "riskLevel": "high",
+  "severityScore": 7,
+
+  "primarySymptoms": [
+    "fever",
+    "cough",
+    "loss of smell",
+    "loss of taste"
+  ],
+
+  "secondarySymptoms": [
+    "fatigue",
+    "headache",
+    "body pain",
+    "sore throat",
+    "shortness of breath",
+    "nasal congestion"
+  ],
+
+  "signatureSymptoms": [
+    "loss of smell",
+    "loss of taste"
   ],
 
   "emergencySymptoms": [
     "difficulty breathing"
   ],
 
-  "negativeSymptoms": [],
+  "negativeSymptoms": [
+    "left arm pain",
+    "jaw pain",
+    "cold sweat"
+  ],
 
   "symptomCombinations": [
-    ["chest pain", "difficulty breathing"]
+    ["fever","loss of smell"],
+    ["fever","loss of taste"],
+    ["cough","loss of smell"],
+    ["cough","loss of taste"]
   ],
 
   "recommendations": [
-    "Seek emergency care immediately"
+    "Stay isolated",
+    "Monitor oxygen levels",
+    "Seek emergency care if breathing worsens"
   ]
 },
-
-
-
-  {
-    "disease": "COVID-19",
-    "category": "Respiratory",
-    "department": "Pulmonology",
-    "riskLevel": "high",
-    "severityScore": 8,
-
-    "primarySymptoms": [
-      "fever",
-      "cough",
-      "fatigue",
-      "shortness of breath"
-    ],
-
-    "secondarySymptoms": [
-      "headache",
-      "body pain",
-      "sore throat",
-      "nasal congestion"
-    ],
-
-    "signatureSymptoms": [
-      "loss of taste",
-      "loss of smell"
-    ],
-
-    "emergencySymptoms": [
-      "difficulty breathing",
-      "chest pain"
-    ],
-
-    "negativeSymptoms": [],
-
-    "symptomCombinations": [
-      ["fever", "loss of taste"],
-      ["fever", "loss of smell"],
-      ["cough", "shortness of breath"]
-    ],
-
-    "recommendations": [
-      "Stay isolated",
-      "Monitor oxygen levels",
-      "Seek emergency care if breathing worsens"
-    ]
-  },
 {
   "disease": "Arthritis",
   "category": "Orthopedics",
@@ -384,47 +409,54 @@
   ]
 },
 
-  {
-    "disease": "Pneumonia",
-    "category": "Respiratory",
-    "department": "Pulmonology",
-    "riskLevel": "high",
-    "severityScore": 9,
+ {
+  "disease": "Pneumonia",
+  "category": "Respiratory",
+  "department": "Pulmonology",
+  "riskLevel": "high",
+  "severityScore": 9,
 
-    "primarySymptoms": [
-      "fever",
-      "cough",
-      "shortness of breath",
-      "chest pain"
-    ],
+  "primarySymptoms": [
+    "fever",
+    "cough",
+    "difficulty breathing"
+  ],
 
-    "secondarySymptoms": [
-      "fatigue",
-      "body pain",
-      "chills"
-    ],
+  "secondarySymptoms": [
+    "chest pain",
+    "fatigue",
+    "body pain",
+    "chills",
+    "green mucus",
+    "yellow mucus"
+  ],
 
-    "signatureSymptoms": [
-      "green mucus",
-      "yellow mucus"
-    ],
+  "signatureSymptoms": [
+    "green mucus",
+    "yellow mucus"
+  ],
 
-    "emergencySymptoms": [
-      "difficulty breathing"
-    ],
+  "emergencySymptoms": [
+    "difficulty breathing"
+  ],
 
-    "negativeSymptoms": [],
+  "negativeSymptoms": [
+    "loss of smell",
+    "loss of taste"
+  ],
 
-    "symptomCombinations": [
-      ["fever", "chest pain"],
-      ["cough", "shortness of breath"]
-    ],
+  "symptomCombinations": [
+    ["fever","cough"],
+    ["cough","difficulty breathing"],
+    ["green mucus","fever"],
+    ["yellow mucus","cough"]
+  ],
 
-    "recommendations": [
-      "Seek immediate medical attention",
-      "Take prescribed medication"
-    ]
-  },
+  "recommendations": [
+    "Seek immediate medical attention",
+    "Take prescribed medication"
+  ]
+},
 
   {
     "disease": "Bronchitis",
@@ -526,8 +558,8 @@
   ],
 
   "signatureSymptoms": [
-    "sensitivity to light"
-  ],
+  "light sensitivity"
+],
 
   "symptomCombinations": [
     [
@@ -563,7 +595,7 @@
     ],
 
     "signatureSymptoms": [
-      "skin rash",
+      " rash",
       "red spots"
     ],
 

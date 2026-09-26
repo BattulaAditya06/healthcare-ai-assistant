@@ -1,42 +1,104 @@
 const followUpSymptoms = {
 
-  "headache": {
+"headache": {
 
-    minimumAnswers: 3,
+  minimumAnswers: 3,
 
-    questions: [
+  questions: [
 
-      "Is the headache on one side of your head?",
+    {
 
-      "Do you have nausea or vomiting?",
+      id: "nausea",
 
-      "Are you sensitive to light or loud sounds?",
+      question: "Do you have nausea?",
 
-      "Did the headache start suddenly?",
+      positiveSymptom: "nausea"
 
-      "Do you have fever or neck stiffness?"
+    },
 
-    ]
+    {
 
-  },
+      id: "light",
 
-  "fever": {
+      question: "Are you sensitive to light?",
 
-    minimumAnswers: 3,
+      positiveSymptom: "photophobia"
 
-    questions: [
+    },
 
-      "How high is your temperature?",
+    {
 
-      "Do you have chills or shivering?",
+      id: "onesided",
 
-      "Do you also have cough or sore throat?",
+      question: "Is the headache on one side?",
 
-      "Have you recently traveled or been around someone who was sick?"
+      positiveSymptom: "one sided headache"
 
-    ]
+    },
 
-  },
+    {
+
+      id: "neck",
+
+      question: "Do you have neck stiffness?",
+
+      positiveSymptom: "neck stiffness"
+
+    }
+
+  ]
+
+},
+
+ "fever": {
+
+  minimumAnswers: 3,
+
+  questions: [
+
+    {
+
+      id: "chills",
+
+      question: "Do you have chills?",
+
+      positiveSymptom: "chills"
+
+    },
+
+    {
+
+      id: "cough",
+
+      question: "Do you also have cough?",
+
+      positiveSymptom: "cough"
+
+    },
+
+    {
+
+      id: "body",
+
+      question: "Do you have body pain?",
+
+      positiveSymptom: "body pain"
+
+    },
+
+    {
+
+      id: "throat",
+
+      question: "Do you have sore throat?",
+
+      positiveSymptom: "sore throat"
+
+    }
+
+  ]
+
+},
 
   "cough": {
 
@@ -56,25 +118,55 @@ const followUpSymptoms = {
 
   },
 
-  "chest pain": {
+"chest pain": {
 
-    minimumAnswers: 3,
+  minimumAnswers: 4,
 
-    questions: [
+  questions: [
 
-      "Does the pain spread to your left arm, jaw, or shoulder?",
+    {
 
-      "Do you feel short of breath?",
+      id: "leftarm",
 
-      "Is the pain sharp, burning, or pressure-like?",
+      question: "Does the pain spread to your left arm?",
 
-      "Did the pain start suddenly?",
+      positiveSymptom: "left arm pain"
 
-      "Does it become worse while taking a deep breath?"
+    },
 
-    ]
+    {
 
-  },
+      id: "breathing",
+
+      question: "Are you short of breath?",
+
+      positiveSymptom: "shortness of breath"
+
+    },
+
+    {
+
+      id: "pressure",
+
+      question: "Does it feel like pressure or tightness?",
+
+      positiveSymptom: "chest pressure"
+
+    },
+
+    {
+
+      id: "sweating",
+
+      question: "Are you sweating excessively?",
+
+      positiveSymptom: "cold sweating"
+
+    }
+
+  ]
+
+},
 
   "abdominal pain": {
 
@@ -95,24 +187,55 @@ const followUpSymptoms = {
   },
 
  
+"eye pain": {
 
-  "eye pain": {
+  minimumAnswers: 3,
 
-    minimumAnswers: 3,
+  questions: [
 
-    questions: [
+    {
 
-      "Is your eye red?",
+      id: "eye_red",
 
-      "Is your vision blurred?",
+      question: "Is your eye red?",
 
-      "Are you sensitive to light?",
+      positiveSymptom: "eye redness"
 
-      "Do you have discharge from the eye?"
+    },
 
-    ]
+    {
 
-  },
+      id: "blurred",
+
+      question: "Is your vision blurred?",
+
+      positiveSymptom: "blurred vision"
+
+    },
+
+    {
+
+      id: "light",
+
+      question: "Are you sensitive to light?",
+
+      positiveSymptom: "photophobia"
+
+    },
+
+    {
+
+      id: "discharge",
+
+      question: "Do you have eye discharge?",
+
+      positiveSymptom: "eye discharge"
+
+    }
+
+  ]
+
+},
 
 };
 
