@@ -1,5 +1,5 @@
 const API_URL =
-  "http://localhost:5000/api/appointments";
+  `${process.env.NEXT_PUBLIC_API_URL}/appointments`;
 
 // =========================
 // GET EMERGENCY DOCTORS
@@ -28,9 +28,7 @@ async (
 
   const response =
     await fetch(
-
       `${API_URL}/slots?doctorId=${doctorId}`
-
     );
 
   return response.json();
@@ -55,9 +53,7 @@ async (
 
   const response =
     await fetch(
-
       `${API_URL}/book`,
-
       {
         method: "POST",
 
@@ -70,7 +66,6 @@ async (
           payload
         )
       }
-
     );
 
   return response.json();
