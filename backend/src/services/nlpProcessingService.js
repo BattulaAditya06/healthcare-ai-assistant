@@ -62,6 +62,48 @@ const escapeRegex = (
 };
 
 // =========================
+// BUILD SYMPTOM REGEX
+// =========================
+
+const buildSymptomRegex = (
+  symptom = ""
+) => {
+
+  const escapedSymptom =
+    escapeRegex(symptom);
+
+  // Allow common plural form
+  // for single-word symptoms.
+  //
+  // headache -> headache / headaches
+  // cough    -> cough / coughs
+  // fever    -> fever / fevers
+
+  if (
+    /^[a-z]+$/i.test(symptom)
+  ) {
+
+    return new RegExp(
+      `\\b${escapedSymptom}s?\\b`,
+      "i"
+    );
+
+  }
+
+  // Multi-word symptoms remain exact.
+  //
+  // chest pain
+  // shortness of breath
+  // loss of consciousness
+
+  return new RegExp(
+    `\\b${escapedSymptom}\\b`,
+    "i"
+  );
+
+};
+
+// =========================
 // PROCESS SYMPTOMS
 // =========================
 
@@ -182,45 +224,36 @@ normalizedMessage =
   );
 
   // =====================
-  // DETECT SYMPTOMS
-  // =====================
+// DETECT SYMPTOMS
+// =====================
 
-  const detectedSymptoms =
-    new Set();
+const detectedSymptoms =
+  new Set();
 
-  cleanedSymptoms.forEach(
+cleanedSymptoms.forEach(
 
-    (symptom) => {
+  (symptom) => {
 
-      const escapedSymptom =
-        escapeRegex(symptom);
+    const regex =
+      buildSymptomRegex(
+        symptom
+      );
 
-      const regex =
-        new RegExp(
+    if (
+      regex.test(
+        normalizedMessage
+      )
+    ) {
 
-          `\\b${escapedSymptom}\\b`,
-
-          "i"
-
-        );
-
-      if (
-
-        regex.test(
-          normalizedMessage
-        )
-
-      ) {
-
-        detectedSymptoms.add(
-          symptom
-        );
-
-      }
+      detectedSymptoms.add(
+        symptom
+      );
 
     }
 
-  );
+  }
+
+);
 
   // =====================
   // FINAL NORMALIZATION

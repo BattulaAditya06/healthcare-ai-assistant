@@ -7,6 +7,26 @@ const diseases = require(
 );
 
 // =========================
+// EMERGENCY SORT PRIORITY
+// =========================
+
+const EMERGENCY_PRIORITY = {
+
+  "Heart Attack": 1,
+
+  "Pulmonary Embolism": 2,
+
+  "Aortic Dissection": 3,
+
+  "Stroke": 4,
+
+  "Pneumonia": 5,
+
+  "COVID-19": 6
+
+};
+
+// =========================
 // CRITICAL DISEASE PRIORITY
 // =========================
 
@@ -806,79 +826,53 @@ if (
       // FINAL SORTING
       // =====================
 
-     .sort((a,b)=>{
+    .sort((a, b) => {
 
-if(
+  // Emergency priority override
+  if (a.emergencyMatch && b.emergencyMatch) {
 
-a.emergencyMatch &&
+    const priorityA =
+      EMERGENCY_PRIORITY[a.disease] ?? 999;
 
-!b.emergencyMatch
+    const priorityB =
+      EMERGENCY_PRIORITY[b.disease] ?? 999;
 
-){
+    if (priorityA !== priorityB) {
 
-return -1;
+      return priorityA - priorityB;
 
-}
+    }
 
-if(
+  }
 
-!a.emergencyMatch &&
+  if (a.emergencyMatch && !b.emergencyMatch) {
 
-b.emergencyMatch
+    return -1;
 
-){
+  }
 
-return 1;
+  if (!a.emergencyMatch && b.emergencyMatch) {
 
-}
+    return 1;
 
-if(
+  }
 
-a.severityScore!==
+  if (a.severityScore !== b.severityScore) {
 
-b.severityScore
+    return b.severityScore - a.severityScore;
 
-){
+  }
 
-return (
+  if (a.confidence !== b.confidence) {
 
-b.severityScore-
+    return b.confidence - a.confidence;
 
-a.severityScore
+  }
 
-);
-
-}
-
-if(
-
-b.confidence!==
-
-a.confidence
-
-){
-
-return (
-
-b.confidence-
-
-a.confidence
-
-);
-
-}
-
-return (
-
-b.scoreBreakdown.
-
-reliability-
-
-a.scoreBreakdown.
-
-reliability
-
-);
+  return (
+    b.scoreBreakdown.reliability -
+    a.scoreBreakdown.reliability
+  );
 
 })
 

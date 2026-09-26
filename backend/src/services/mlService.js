@@ -1,10 +1,48 @@
 const axios = require("axios");
 const cache = require("./predictionCache");
 
+const normalizeSymptomsForML = (symptoms = []) => {
+
+  return symptoms.map((symptom) => {
+
+    if (symptom === "migraine") {
+      return "headache";
+    }
+
+    return symptom;
+
+  });
+
+};
+
+const normalizePrediction = (prediction = {}) => {
+
+  return {
+    disease:
+      prediction.disease || "Unknown",
+
+    confidence:
+      Number(prediction.confidence || 0),
+
+    riskLevel:
+      prediction.riskLevel || "unknown",
+
+    department:
+      prediction.department || "General Medicine",
+
+    predictionType:
+      "ML Prediction"
+  };
+
+};
+
 const predictDisease = async (symptoms = []) => {
 
+  const mlSymptoms =
+    normalizeSymptomsForML(symptoms);
+
   const key =
-    [...symptoms]
+    [...mlSymptoms]
       .sort()
       .join(",");
 
@@ -21,6 +59,11 @@ const predictDisease = async (symptoms = []) => {
 
   try {
 
+    console.log(
+      "ML INPUT SYMPTOMS:",
+      mlSymptoms
+    );
+
     console.time("ML_REQUEST");
 
     const response =
@@ -28,7 +71,9 @@ const predictDisease = async (symptoms = []) => {
 
         `${process.env.ML_SERVICE_URL}/predict`,
 
-        { symptoms },
+        {
+          symptoms: mlSymptoms
+        },
 
         {
           timeout: 30000
@@ -38,24 +83,30 @@ const predictDisease = async (symptoms = []) => {
 
     console.timeEnd("ML_REQUEST");
 
-    cache.set(
-      key,
+    console.log(
+      "ML RESPONSE:",
       response.data
     );
 
- 
+    const predictions =
 
-const predictions =
+      Array.isArray(response.data)
 
-Array.isArray(response.data)
+        ? response.data
 
-? response.data
+        : [response.data];
 
-: [response.data];
+    const normalizedPredictions =
+      predictions.map(
+        normalizePrediction
+      );
 
-return predictions.map(
-  normalizePrediction
-);
+    cache.set(
+      key,
+      normalizedPredictions
+    );
+
+    return normalizedPredictions;
 
   } catch (error) {
 
@@ -68,10 +119,18 @@ return predictions.map(
       {
         disease:
           "Prediction Service Unavailable",
-        confidence: 0,
-        riskLevel: "unknown",
+
+        confidence:
+          0,
+
+        riskLevel:
+          "unknown",
+
         department:
-          "General Medicine"
+          "General Medicine",
+
+        predictionType:
+          "ML Prediction"
       }
     ];
 

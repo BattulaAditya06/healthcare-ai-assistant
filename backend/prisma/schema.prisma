@@ -51,3 +51,27 @@ model Appointment {
   createdAt       DateTime @default(now())
   user            User     @relation(fields: [userId], references: [id])
 }
+
+model doctor_reviews {
+  id          Int       @id @default(autoincrement())
+  report_id   Int
+  action      String    @db.VarChar(50)
+  comments    String?
+  reviewed_at DateTime? @default(now()) @db.Timestamptz(6)
+  reports     reports   @relation(fields: [report_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([id], map: "ix_doctor_reviews_id")
+}
+
+model reports {
+  id             Int              @id @default(autoincrement())
+  filename       String           @db.VarChar(255)
+  file_path      String           @db.VarChar(500)
+  priority       String?          @db.VarChar(20)
+  priority_score Float?
+  status         String?          @db.VarChar(50)
+  uploaded_at    DateTime?        @default(now()) @db.Timestamptz(6)
+  doctor_reviews doctor_reviews[]
+
+  @@index([id], map: "ix_reports_id")
+}

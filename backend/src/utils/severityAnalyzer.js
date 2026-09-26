@@ -2,9 +2,17 @@ const severityAnalyzer =
 (text = "") => {
 
   const message =
-    text.toLowerCase();
+    String(text).toLowerCase();
+
+  // =========================
+  // BASE SCORE
+  // =========================
 
   let score = 1;
+
+  // =========================
+  // SEVERITY KEYWORDS
+  // =========================
 
   const severeWords = [
 
@@ -12,23 +20,52 @@ const severityAnalyzer =
     "extreme",
     "unbearable",
     "intense",
-    "worst"
+    "worst",
+    "critical"
 
   ];
 
-  severeWords.forEach(
-    word => {
+  const moderateWords = [
 
-      if (
+    "moderate",
+    "bad",
+    "painful"
+
+  ];
+
+  // =========================
+  // SEVERE
+  // =========================
+
+  if (
+    severeWords.some(
+      word =>
         message.includes(word)
-      ) {
+    )
+  ) {
 
-        score += 3;
+    score = 8;
 
-      }
+  }
 
-    }
-  );
+  // =========================
+  // MODERATE
+  // =========================
+
+  else if (
+    moderateWords.some(
+      word =>
+        message.includes(word)
+    )
+  ) {
+
+    score = 5;
+
+  }
+
+  // =========================
+  // HIGH FEVER
+  // =========================
 
   if (
     message.includes(
@@ -36,9 +73,16 @@ const severityAnalyzer =
     )
   ) {
 
-    score += 3;
+    score = Math.max(
+      score,
+      8
+    );
 
   }
+
+  // =========================
+  // RESULT
+  // =========================
 
   return {
 
@@ -46,11 +90,11 @@ const severityAnalyzer =
 
     level:
 
-      score >= 5
+      score >= 8
 
         ? "high"
 
-        : score >= 3
+        : score >= 5
 
         ? "medium"
 
