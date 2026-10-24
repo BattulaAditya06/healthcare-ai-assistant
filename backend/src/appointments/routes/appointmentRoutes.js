@@ -1,45 +1,22 @@
-const express =
-require("express");
 
-const router =
-  express.Router();
+const express = require("express");
+const router = express.Router();
 
 const {
-
   getAvailableSlots,
-
   bookAppointment,
-
   getEmergencyDoctors
+} = require("../controllers/appointmentController");
 
-} = require(
-  "../controllers/appointmentController"
-);
+const protect = require("../../middleware/authMiddleware");
 
-// =========================
-// GET AVAILABLE SLOTS
-// =========================
+// Public doctor directory.
+router.get("/emergency-doctors", getEmergencyDoctors);
 
-router.get(
-  "/emergency-doctors",
-  getEmergencyDoctors
-);
+// Authenticated slot availability.
+router.get("/slots", protect, getAvailableSlots);
 
-// =========================
-// BOOK APPOINTMENT
-// =========================
+// Authenticated appointment booking.
+router.post("/book", protect, bookAppointment);
 
-router.post(
-
-  "/book",
-
-  bookAppointment
-
-);
-
-// =========================
-// EXPORT
-// =========================
-
-module.exports =
-  router;
+module.exports = router;
